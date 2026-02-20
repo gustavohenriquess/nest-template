@@ -2,31 +2,28 @@
 import { Module } from '@nestjs/common';
 import { HealthController } from './interface/controllers/health.controller';
 import { CheckHealthUseCase } from './application/use-cases/check-health.use-case';
-import { CheckGcpIntegrationUseCase } from './application/use-cases/check-gcp-integration.use-case';
+import { CheckIntegrationsUseCase } from './application/use-cases/check-integrations.use-case';
 import { BigQueryService } from '@/core/infrastructure/gcp/bigquery.service';
 import { PubSubService } from '@/core/infrastructure/gcp/pubsub.service';
+import { PrismaService } from '@/core/infrastructure/persistence/prisma/prisma.service';
 import { PubSubListenerExample } from './application/listeners/pubsub-listener.example';
 
 @Module({
     controllers: [HealthController],
     providers: [
         CheckHealthUseCase,
-        CheckGcpIntegrationUseCase,
+        CheckIntegrationsUseCase,
         PubSubListenerExample,
-        // Exemplo: Instanciando serviços para diferentes projetos GCP
+        // Exemplo: Instanciando múltiplos databases com Prisma
         {
-            provide: 'GCP_PROJECT_A_BIGQUERY',
-            useFactory: () => new BigQueryService('project-a-id'),
+            provide: 'PRIMARY_PRISMA',
+            useFactory: () => new PrismaService('postgresql://user:pass@localhost:5432/primary'),
         },
         {
-            provide: 'GCP_PROJECT_B_BIGQUERY',
-            useFactory: () => new BigQueryService('project-b-id'),
+            provide: 'SECONDARY_PRISMA',
+            useFactory: () => new PrismaService('postgresql://user:pass@localhost:5432/secondary'),
         },
-        {
-            provide: 'GCP_PROJECT_A_PUBSUB',
-            useFactory: () => new PubSubService('project-a-id'),
-        },
-        // Provendo instâncias padrão para compatibilidade com os Use Cases atuais
+        // Provendo instâncias padrão
         {
             provide: BigQueryService,
             useFactory: () => new BigQueryService('primary-project-id'),
@@ -34,6 +31,10 @@ import { PubSubListenerExample } from './application/listeners/pubsub-listener.e
         {
             provide: PubSubService,
             useFactory: () => new PubSubService('primary-project-id'),
+        },
+        {
+            provide: PrismaService,
+            useFactory: () => new PrismaService('postgresql://user:pass@localhost:5432/default'),
         },
     ],
 })
