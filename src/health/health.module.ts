@@ -1,5 +1,6 @@
 /* istanbul ignore file */
 import { Module } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { HealthController } from './interface/controllers/health.controller';
 import { CheckHealthUseCase } from './application/use-cases/check-health.use-case';
 import { CheckIntegrationsUseCase } from './application/use-cases/check-integrations.use-case';
@@ -14,27 +15,47 @@ import { PubSubListenerExample } from './application/listeners/pubsub-listener.e
         CheckHealthUseCase,
         CheckIntegrationsUseCase,
         PubSubListenerExample,
-        // Exemplo: Instanciando múltiplos databases com Prisma
+        // Exemplo: Instanciando múltiplos databases com Prisma usando ConfigService
         {
             provide: 'PRIMARY_PRISMA',
-            useFactory: () => new PrismaService('postgresql://user:pass@localhost:5432/primary'),
+            useFactory: (configService: ConfigService) => {
+                const url = configService.get<string>('DATABASE_URL_PRIMARY') || 'postgresql://user:pass@localhost:5432/primary';
+                return new PrismaService(url);
+            },
+            inject: [ConfigService],
         },
         {
             provide: 'SECONDARY_PRISMA',
-            useFactory: () => new PrismaService('postgresql://user:pass@localhost:5432/secondary'),
+            useFactory: (configService: ConfigService) => {
+                const url = configService.get<string>('DATABASE_URL_SECONDARY') || 'postgresql://user:pass@localhost:5432/secondary';
+                return new PrismaService(url);
+            },
+            inject: [ConfigService],
         },
-        // Provendo instâncias padrão
+        // Provendo instâncias padrão com ConfigService
         {
             provide: BigQueryService,
-            useFactory: () => new BigQueryService('primary-project-id'),
+            useFactory: (configService: ConfigService) => {
+                const projectId = configService.get<string>('GCP_PRIMARY_PROJECT_ID') || 'primary-project-id';
+                return new BigQueryService(projectId);
+            },
+            inject: [ConfigService],
         },
         {
             provide: PubSubService,
-            useFactory: () => new PubSubService('primary-project-id'),
+            useFactory: (configService: ConfigService) => {
+                const projectId = configService.get<string>('GCP_PRIMARY_PROJECT_ID') || 'primary-project-id';
+                return new PubSubService(projectId);
+            },
+            inject: [ConfigService],
         },
         {
             provide: PrismaService,
-            useFactory: () => new PrismaService('postgresql://user:pass@localhost:5432/default'),
+            useFactory: (configService: ConfigService) => {
+                const url = configService.get<string>('DATABASE_URL') || 'postgresql://user:pass@localhost:5432/default';
+                return new PrismaService(url);
+            },
+            inject: [ConfigService],
         },
     ],
 })
