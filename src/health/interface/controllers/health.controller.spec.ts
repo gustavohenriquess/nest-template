@@ -1,11 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HealthController } from './health.controller';
 import { CheckHealthUseCase } from '../../application/use-cases/check-health.use-case';
+import { CheckGcpIntegrationUseCase } from '../../application/use-cases/check-gcp-integration.use-case';
 import { HealthCheck } from '../../domain/entities/health-check.entity';
 
 describe('HealthController', () => {
     let controller: HealthController;
-    let useCase: CheckHealthUseCase;
+    let checkHealth: CheckHealthUseCase;
+    let checkGcp: CheckGcpIntegrationUseCase;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
@@ -17,11 +19,18 @@ describe('HealthController', () => {
                         execute: jest.fn(),
                     },
                 },
+                {
+                    provide: CheckGcpIntegrationUseCase,
+                    useValue: {
+                        execute: jest.fn(),
+                    },
+                },
             ],
         }).compile();
 
         controller = module.get<HealthController>(HealthController);
-        useCase = module.get<CheckHealthUseCase>(CheckHealthUseCase);
+        checkHealth = module.get<CheckHealthUseCase>(CheckHealthUseCase);
+        checkGcp = module.get<CheckGcpIntegrationUseCase>(CheckGcpIntegrationUseCase);
     });
 
     it('should be defined', () => {
@@ -30,7 +39,7 @@ describe('HealthController', () => {
 
     it('should return health check status', async () => {
         const timestamp = new Date();
-        jest.spyOn(useCase, 'execute').mockResolvedValue({
+        jest.spyOn(checkHealth, 'execute').mockResolvedValue({
             healthCheck: HealthCheck.create({
                 status: 'ok',
                 timestamp,
@@ -45,5 +54,15 @@ describe('HealthController', () => {
             timestamp,
             details: 'ok',
         });
+    });
+
+    it('should return gcp integration status', async () => {
+        const mockResult = { bigquery: { status: 'integrated' }, pubsub: { status: 'integrated', messageId: 'id' } };
+        jest.spyOn(checkGcp, 'execute').mockResolvedValue(mockResult as any);
+
+        const response = await controller.handleGcp();
+
+        expect(response).toBe(mockResult);
+        expect(checkGcp.execute).toHaveBeenCalled();
     });
 });
