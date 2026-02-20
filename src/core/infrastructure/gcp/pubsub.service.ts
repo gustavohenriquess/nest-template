@@ -17,7 +17,7 @@ export class PubSubService {
             this.logger.log(`Message ${messageId} published to topic ${topicName}`);
             return messageId;
         } catch (error) {
-            this.logger.error(`Error publishing message to ${topicName}:`, error);
+            this.logger.error(`Error publishing message to ${topicName}:`, error.message);
             throw error;
         }
     }
@@ -28,21 +28,27 @@ export class PubSubService {
             this.logger.log(`Topic ${topic.name} created.`);
             return topic;
         } catch (error) {
-            this.logger.error(`Error creating topic ${topicName}:`, error);
+            this.logger.error(`Error creating topic ${topicName}:`, error.message);
             throw error;
         }
     }
 
     async listenForMessages(subscriptionName: string, messageHandler: (message: Message) => void) {
-        const subscription = this.pubsub.subscription(subscriptionName);
+        try {
+            const subscription = this.pubsub.subscription(subscriptionName);
 
-        subscription.on('message', (message: Message) => {
-            this.logger.log(`Received message ${message.id}:`);
-            messageHandler(message);
-        });
+            subscription.on('message', (message: Message) => {
+                this.logger.log(`Received message ${message.id}:`);
+                messageHandler(message);
+            });
 
-        subscription.on('error', (error) => {
-            this.logger.error(`Received error from subscription ${subscriptionName}:`, error);
-        });
+            subscription.on('error', (error) => {
+                this.logger.error(`Received error from subscription ${subscriptionName}:`, error.message);
+            });
+
+            this.logger.log(`Listening for messages on subscription: ${subscriptionName}`);
+        } catch (error) {
+            this.logger.error(`Failed to initialize listener for ${subscriptionName}:`, error.message);
+        }
     }
 }

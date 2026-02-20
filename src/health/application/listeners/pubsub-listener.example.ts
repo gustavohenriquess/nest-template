@@ -12,16 +12,24 @@ export class PubSubListenerExample implements OnModuleInit {
     ) { }
 
     onModuleInit() {
-        this.logger.log('Initializing PubSub Listener Example...');
-        this.setupListener();
+        // Envolver em um timeout ou try/catch para garantir que não trave o bootstrap
+        // Em um template, é melhor ser resiliente a falhas de infra local
+        setTimeout(() => {
+            this.logger.log('Initializing PubSub Listener Example (Delayed)...');
+            this.setupListener();
+        }, 1000);
     }
 
     private setupListener() {
         const subscriptionName = 'health-check-subscription';
 
-        this.pubsub.listenForMessages(subscriptionName, (message: Message) => {
-            this.handleMessage(message);
-        });
+        try {
+            this.pubsub.listenForMessages(subscriptionName, (message: Message) => {
+                this.handleMessage(message);
+            });
+        } catch (error) {
+            this.logger.error(`Failed to setup PubSub listener: ${error.message}`);
+        }
     }
 
     private handleMessage(message: Message) {
@@ -31,7 +39,6 @@ export class PubSubListenerExample implements OnModuleInit {
             message.ack();
         } catch (error) {
             this.logger.error('Error handling message:', error.message);
-            // In a real scenario, you might want to nack or handle differently
             message.ack();
         }
     }

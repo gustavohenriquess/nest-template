@@ -16,7 +16,7 @@ export class BigQueryService {
             this.logger.log(`Dataset ${dataset.id} created.`);
             return dataset;
         } catch (error) {
-            this.logger.error(`Error creating dataset ${datasetId}:`, error);
+            this.logger.error(`Error creating dataset ${datasetId}:`, error.message);
             throw error;
         }
     }
@@ -30,7 +30,7 @@ export class BigQueryService {
             const [rows] = await this.bigquery.query(query);
             return rows;
         } catch (error) {
-            this.logger.error(`Error executing query:`, error);
+            this.logger.error(`Error executing query:`, error.message);
             throw error;
         }
     }
@@ -40,7 +40,7 @@ export class BigQueryService {
             await this.bigquery.dataset(datasetId).table(tableId).insert(rows);
             this.logger.log(`Inserted ${rows.length} rows into ${tableId}`);
         } catch (error) {
-            this.logger.error(`Error inserting rows into ${tableId}:`, error);
+            this.logger.error(`Error inserting rows into ${tableId}:`, error.message);
             throw error;
         }
     }
