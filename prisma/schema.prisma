@@ -5,3 +5,6 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+// O banco de dados está vazio por padrão, conforme solicitado para o template.
+// Adicione seus modelos abaixo.
