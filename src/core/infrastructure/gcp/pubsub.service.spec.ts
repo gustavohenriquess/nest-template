@@ -102,5 +102,17 @@ describe('PubSubService', () => {
             const errorHandler = subscriptionMock.on.mock.calls.find(call => call[0] === 'error')[1];
             errorHandler(new Error('error'));
         });
+
+        it('should handle error if setup fails', () => {
+            const subscriptionName = 'test-sub';
+            const error = new Error('Setup failed');
+            pubsubMock.subscription.mockImplementation(() => {
+                throw error;
+            });
+
+            service.listenForMessages(subscriptionName, jest.fn());
+
+            expect(pubsubMock.subscription).toHaveBeenCalledWith(subscriptionName);
+        });
     });
 });

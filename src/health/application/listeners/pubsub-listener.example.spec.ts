@@ -7,6 +7,7 @@ describe('PubSubListenerExample', () => {
     let pubsubService: jest.Mocked<PubSubService>;
 
     beforeEach(async () => {
+        jest.useFakeTimers();
         const module: TestingModule = await Test.createTestingModule({
             providers: [
                 PubSubListenerExample,
@@ -23,12 +24,23 @@ describe('PubSubListenerExample', () => {
         pubsubService = module.get(PubSubService);
     });
 
+    afterEach(() => {
+        jest.useRealTimers();
+    });
+
     it('should be defined', () => {
         expect(service).toBeDefined();
     });
 
-    it('should setup listener on module init', () => {
+    it('should setup listener on module init (delayed)', () => {
         service.onModuleInit();
+
+        // At this point it shouldn't have been called yet
+        expect(pubsubService.listenForMessages).not.toHaveBeenCalled();
+
+        // Advance timers
+        jest.advanceTimersByTime(1100);
+
         expect(pubsubService.listenForMessages).toHaveBeenCalledWith(
             'health-check-subscription',
             expect.any(Function),
@@ -37,6 +49,8 @@ describe('PubSubListenerExample', () => {
 
     it('should handle incoming message correctly', () => {
         service.onModuleInit();
+        jest.advanceTimersByTime(1100);
+
         const handler = pubsubService.listenForMessages.mock.calls[0][1];
 
         const mockData = { test: 'data' };
@@ -52,6 +66,8 @@ describe('PubSubListenerExample', () => {
 
     it('should handle malformed message gracefully', () => {
         service.onModuleInit();
+        jest.advanceTimersByTime(1100);
+
         const handler = pubsubService.listenForMessages.mock.calls[0][1];
 
         const mockMessage = {

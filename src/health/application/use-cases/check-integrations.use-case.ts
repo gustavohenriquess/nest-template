@@ -1,18 +1,29 @@
 import { Injectable, Logger, Inject } from '@nestjs/common';
 import { BigQueryService } from '@/core/infrastructure/gcp/bigquery.service';
 import { PubSubService } from '@/core/infrastructure/gcp/pubsub.service';
+import { StorageService } from '@/core/infrastructure/gcp/storage.service';
 import { PrismaService } from '@/core/infrastructure/persistence/prisma/prisma.service';
 
 @Injectable()
 export class CheckIntegrationsUseCase {
     private readonly logger = new Logger(CheckIntegrationsUseCase.name);
 
+    private readonly bigQueryService: BigQueryService;
+    private readonly pubSubService: PubSubService;
+    private readonly storageService: StorageService;
+    private readonly prismaService: PrismaService;
+
     constructor(
-        private readonly bigQueryService: BigQueryService,
-        private readonly pubSubService: PubSubService,
-        private readonly prismaService: PrismaService,
-        @Inject('PRIMARY_PRISMA') private readonly primaryPrisma: PrismaService,
-    ) { }
+        @Inject(BigQueryService) bigQueryService: any,
+        @Inject(PubSubService) pubSubService: any,
+        @Inject(StorageService) storageService: any,
+        @Inject(PrismaService) prismaService: any,
+    ) {
+        this.bigQueryService = bigQueryService;
+        this.pubSubService = pubSubService;
+        this.storageService = storageService;
+        this.prismaService = prismaService;
+    }
 
     async execute() {
         this.logger.log('Executing complete integration check...');
@@ -20,12 +31,12 @@ export class CheckIntegrationsUseCase {
         const results = {
             bigquery: { status: 'checking', message: '' },
             pubsub: { status: 'checking', message: '' },
+            storage: { status: 'checking', message: '' },
             prisma: { status: 'checking', message: '' },
         };
 
         // BigQuery Check
         try {
-            // Usar Promise.race como safeguard adicional contra bibliotecas que "travam" ou crasham
             const bqPromise = this.bigQueryService.query('SELECT 1');
             await Promise.race([
                 bqPromise,
@@ -33,8 +44,9 @@ export class CheckIntegrationsUseCase {
             ]);
             results.bigquery = { status: 'ok', message: 'Connected' };
         } catch (error) {
-            this.logger.warn(`BigQuery check failed: ${error.message || error}`);
-            results.bigquery = { status: 'error', message: error.message || String(error) };
+            const message = this.extractErrorMessage(error);
+            this.logger.warn(`BigQuery check failed: ${message}`);
+            results.bigquery = { status: 'error', message };
         }
 
         // PubSub Check
@@ -46,8 +58,23 @@ export class CheckIntegrationsUseCase {
             ]);
             results.pubsub = { status: 'ok', message: 'Message published' };
         } catch (error) {
-            this.logger.warn(`PubSub check failed: ${error.message || error}`);
-            results.pubsub = { status: 'error', message: error.message || String(error) };
+            const message = this.extractErrorMessage(error);
+            this.logger.warn(`PubSub check failed: ${message}`);
+            results.pubsub = { status: 'error', message };
+        }
+
+        // Storage Check
+        try {
+            const stPromise = this.storageService.listBuckets();
+            await Promise.race([
+                stPromise,
+                new Promise((_, reject) => setTimeout(() => reject(new Error('Storage timeout')), 5000))
+            ]);
+            results.storage = { status: 'ok', message: 'Connected' };
+        } catch (error) {
+            const message = this.extractErrorMessage(error);
+            this.logger.warn(`Storage check failed: ${message}`);
+            results.storage = { status: 'error', message };
         }
 
         // Prisma Check
@@ -55,10 +82,18 @@ export class CheckIntegrationsUseCase {
             await this.prismaService.$queryRaw`SELECT 1`;
             results.prisma = { status: 'ok', message: 'Connected' };
         } catch (error) {
-            this.logger.warn(`Prisma check failed: ${error.message || error}`);
-            results.prisma = { status: 'error', message: error.message || String(error) };
+            const message = this.extractErrorMessage(error);
+            this.logger.warn(`Prisma check failed: ${message}`);
+            results.prisma = { status: 'error', message };
         }
 
         return results;
+    }
+
+    private extractErrorMessage(error: any): string {
+        if (error && error.message) {
+            return String(error.message);
+        }
+        return String(error);
     }
 }

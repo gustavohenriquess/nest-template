@@ -6,6 +6,7 @@ import { CheckHealthUseCase } from './application/use-cases/check-health.use-cas
 import { CheckIntegrationsUseCase } from './application/use-cases/check-integrations.use-case';
 import { BigQueryService } from '@/core/infrastructure/gcp/bigquery.service';
 import { PubSubService } from '@/core/infrastructure/gcp/pubsub.service';
+import { StorageService } from '@/core/infrastructure/gcp/storage.service';
 import { PrismaService } from '@/core/infrastructure/persistence/prisma/prisma.service';
 import { PubSubListenerExample } from './application/listeners/pubsub-listener.example';
 
@@ -46,6 +47,14 @@ import { PubSubListenerExample } from './application/listeners/pubsub-listener.e
             useFactory: (configService: ConfigService) => {
                 const projectId = configService.get<string>('GCP_PRIMARY_PROJECT_ID') || 'primary-project-id';
                 return new PubSubService(projectId);
+            },
+            inject: [ConfigService],
+        },
+        {
+            provide: StorageService,
+            useFactory: (configService: ConfigService) => {
+                const projectId = configService.get<string>('GCP_PRIMARY_PROJECT_ID') || 'primary-project-id';
+                return new StorageService(projectId);
             },
             inject: [ConfigService],
         },
