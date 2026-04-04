@@ -39,7 +39,8 @@ describe('TransformInterceptor', () => {
     reflector = {
       getAllAndOverride: jest.fn(),
     } as any;
-    interceptor = new TransformInterceptor(reflector);
+    interceptor = new TransformInterceptor();
+    (interceptor as any).reflector = reflector;
     executionContext = {
       getType: jest.fn().mockReturnValue('http'),
       switchToHttp: jest.fn().mockReturnThis(),

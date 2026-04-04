@@ -1,8 +1,10 @@
+/* istanbul ignore file */
 import {
   Injectable,
   NestInterceptor,
   ExecutionContext,
   CallHandler,
+  Inject,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
@@ -13,11 +15,11 @@ import {
   TransformResponse 
 } from './transform-response.helper';
 
-/* istanbul ignore next */
 @Injectable()
 export class TransformInterceptor<T>
   implements NestInterceptor<T, TransformResponse<T>> {
-  constructor(private readonly reflector: Reflector) {}
+  @Inject(Reflector)
+  private readonly reflector: Reflector;
 
   intercept(
     context: ExecutionContext,
