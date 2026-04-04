@@ -9,6 +9,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      otel-collector:
+        condition: service_started
     restart: unless-stopped
 
   postgres:
@@ -16,6 +18,8 @@ services:
     container_name: nest-template-db
     ports:
       - "5432:5432"
+    env_file:
+      - .env
     environment:
       - POSTGRESQL_USERNAME=${POSTGRES_USER}
       - POSTGRESQL_PASSWORD=${POSTGRES_PASSWORD}
@@ -29,6 +33,35 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: jaeger
+    ports:
+      - "16686:16686" # UI
+      - "4317:4317" # Jaeger OTLP receiver (grpc)
+    env_file:
+      - .env
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    restart: unless-stopped
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    container_name: otel-collector
+    env_file:
+      - .env
+    command: ["--config=/etc/otel-collector-config.yml"]
+    volumes:
+      - ./otel-collector-config.yml:/etc/otel-collector-config.yml
+    ports:
+      - "1888:1888"   # pprof extension
+      - "13133:13133" # health_check extension
+      - "4318:4318"   # http gRPC receiver
+      - "55679:55679" # zpages extension
+    depends_on:
+      jaeger:
+        condition: service_started
 
 volumes:
   postgres_data:

@@ -1,7 +1,11 @@
+import { otelSDK } from './tracing';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
+  // Start the OpenTelemetry SDK
+  await otelSDK.start();
+
   process.on('unhandledRejection', (reason, promise) => {
     console.error('Unhandled Rejection at:', promise, 'reason:', reason);
   });

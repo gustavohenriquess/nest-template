@@ -1,0 +1,53 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+exporters:
+  debug:
+    verbosity: detailed
+
+  otlp:
+    endpoint: ${JAEGER_URL}
+    tls:
+      insecure: true
+
+  datadog:
+    hostname: "nest-template-otelcol"
+    api:
+      site: ${DD_URL}
+      key: ${DD_KEY}
+
+processors:
+  batch:
+    send_batch_max_size: 100
+    send_batch_size: 10
+    timeout: 10s
+
+extensions:
+  health_check: {}
+
+connectors:
+    datadog/connector:
+
+service:
+  telemetry:
+    logs:
+      level: debug
+
+  extensions: [health_check]
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [otlp, datadog, datadog/connector]
+    metrics:
+      receivers: [otlp, datadog/connector]
+      processors: [batch]
+      exporters: [datadog]
+    logs:
+      receivers: [otlp]
+      exporters: [datadog]
