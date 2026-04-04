@@ -2,10 +2,14 @@ services:
   app:
     build: .
     container_name: nest-template-app
+    command: sh -c "npx prisma generate && npm run start:dev"
     ports:
       - "${PORT:-3000}:3000"
     env_file:
       - .env
+    volumes:
+      - .:/app
+      - /app/node_modules
     depends_on:
       postgres:
         condition: service_healthy

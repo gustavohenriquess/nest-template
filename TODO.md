@@ -27,6 +27,9 @@ Lista de melhorias planejadas para elevar o template para um padrão "Enterprise
   - Adicionar metadados básicos às rotas de saúde.
 - [x] **Makefile / Automação**
   - Criar `Makefile` com comandos: `make setup`, `make test`, `make db-up`, `make prisma-gen`.
+- [x] **Docker Hot Reload**
+  - Configurar volumes no `docker-compose.yml`.
+  - Habilitar watch mode dentro do container.
 
 ## 🧪 Qualidade & Testes
 - [ ] **Garantir 100% de Coverage nas Novas Funcionalidades**

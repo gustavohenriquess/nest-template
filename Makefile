@@ -1,4 +1,4 @@
-.PHONY: setup install sys-up sys-down prisma-gen test build start clean help
+.PHONY: setup install sys-up sys-down prisma-gen test build start clean help rebuild
 
 # Default target
 help:
@@ -9,6 +9,7 @@ help:
 	@echo "  install     Install npm dependencies"
 	@echo "  sys-up      Start docker-compose services"
 	@echo "  sys-down    Stop docker-compose services"
+	@echo "  rebuild     Force rebuild and restart services"
 	@echo "  prisma-gen  Generate Prisma client"
 	@echo "  test        Run tests with coverage"
 	@echo "  build       Build the application"
@@ -21,10 +22,13 @@ install:
 	npm install
 
 sys-up:
-	docker-compose up -d
+	docker compose up -d
 
 sys-down:
-	docker-compose down
+	docker compose down
+
+rebuild: sys-down
+	docker compose up -d --build
 
 prisma-gen:
 	npx prisma generate
