@@ -8,9 +8,9 @@ Lista de melhorias planejadas para elevar o template para um padrão "Enterprise
 - [x] **Validação de Ambiente (Zod)**
   - [x] Criar `src/core/config/env.schema.ts`.
   - [x] Impedir o boot da aplicação se variáveis obrigatórias estiverem ausentes.
-- [ ] **Global Exception Filter**
-  - Padronizar respostas de erro (JSON uniforme).
-  - Mapear erros de domínio/entidade para status HTTP corretos.
+- [x] **Global Exception Filter**
+  - [x] Padronizar respostas de erro (JSON uniforme).
+  - [x] Mapear erros de domínio/entidade para status HTTP corretos.
 - [x] **Global Response Interceptor**
   - [x] Envelopar sucessos em um padrão consistente (ex: `{ data: ... }`).
 
