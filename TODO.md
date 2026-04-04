@@ -22,7 +22,7 @@ Lista de melhorias planejadas para elevar o template para um padrão "Enterprise
   - Adicionar métricas de memória/CPU ao Health Check.
 
 ## 📖 Documentação & DX
-- [ ] **Swagger (OpenAPI) Integration**
+- [x] **Swagger (OpenAPI) Integration**
   - Configurar `SwaggerModule` no `main.ts`.
   - Adicionar metadados básicos às rotas de saúde.
 - [ ] **Makefile / Automação**
