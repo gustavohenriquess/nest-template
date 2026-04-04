@@ -2,6 +2,32 @@ import { ExecutionContext, CallHandler } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { of } from 'rxjs';
 import { TransformInterceptor } from './transform.interceptor';
+import { formatSuccessResponse } from './transform-response.helper';
+
+describe('TransformResponseHelper', () => {
+  it('should format simple object correctly', () => {
+    const result = formatSuccessResponse('data', '/path', {}, undefined);
+    expect(result.data).toBe('data');
+    expect(result.meta.path).toBe('/path');
+    expect(result.meta.count).toBeUndefined();
+  });
+
+  it('should format array and include count', () => {
+    const result = formatSuccessResponse(['a', 'b'], '/path', {}, undefined);
+    expect(result.data).toHaveLength(2);
+    expect(result.meta.count).toBe(2);
+  });
+
+  it('should merge custom metadata', () => {
+    const result = formatSuccessResponse('data', '/path', {}, { foo: 'bar' });
+    expect(result.meta.foo).toBe('bar');
+  });
+
+  it('should work with undefined customMeta', () => {
+    const result = formatSuccessResponse('data', '/path', {}, undefined);
+    expect(result.meta.timestamp).toBeDefined();
+  });
+});
 
 describe('TransformInterceptor', () => {
   let interceptor: TransformInterceptor<any>;
@@ -15,6 +41,7 @@ describe('TransformInterceptor', () => {
     } as any;
     interceptor = new TransformInterceptor(reflector);
     executionContext = {
+      getType: jest.fn().mockReturnValue('http'),
       switchToHttp: jest.fn().mockReturnThis(),
       getHandler: jest.fn(),
       getClass: jest.fn(),
@@ -28,8 +55,12 @@ describe('TransformInterceptor', () => {
     };
   });
 
-  it('should be defined', () => {
-    expect(interceptor).toBeDefined();
+  it('should return original data if context type is not http', (done) => {
+    (executionContext.getType as jest.Mock).mockReturnValue('rpc');
+    interceptor.intercept(executionContext, callHandler).subscribe((result) => {
+      expect(result).toBe('test-data');
+      done();
+    });
   });
 
   it('should transform response to { data, meta }', (done) => {
@@ -41,37 +72,6 @@ describe('TransformInterceptor', () => {
           filters: { search: 'term' }
         },
       });
-      expect(result.meta.timestamp).toBeDefined();
-      expect(result.meta.count).toBeUndefined();
-      done();
-    });
-  });
-
-  it('should merge custom metadata from reflector', (done) => {
-    (reflector.getAllAndOverride as jest.Mock).mockReturnValue({ version: '1.2.3' });
-    
-    interceptor.intercept(executionContext, callHandler).subscribe((result) => {
-      expect(result.meta).toMatchObject({
-        version: '1.2.3',
-        path: '/test-path',
-      });
-      done();
-    });
-  });
-
-  it('should include count when data is an array', (done) => {
-    callHandler.handle = jest.fn().mockReturnValue(of(['item1', 'item2']));
-    interceptor.intercept(executionContext, callHandler).subscribe((result) => {
-      expect(result.data).toHaveLength(2);
-      expect(result.meta.count).toBe(2);
-      done();
-    });
-  });
-
-  it('should include correct timestamp in meta', (done) => {
-    const now = new Date().toISOString();
-    interceptor.intercept(executionContext, callHandler).subscribe((result) => {
-      expect(result.meta.timestamp.slice(0, 10)).toBe(now.slice(0, 10));
       done();
     });
   });
