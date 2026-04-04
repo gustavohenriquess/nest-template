@@ -11,8 +11,8 @@ Lista de melhorias planejadas para elevar o template para um padrão "Enterprise
 - [ ] **Global Exception Filter**
   - Padronizar respostas de erro (JSON uniforme).
   - Mapear erros de domínio/entidade para status HTTP corretos.
-- [ ] **Global Response Interceptor**
-  - Envelopar sucessos em um padrão consistente (ex: `{ data: ... }`).
+- [x] **Global Response Interceptor**
+  - [x] Envelopar sucessos em um padrão consistente (ex: `{ data: ... }`).
 
 ## 🔍 Observabilidade & Logs
 - [ ] **Correlation IDs (Trace + Log)**

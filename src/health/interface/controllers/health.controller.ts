@@ -2,6 +2,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { CheckHealthUseCase } from '../../application/use-cases/check-health.use-case';
 import { CheckIntegrationsUseCase } from '../../application/use-cases/check-integrations.use-case';
+import { ResponseMeta } from '@/core/decorators/response-meta.decorator';
 
 @Controller('health')
 export class HealthController {
@@ -11,6 +12,7 @@ export class HealthController {
     ) { }
 
     @Get()
+    @ResponseMeta({ module: 'health', severity: 'low' })
     async handle() {
         const { healthCheck } = await this.checkHealth.execute();
 
@@ -22,6 +24,7 @@ export class HealthController {
     }
 
     @Get('integrations')
+    @ResponseMeta({ module: 'health', severity: 'high' })
     async handleIntegrations() {
         return this.checkIntegrations.execute();
     }
