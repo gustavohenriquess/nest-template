@@ -18,7 +18,7 @@ Lista de melhorias planejadas para elevar o template para um padrão "Enterprise
 - [ ] **Correlation IDs (Trace + Log)**
   - Injetar `traceId` nos logs emitidos pelo `Logger` do NestJS.
   - Facilitar a busca de logs no Grafana/Datadog via ID de rastreio.
-- [ ] **Monitoramento de Resource Usage**
+- [x] **Monitoramento de Resource Usage**
   - Adicionar métricas de memória/CPU ao Health Check.
 
 ## 📖 Documentação & DX

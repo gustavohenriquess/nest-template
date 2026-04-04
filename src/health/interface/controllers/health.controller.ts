@@ -40,6 +40,11 @@ export class HealthController {
       status: healthCheck.status,
       timestamp: healthCheck.timestamp,
       details: healthCheck.details,
+      memoryUsage: healthCheck.memoryUsage,
+      cpuLoad: healthCheck.cpuLoad,
+      uptime: healthCheck.uptime,
+      uptimeHuman: healthCheck.uptimeHuman,
+      nodeVersion: healthCheck.nodeVersion,
     };
   }
 
