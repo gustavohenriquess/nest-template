@@ -27,6 +27,7 @@
         "@nestjs/config": "^4.0.3",
         "@nestjs/core": "^11.0.1",
         "@nestjs/platform-express": "^11.0.1",
+        "@nestjs/swagger": "^11.2.6",
         "@opentelemetry/api": "^1.9.0",
         "@opentelemetry/exporter-trace-otlp-http": "^0.212.0",
         "@opentelemetry/instrumentation-express": "^0.60.0",
@@ -41,6 +42,7 @@
         "pg": "^8.18.0",
         "reflect-metadata": "^0.2.2",
         "rxjs": "^7.8.1",
+        "swagger-ui-express": "^5.0.1",
         "zod": "^4.3.6"
     },
     "devDependencies": {
