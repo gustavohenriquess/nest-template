@@ -1,9 +1,11 @@
 /* istanbul ignore file */
+import { Context } from '@opentelemetry/api';
 import { NodeSDK } from '@opentelemetry/sdk-node';
 import {
   SimpleSpanProcessor,
   SpanProcessor,
   ReadableSpan,
+  Span,
 } from '@opentelemetry/sdk-trace-base';
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
 import { HttpInstrumentation } from '@opentelemetry/instrumentation-http';
@@ -20,7 +22,7 @@ const logger = new Logger('OpenTelemetry');
  */
 class MultiSpanProcessor implements SpanProcessor {
   constructor(private processors: SpanProcessor[]) {}
-  onStart(span: any, parentContext: any): void {
+  onStart(span: Span, parentContext: Context): void {
     this.processors.forEach((p) => p.onStart(span, parentContext));
   }
   onEnd(span: ReadableSpan): void {
@@ -39,7 +41,7 @@ class MultiSpanProcessor implements SpanProcessor {
  * This bridges the gap between logs and traces using AsyncLocalStorage (TraceContext).
  */
 class BaggageSpanProcessor implements SpanProcessor {
-  onStart(span: any): void {
+  onStart(span: Span): void {
     const correlationId = TraceContext.getCorrelationId();
     if (correlationId) {
       span.setAttribute('correlation.id', correlationId);

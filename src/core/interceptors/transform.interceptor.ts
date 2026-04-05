@@ -29,7 +29,7 @@ export class TransformInterceptor<T> implements NestInterceptor<
     next: CallHandler,
   ): Observable<TransformResponse<T>> {
     if (context.getType() !== 'http') {
-      return next.handle();
+      return next.handle() as Observable<TransformResponse<T>>;
     }
 
     const http = context.switchToHttp();

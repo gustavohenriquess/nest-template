@@ -1,6 +1,6 @@
 import { ZodValidationPipe } from './zod-validation.pipe';
-import { z } from 'zod';
-import { BadRequestException } from '@nestjs/common';
+import { z, ZodSchema } from 'zod';
+import { BadRequestException, ArgumentMetadata } from '@nestjs/common';
 
 describe('ZodValidationPipe', () => {
   let pipe: ZodValidationPipe;
@@ -14,13 +14,15 @@ describe('ZodValidationPipe', () => {
 
   it('should validate and return value', () => {
     const value = { name: 'test' };
-    expect(pipe.transform(value, {} as any)).toEqual(value);
+    expect(pipe.transform(value, {} as unknown as ArgumentMetadata)).toEqual(
+      value,
+    );
   });
 
   it('should throw BadRequestException on validation failure', () => {
-    expect(() => pipe.transform({ name: 123 }, {} as any)).toThrow(
-      BadRequestException,
-    );
+    expect(() =>
+      pipe.transform({ name: 123 }, {} as unknown as ArgumentMetadata),
+    ).toThrow(BadRequestException);
   });
 
   it('should throw generic BadRequestException on unknown error', () => {
@@ -29,9 +31,11 @@ describe('ZodValidationPipe', () => {
         throw new Error('unknown');
       },
     };
-    const errorPipe = new ZodValidationPipe(errorSchema as any);
-    expect(() => errorPipe.transform({}, {} as any)).toThrow(
-      BadRequestException,
+    const errorPipe = new ZodValidationPipe(
+      errorSchema as unknown as ZodSchema,
     );
+    expect(() =>
+      errorPipe.transform({}, {} as unknown as ArgumentMetadata),
+    ).toThrow(BadRequestException);
   });
 });

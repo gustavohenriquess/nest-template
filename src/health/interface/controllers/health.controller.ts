@@ -33,8 +33,8 @@ export class HealthController {
     type: ErrorResponseDto,
   })
   @ResponseMeta({ module: 'health', severity: 'low' })
-  async handle() {
-    const { healthCheck } = await this.checkHealth.execute();
+  handle() {
+    const { healthCheck } = this.checkHealth.execute();
 
     return {
       status: healthCheck.status,

@@ -1,4 +1,5 @@
-import { HttpException, HttpStatus, Logger } from '@nestjs/common';
+import { HttpException, HttpStatus, ArgumentsHost } from '@nestjs/common';
+import { Request, Response } from 'express';
 import { GlobalExceptionFilter } from './global-exception.filter';
 import {
   EntityNotFoundError,
@@ -10,9 +11,9 @@ import {
 
 describe('GlobalExceptionFilter', () => {
   let filter: GlobalExceptionFilter;
-  let mockResponse: any;
-  let mockRequest: any;
-  let mockArgumentsHost: any;
+  let mockResponse: Partial<Response>;
+  let mockRequest: Partial<Request>;
+  let mockArgumentsHost: ArgumentsHost;
 
   beforeEach(() => {
     filter = new GlobalExceptionFilter();
@@ -29,7 +30,7 @@ describe('GlobalExceptionFilter', () => {
         getResponse: () => mockResponse,
         getRequest: () => mockRequest,
       }),
-    };
+    } as unknown as ArgumentsHost;
   });
 
   it('should handle HttpException correctly', () => {
@@ -42,8 +43,8 @@ describe('GlobalExceptionFilter', () => {
         error: expect.objectContaining({
           code: 'HTTP', // HttpException -> HTTP
           message: 'Forbidden',
-        }),
-      }),
+        }) as unknown,
+      }) as unknown,
     );
   });
 
@@ -61,8 +62,8 @@ describe('GlobalExceptionFilter', () => {
       expect.objectContaining({
         error: expect.objectContaining({
           code: 'GENERIC_CODE',
-        }),
-      }),
+        }) as unknown,
+      }) as unknown,
     );
   });
 
@@ -83,7 +84,7 @@ describe('GlobalExceptionFilter', () => {
           message: 'Custom error',
           details: { foo: 'bar' },
         },
-      }),
+      }) as unknown,
     );
   });
 
@@ -97,8 +98,8 @@ describe('GlobalExceptionFilter', () => {
         error: expect.objectContaining({
           code: 'HTTP_EXCEPTION',
           message: 'Http Exception',
-        }),
-      }),
+        }) as unknown,
+      }) as unknown,
     );
   });
 
@@ -112,8 +113,8 @@ describe('GlobalExceptionFilter', () => {
         error: expect.objectContaining({
           code: 'ENTITY_NOT_FOUND',
           message: 'User not found',
-        }),
-      }),
+        }) as unknown,
+      }) as unknown,
     );
   });
 
@@ -126,8 +127,8 @@ describe('GlobalExceptionFilter', () => {
       expect.objectContaining({
         error: expect.objectContaining({
           code: 'BUSINESS_RULE_VIOLATION',
-        }),
-      }),
+        }) as unknown,
+      }) as unknown,
     );
   });
 
@@ -140,8 +141,8 @@ describe('GlobalExceptionFilter', () => {
       expect.objectContaining({
         error: expect.objectContaining({
           code: 'CONFLICT',
-        }),
-      }),
+        }) as unknown,
+      }) as unknown,
     );
   });
 
@@ -154,8 +155,8 @@ describe('GlobalExceptionFilter', () => {
       expect.objectContaining({
         error: expect.objectContaining({
           code: 'UNAUTHORIZED',
-        }),
-      }),
+        }) as unknown,
+      }) as unknown,
     );
   });
 
@@ -171,8 +172,8 @@ describe('GlobalExceptionFilter', () => {
         error: expect.objectContaining({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Unexpected problem',
-        }),
-      }),
+        }) as unknown,
+      }) as unknown,
     );
   });
 
@@ -187,8 +188,8 @@ describe('GlobalExceptionFilter', () => {
         error: expect.objectContaining({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'An unexpected error occurred',
-        }),
-      }),
+        }) as unknown,
+      }) as unknown,
     );
   });
 });

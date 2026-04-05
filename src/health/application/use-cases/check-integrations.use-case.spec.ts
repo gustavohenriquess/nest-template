@@ -60,12 +60,12 @@ describe('CheckIntegrationsUseCase', () => {
 
   it('should return ok status when all services respond correctly', async () => {
     bigquery.query.mockResolvedValue([{ check: 1 }]);
-    pubsub.publishMessage.mockResolvedValue('msg-id' as any);
-    storage.listBuckets.mockResolvedValue([] as any);
+    pubsub.publishMessage.mockResolvedValue('msg-id' as unknown as string);
+    storage.listBuckets.mockResolvedValue([] as unknown as never[]);
 
     // Mocking $queryRaw specifically for tagged template usage
     const queryMock = jest.fn().mockResolvedValue([1]);
-    (prisma as any).$queryRaw = queryMock;
+    (prisma as unknown as { $queryRaw: jest.Mock }).$queryRaw = queryMock;
 
     const result = await useCase.execute();
 
@@ -83,7 +83,7 @@ describe('CheckIntegrationsUseCase', () => {
     storage.listBuckets.mockRejectedValue(new Error('ST Error'));
 
     const queryMock = jest.fn().mockRejectedValue(new Error('Prisma Error'));
-    (prisma as any).$queryRaw = queryMock;
+    (prisma as unknown as { $queryRaw: jest.Mock }).$queryRaw = queryMock;
 
     const result = await useCase.execute();
 
@@ -100,7 +100,7 @@ describe('CheckIntegrationsUseCase', () => {
     bigquery.query.mockRejectedValue(new Error('BQ Message'));
     pubsub.publishMessage.mockRejectedValue(new Error('PS Message'));
     storage.listBuckets.mockRejectedValue(new Error('ST Message'));
-    (prisma as any).$queryRaw = jest
+    (prisma as unknown as { $queryRaw: jest.Mock }).$queryRaw = jest
       .fn()
       .mockRejectedValue(new Error('PR Message'));
 
@@ -114,7 +114,9 @@ describe('CheckIntegrationsUseCase', () => {
     bigquery.query.mockRejectedValue('BQ String');
     pubsub.publishMessage.mockRejectedValue({ custom: 'error' });
     storage.listBuckets.mockRejectedValue(null);
-    (prisma as any).$queryRaw = jest.fn().mockRejectedValue(undefined);
+    (prisma as unknown as { $queryRaw: jest.Mock }).$queryRaw = jest
+      .fn()
+      .mockRejectedValue(undefined);
 
     result = await useCase.execute();
     expect(result.bigquery.message).toBe('BQ String');
@@ -126,7 +128,9 @@ describe('CheckIntegrationsUseCase', () => {
     bigquery.query.mockRejectedValue(true);
     pubsub.publishMessage.mockRejectedValue(123);
     storage.listBuckets.mockRejectedValue(0); // falsy number
-    (prisma as any).$queryRaw = jest.fn().mockRejectedValue(false); // falsy boolean
+    (prisma as unknown as { $queryRaw: jest.Mock }).$queryRaw = jest
+      .fn()
+      .mockRejectedValue(false); // falsy boolean
 
     result = await useCase.execute();
     expect(result.bigquery.message).toBe('true');

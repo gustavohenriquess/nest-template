@@ -7,8 +7,8 @@ describe('CheckHealthUseCase', () => {
     sut = new CheckHealthUseCase();
   });
 
-  it('should be able to check health with system metrics', async () => {
-    const { healthCheck } = await sut.execute();
+  it('should be able to check health with system metrics', () => {
+    const { healthCheck } = sut.execute();
 
     expect(healthCheck.status).toBe('ok');
     expect(healthCheck.timestamp).toBeInstanceOf(Date);

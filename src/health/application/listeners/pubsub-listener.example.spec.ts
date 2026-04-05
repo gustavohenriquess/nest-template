@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PubSubListenerExample } from './pubsub-listener.example';
 import { PubSubService } from '@/core/infrastructure/gcp/pubsub.service';
+import { Message } from '@google-cloud/pubsub';
 
 describe('PubSubListenerExample', () => {
   let service: PubSubListenerExample;
@@ -36,14 +37,17 @@ describe('PubSubListenerExample', () => {
     service.onModuleInit();
 
     // At this point it shouldn't have been called yet
-    expect(pubsubService.listenForMessages).not.toHaveBeenCalled();
+    expect(pubsubService.listenForMessages.mock.calls.length).toBe(0);
 
     // Advance timers
     jest.advanceTimersByTime(1100);
 
-    expect(pubsubService.listenForMessages).toHaveBeenCalledWith(
+    expect(pubsubService.listenForMessages.mock.calls.length).toBe(1);
+    expect(pubsubService.listenForMessages.mock.calls[0][0]).toBe(
       'health-check-subscription',
-      expect.any(Function),
+    );
+    expect(pubsubService.listenForMessages.mock.calls[0][1]).toBeInstanceOf(
+      Function,
     );
   });
 
@@ -59,7 +63,7 @@ describe('PubSubListenerExample', () => {
       ack: jest.fn(),
     };
 
-    handler(mockMessage as any);
+    handler(mockMessage as unknown as Message);
 
     expect(mockMessage.ack).toHaveBeenCalled();
   });
@@ -75,7 +79,7 @@ describe('PubSubListenerExample', () => {
       ack: jest.fn(),
     };
 
-    handler(mockMessage as any);
+    handler(mockMessage as unknown as Message);
 
     expect(mockMessage.ack).toHaveBeenCalled();
   });

@@ -42,16 +42,22 @@ describe('PrismaService', () => {
 
   describe('connect', () => {
     it('should call $connect and log success', async () => {
-      (service as any).$connect.mockResolvedValue(undefined);
+      (
+        service as unknown as { $connect: jest.Mock }
+      ).$connect.mockResolvedValue(undefined);
 
       await service.connect();
 
-      expect(service.$connect).toHaveBeenCalled();
+      const connectSpy = (service as unknown as { $connect: jest.Mock })
+        .$connect;
+      expect(connectSpy).toHaveBeenCalled();
     });
 
     it('should throw and log error if $connect fails', async () => {
       const error = new Error('Connection failed');
-      (service as any).$connect.mockRejectedValue(error);
+      (
+        service as unknown as { $connect: jest.Mock }
+      ).$connect.mockRejectedValue(error);
 
       await expect(service.connect()).rejects.toThrow(error);
     });
@@ -59,19 +65,29 @@ describe('PrismaService', () => {
 
   describe('disconnect', () => {
     it('should call $disconnect, pool.end and log success', async () => {
-      (service as any).$disconnect.mockResolvedValue(undefined);
-      const poolEndSpy = (service as any).pool.end;
+      (
+        service as unknown as { $disconnect: jest.Mock }
+      ).$disconnect.mockResolvedValue(undefined);
+      const poolEndSpy = (service as unknown as { pool: { end: jest.Mock } })
+        .pool.end;
 
       await service.disconnect();
 
-      expect(service.$disconnect).toHaveBeenCalled();
+      const disconnectSpy = (service as unknown as { $disconnect: jest.Mock })
+        .$disconnect;
+      expect(disconnectSpy).toHaveBeenCalled();
       expect(poolEndSpy).toHaveBeenCalled();
     });
 
     it('should log error if disconnect fails', async () => {
       const error = new Error('Disconnect failed');
-      (service as any).$disconnect.mockRejectedValue(error);
-      const loggerSpy = jest.spyOn((service as any).logger, 'error');
+      (
+        service as unknown as { $disconnect: jest.Mock }
+      ).$disconnect.mockRejectedValue(error);
+      const loggerSpy = jest.spyOn(
+        (service as unknown as { logger: { error: jest.Mock } }).logger,
+        'error',
+      );
 
       await service.disconnect();
 
@@ -93,12 +109,16 @@ describe('PrismaService', () => {
 
   describe('maskUrl', () => {
     it('should mask the password in a valid URL', () => {
-      const result = (service as any).maskUrl(dbUrl);
+      const result = (
+        service as unknown as { maskUrl: (url: string) => string }
+      ).maskUrl(dbUrl);
       expect(result).toContain('user:****@localhost');
     });
 
     it('should return **** for an invalid URL', () => {
-      const result = (service as any).maskUrl('invalid-url');
+      const result = (
+        service as unknown as { maskUrl: (url: string) => string }
+      ).maskUrl('invalid-url');
       expect(result).toBe('****');
     });
   });

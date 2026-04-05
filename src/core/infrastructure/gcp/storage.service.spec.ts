@@ -1,5 +1,4 @@
 import { StorageService } from './storage.service';
-import { Storage } from '@google-cloud/storage';
 
 jest.mock('@google-cloud/storage', () => {
   return {
@@ -18,12 +17,16 @@ jest.mock('@google-cloud/storage', () => {
 
 describe('StorageService', () => {
   let service: StorageService;
-  let storageMock: any;
+  let storageMock: { bucket: jest.Mock; getBuckets: jest.Mock };
   const projectId = 'test-project';
 
   beforeEach(() => {
     service = new StorageService(projectId);
-    storageMock = (service as any).storage;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    storageMock = (service as any).storage as {
+      bucket: jest.Mock;
+      getBuckets: jest.Mock;
+    };
   });
 
   it('should be defined', () => {

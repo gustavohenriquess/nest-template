@@ -1,5 +1,4 @@
 import { PubSubService } from './pubsub.service';
-import { PubSub } from '@google-cloud/pubsub';
 
 jest.mock('@google-cloud/pubsub', () => {
   return {
@@ -17,12 +16,21 @@ jest.mock('@google-cloud/pubsub', () => {
 
 describe('PubSubService', () => {
   let service: PubSubService;
-  let pubsubMock: any;
+  let pubsubMock: {
+    topic: jest.Mock;
+    createTopic: jest.Mock;
+    subscription: jest.Mock;
+  };
   const projectId = 'test-project';
 
   beforeEach(() => {
     service = new PubSubService(projectId);
-    pubsubMock = (service as any).pubsub;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    pubsubMock = (service as any).pubsub as {
+      topic: jest.Mock;
+      createTopic: jest.Mock;
+      subscription: jest.Mock;
+    };
   });
 
   it('should be defined', () => {
@@ -103,28 +111,32 @@ describe('PubSubService', () => {
       );
 
       // Simulate message
-      const messageHandler = subscriptionMock.on.mock.calls.find(
-        (call) => call[0] === 'message',
+      const messageHandler = (
+        subscriptionMock.on.mock.calls.find(
+          (call: unknown[]) => call[0] === 'message',
+        ) as [string, (msg: unknown) => void]
       )[1];
       const message = { id: 'msg-1', ack: jest.fn() };
       messageHandler(message);
       expect(handler).toHaveBeenCalledWith(message);
 
       // Simulate error
-      const errorHandler = subscriptionMock.on.mock.calls.find(
-        (call) => call[0] === 'error',
+      const errorHandler = (
+        subscriptionMock.on.mock.calls.find(
+          (call: unknown[]) => call[0] === 'error',
+        ) as [string, (err: Error) => void]
       )[1];
       errorHandler(new Error('error'));
     });
 
-    it('should handle error if setup fails', () => {
+    it('should handle error if setup fails', async () => {
       const subscriptionName = 'test-sub';
       const error = new Error('Setup failed');
       pubsubMock.subscription.mockImplementation(() => {
         throw error;
       });
 
-      service.listenForMessages(subscriptionName, jest.fn());
+      await service.listenForMessages(subscriptionName, jest.fn());
 
       expect(pubsubMock.subscription).toHaveBeenCalledWith(subscriptionName);
     });

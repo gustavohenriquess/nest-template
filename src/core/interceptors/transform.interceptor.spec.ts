@@ -30,7 +30,7 @@ describe('TransformResponseHelper', () => {
 });
 
 describe('TransformInterceptor', () => {
-  let interceptor: TransformInterceptor<any>;
+  let interceptor: TransformInterceptor<unknown>;
   let executionContext: ExecutionContext;
   let callHandler: CallHandler;
   let reflector: Reflector;
@@ -38,9 +38,9 @@ describe('TransformInterceptor', () => {
   beforeEach(() => {
     reflector = {
       getAllAndOverride: jest.fn(),
-    } as any;
+    } as unknown as Reflector;
     interceptor = new TransformInterceptor();
-    (interceptor as any).reflector = reflector;
+    (interceptor as unknown as { reflector: Reflector }).reflector = reflector;
     executionContext = {
       getType: jest.fn().mockReturnValue('http'),
       switchToHttp: jest.fn().mockReturnThis(),
@@ -50,7 +50,7 @@ describe('TransformInterceptor', () => {
         url: '/test-path',
         query: { search: 'term' },
       }),
-    } as any;
+    } as unknown as ExecutionContext;
     callHandler = {
       handle: jest.fn().mockReturnValue(of('test-data')),
     };

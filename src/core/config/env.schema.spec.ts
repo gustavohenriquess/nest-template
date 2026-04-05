@@ -19,8 +19,8 @@ describe('envSchema', () => {
   });
 
   it('should use default values', () => {
-    const configWithoutPort = { ...validConfig };
-    delete (configWithoutPort as any).PORT;
+    const configWithoutPort = { ...validConfig } as Record<string, unknown>;
+    delete configWithoutPort.PORT;
 
     const result = validate(configWithoutPort);
     expect(result.PORT).toBe(3000);
@@ -28,8 +28,8 @@ describe('envSchema', () => {
   });
 
   it('should throw error on missing required fields', () => {
-    const invalidConfig = { ...validConfig };
-    delete (invalidConfig as any).GCP_PRIMARY_PROJECT_ID;
+    const invalidConfig = { ...validConfig } as Record<string, unknown>;
+    delete invalidConfig.GCP_PRIMARY_PROJECT_ID;
 
     expect(() => validate(invalidConfig)).toThrow('Config validation error');
   });

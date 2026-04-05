@@ -1,6 +1,6 @@
 import { CorrelationLoggerService } from './correlation-logger.service';
 import { TraceContext } from '@/core/utils/trace-context';
-import { trace, context } from '@opentelemetry/api';
+import { trace } from '@opentelemetry/api';
 
 jest.mock('@opentelemetry/api', () => ({
   trace: {
@@ -17,6 +17,18 @@ jest.mock('@/core/utils/trace-context', () => ({
   },
 }));
 
+// Define interface for the private method to avoid 'any'
+interface AbstractLogger {
+  formatMessage(
+    logLevel: string,
+    message: string,
+    pidMessage: string,
+    formattedLogLevel: string,
+    contextMessage: string,
+    timestampDiff: string,
+  ): string;
+}
+
 describe('CorrelationLoggerService', () => {
   let logger: CorrelationLoggerService;
 
@@ -32,7 +44,7 @@ describe('CorrelationLoggerService', () => {
 
     // Using protected method access for testing via cast or by calling a public method that uses it
     // In NestJS ConsoleLogger, we can test by calling 'log' and seeing the output or just test the formatMessage directly
-    const formatted = (logger as any).formatMessage(
+    const formatted = (logger as unknown as AbstractLogger).formatMessage(
       'log',
       'test message',
       'pid',
@@ -51,7 +63,7 @@ describe('CorrelationLoggerService', () => {
       traceId: 'otel-id-456',
     });
 
-    const formatted = (logger as any).formatMessage(
+    const formatted = (logger as unknown as AbstractLogger).formatMessage(
       'log',
       'test message',
       'pid',
@@ -68,7 +80,7 @@ describe('CorrelationLoggerService', () => {
     (TraceContext.getCorrelationId as jest.Mock).mockReturnValue(undefined);
     (trace.getSpanContext as jest.Mock).mockReturnValue(undefined);
 
-    const formatted = (logger as any).formatMessage(
+    const formatted = (logger as unknown as AbstractLogger).formatMessage(
       'log',
       'test message',
       'pid',

@@ -1,6 +1,6 @@
 import { CorrelationIdMiddleware } from './correlation-id.middleware';
 import { Request, Response, NextFunction } from 'express';
-import { trace, context } from '@opentelemetry/api';
+import { trace } from '@opentelemetry/api';
 import { TraceContext } from '@/core/utils/trace-context';
 
 jest.mock('@opentelemetry/api', () => ({
@@ -15,7 +15,7 @@ jest.mock('@opentelemetry/api', () => ({
 
 jest.mock('@/core/utils/trace-context', () => ({
   TraceContext: {
-    run: jest.fn((id, next) => next()),
+    run: jest.fn((id: string, next: () => unknown) => next()),
   },
 }));
 
@@ -40,14 +40,14 @@ describe('CorrelationIdMiddleware', () => {
 
     middleware.use(req as Request, res as Response, next);
 
-    expect(res.setHeader).toHaveBeenCalledWith(
+    const resMock = res as unknown as { setHeader: jest.Mock };
+    expect(resMock.setHeader).toHaveBeenCalledWith(
       'x-correlation-id',
       'otel-trace-id',
     );
-    expect(TraceContext.run).toHaveBeenCalledWith(
-      'otel-trace-id',
-      expect.any(Function),
-    );
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    const runSpy = TraceContext.run as jest.Mock;
+    expect(runSpy).toHaveBeenCalledWith('otel-trace-id', expect.any(Function));
   });
 
   it('should prefer x-correlation-id from request headers', () => {
@@ -58,11 +58,14 @@ describe('CorrelationIdMiddleware', () => {
 
     middleware.use(req as Request, res as Response, next);
 
-    expect(res.setHeader).toHaveBeenCalledWith(
+    const resMock = res as unknown as { setHeader: jest.Mock };
+    expect(resMock.setHeader).toHaveBeenCalledWith(
       'x-correlation-id',
       'custom-correlation-id',
     );
-    expect(TraceContext.run).toHaveBeenCalledWith(
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    const runSpy = TraceContext.run as jest.Mock;
+    expect(runSpy).toHaveBeenCalledWith(
       'custom-correlation-id',
       expect.any(Function),
     );
@@ -86,7 +89,8 @@ describe('CorrelationIdMiddleware', () => {
 
     middleware.use(req as Request, res as Response, next);
 
-    expect(res.setHeader).toHaveBeenCalledWith(
+    const resMock = res as unknown as { setHeader: jest.Mock };
+    expect(resMock.setHeader).toHaveBeenCalledWith(
       'x-correlation-id',
       'no-trace-id',
     );

@@ -19,7 +19,7 @@ describe('LoggingMiddleware', () => {
     } as Request;
 
     const res = {
-      on: jest.fn((event, callback) => {
+      on: jest.fn((event: string, callback: () => void) => {
         if (event === 'finish') {
           callback();
         }
@@ -32,6 +32,7 @@ describe('LoggingMiddleware', () => {
     middleware.use(req, res, next);
 
     expect(next).toHaveBeenCalled();
-    expect(res.on).toHaveBeenCalledWith('finish', expect.any(Function));
+    const resMock = res as unknown as { on: jest.Mock };
+    expect(resMock.on).toHaveBeenCalledWith('finish', expect.any(Function));
   });
 });

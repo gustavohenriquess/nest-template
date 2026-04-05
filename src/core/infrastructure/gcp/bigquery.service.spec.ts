@@ -1,5 +1,4 @@
 import { BigQueryService } from './bigquery.service';
-import { BigQuery } from '@google-cloud/bigquery';
 
 jest.mock('@google-cloud/bigquery', () => {
   return {
@@ -17,12 +16,21 @@ jest.mock('@google-cloud/bigquery', () => {
 
 describe('BigQueryService', () => {
   let service: BigQueryService;
-  let bigqueryMock: any;
+  let bigqueryMock: {
+    createDataset: jest.Mock;
+    dataset: jest.Mock;
+    query: jest.Mock;
+  };
   const projectId = 'test-project';
 
   beforeEach(() => {
     service = new BigQueryService(projectId);
-    bigqueryMock = (service as any).bigquery;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    bigqueryMock = (service as any).bigquery as {
+      createDataset: jest.Mock;
+      dataset: jest.Mock;
+      query: jest.Mock;
+    };
   });
 
   it('should be defined', () => {

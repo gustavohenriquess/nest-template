@@ -40,22 +40,34 @@ describe('HealthController', () => {
   });
 
   describe('handle', () => {
-    it('should return health status', async () => {
+    it('should return health status', () => {
       const mockResult = {
         healthCheck: {
           status: 'ok',
           timestamp: new Date(),
           details: 'all good',
+          memoryUsage: { heapTotal: 0, heapUsed: 0, rss: 0 },
+          cpuLoad: [0, 0, 0],
+          uptime: 0,
+          uptimeHuman: '0s',
+          nodeVersion: '18',
         },
       };
-      checkHealth.execute.mockResolvedValue(mockResult as any);
+      checkHealth.execute.mockReturnValue(
+        mockResult as unknown as ReturnType<CheckHealthUseCase['execute']>,
+      );
 
-      const result = await controller.handle();
+      const result = controller.handle();
 
       expect(result).toEqual({
         status: 'ok',
         timestamp: mockResult.healthCheck.timestamp,
         details: 'all good',
+        memoryUsage: { heapTotal: 0, heapUsed: 0, rss: 0 },
+        cpuLoad: [0, 0, 0],
+        uptime: 0,
+        uptimeHuman: '0s',
+        nodeVersion: '18',
       });
     });
   });
@@ -63,11 +75,14 @@ describe('HealthController', () => {
   describe('handleIntegrations', () => {
     it('should return integrations status', async () => {
       const mockResult = {
-        bigquery: { status: 'integrated' },
-        pubsub: { status: 'integrated', messageId: '123' },
-        prisma: { status: 'integrated' },
+        bigquery: { status: 'integrated', message: '' },
+        pubsub: { status: 'integrated', message: '123' },
+        storage: { status: 'integrated', message: '' },
+        prisma: { status: 'integrated', message: '' },
       };
-      checkIntegrations.execute.mockResolvedValue(mockResult as any);
+      checkIntegrations.execute.mockResolvedValue(
+        mockResult as unknown as never,
+      );
 
       const result = await controller.handleIntegrations();
 

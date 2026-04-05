@@ -20,13 +20,18 @@ describe('HealthController (e2e)', () => {
   });
 
   it('/health (GET)', () => {
-    return request(app.getHttpServer())
+    return request(app.getHttpServer() as never)
       .get('/health')
       .expect(200)
       .expect((res) => {
-        expect(res.body.status).toBe('ok');
-        expect(res.body).toHaveProperty('timestamp');
-        expect(res.body.details).toBe('Service is running correctly');
+        const body = res.body as {
+          status: string;
+          timestamp: string;
+          details: string;
+        };
+        expect(body.status).toBe('ok');
+        expect(body).toHaveProperty('timestamp');
+        expect(body.details).toBe('Service is running correctly');
       });
   });
 });
