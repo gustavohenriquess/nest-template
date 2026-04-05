@@ -36,3 +36,21 @@ Lista de melhorias planejadas para elevar o template para um padrão "Enterprise
   - [x] Testes unitários para filtros e interceptores globais.
   - [x] Testes de validação de schema de variáveis de ambiente.
   - [x] Testes de infraestrutura (Tracing, Context, Logger).
+- [ ] **Shield de Commit (Husky + Lint-staged)**
+  - Impedir commits que quebrem o Lint ou falhem nos testes.
+  - Otimizar rastro de build com verificações automáticas pré-commit.
+
+## 🛡️ Segurança & Resiliência
+- [ ] **Security Hardening (Helmet)**
+  - Configurar cabeçalhos HTTP seguros para mitigar vulnerabilidades comuns (XSS, Clickjacking).
+- [ ] **Controle de Origem (CORS)**
+  - Implementar política de CORS robusta para permitir apenas domínios autorizados.
+- [ ] **Rate Limiting (Controlador de Tráfego)**
+  - Implementar limite de requisições por IP/User para prevenir abusos e ataques DoS/Brute-force.
+
+## ⚡ Performance & Produção
+- [ ] **Logging de Alta Performance (Pino)**
+  - Migrar para o Pino para logging assíncrono e estruturado (JSON).
+  - Integrar o Correlation ID nativamente nos mixins do Pino.
+- [ ] **Otimização de Imagens Docker**
+  - Revisar imagens alpine e garantir usuários não-root para máxima segurança em cluster.
