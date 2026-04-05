@@ -6,6 +6,7 @@ import { HealthModule } from './health/health.module';
 import { LoggingMiddleware } from './core/infrastructure/middleware/logging.middleware';
 import { TransformInterceptor } from './core/interceptors/transform.interceptor';
 import { GlobalExceptionFilter } from './core/filters/global-exception.filter';
+import { CorrelationIdMiddleware } from './core/infrastructure/middleware/correlation-id.middleware';
 
 @Module({
   imports: [
@@ -28,6 +29,6 @@ import { GlobalExceptionFilter } from './core/filters/global-exception.filter';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggingMiddleware).forRoutes('*');
+    consumer.apply(LoggingMiddleware, CorrelationIdMiddleware).forRoutes('*');
   }
 }

@@ -15,7 +15,7 @@ Lista de melhorias planejadas para elevar o template para um padrão "Enterprise
   - [x] Envelopar sucessos em um padrão consistente (ex: `{ data: ... }`).
 
 ## 🔍 Observabilidade & Logs
-- [ ] **Correlation IDs (Trace + Log)**
+- [x] **Correlation IDs (Trace + Log)**
   - Injetar `traceId` nos logs emitidos pelo `Logger` do NestJS.
   - Facilitar a busca de logs no Grafana/Datadog via ID de rastreio.
 - [x] **Monitoramento de Resource Usage**
@@ -32,6 +32,7 @@ Lista de melhorias planejadas para elevar o template para um padrão "Enterprise
   - Habilitar watch mode dentro do container.
 
 ## 🧪 Qualidade & Testes
-- [ ] **Garantir 100% de Coverage nas Novas Funcionalidades**
-  - Testes unitários para filtros e interceptores globais.
-  - Testes de validação de schema de variáveis de ambiente.
+- [x] **Garantir 100% de Coverage nas Novas Funcionalidades**
+  - [x] Testes unitários para filtros e interceptores globais.
+  - [x] Testes de validação de schema de variáveis de ambiente.
+  - [x] Testes de infraestrutura (Tracing, Context, Logger).
