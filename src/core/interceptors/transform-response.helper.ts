@@ -2,9 +2,9 @@ export interface TransformResponse<T> {
   meta: {
     timestamp: string;
     path: string;
-    filters: any;
+    filters: unknown;
     count?: number;
-    [key: string]: any;
+    [key: string]: unknown;
   };
   data: T;
 }
@@ -12,10 +12,10 @@ export interface TransformResponse<T> {
 export function formatSuccessResponse<T>(
   data: T,
   path: string,
-  filters: any,
-  customMeta: Record<string, any> | undefined,
+  filters: unknown,
+  customMeta: Record<string, unknown> | undefined,
 ): TransformResponse<T> {
-  const meta: any = {
+  const meta: TransformResponse<T>['meta'] = {
     timestamp: new Date().toISOString(),
     path,
     filters,
@@ -27,7 +27,7 @@ export function formatSuccessResponse<T>(
   });
 
   if (Array.isArray(data)) {
-    meta.count = data.length;
+    meta.count = (data as unknown[]).length;
   }
 
   return { meta, data };

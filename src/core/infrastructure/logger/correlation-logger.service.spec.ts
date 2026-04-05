@@ -26,8 +26,10 @@ describe('CorrelationLoggerService', () => {
   });
 
   it('should include correlation ID from TraceContext in the log message', () => {
-    (TraceContext.getCorrelationId as jest.Mock).mockReturnValue('context-id-123');
-    
+    (TraceContext.getCorrelationId as jest.Mock).mockReturnValue(
+      'context-id-123',
+    );
+
     // Using protected method access for testing via cast or by calling a public method that uses it
     // In NestJS ConsoleLogger, we can test by calling 'log' and seeing the output or just test the formatMessage directly
     const formatted = (logger as any).formatMessage(
@@ -36,7 +38,7 @@ describe('CorrelationLoggerService', () => {
       'pid',
       'LOG',
       'Context',
-      'diff'
+      'diff',
     );
 
     expect(formatted).toContain('[context-id-123]');
@@ -45,7 +47,9 @@ describe('CorrelationLoggerService', () => {
 
   it('should fallback to OTEL traceId if TraceContext is NOT available', () => {
     (TraceContext.getCorrelationId as jest.Mock).mockReturnValue(undefined);
-    (trace.getSpanContext as jest.Mock).mockReturnValue({ traceId: 'otel-id-456' });
+    (trace.getSpanContext as jest.Mock).mockReturnValue({
+      traceId: 'otel-id-456',
+    });
 
     const formatted = (logger as any).formatMessage(
       'log',
@@ -53,7 +57,7 @@ describe('CorrelationLoggerService', () => {
       'pid',
       'LOG',
       'Context',
-      'diff'
+      'diff',
     );
 
     expect(formatted).toContain('[otel-id-456]');
@@ -70,7 +74,7 @@ describe('CorrelationLoggerService', () => {
       'pid',
       'LOG',
       'Context',
-      'diff'
+      'diff',
     );
 
     // Should not start with a bracketed ID, but can contain brackets later (e.g. [Nest])

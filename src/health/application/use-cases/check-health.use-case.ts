@@ -5,9 +5,10 @@ import { formatDuration } from '@/core/utils/format-duration.helper';
 
 @Injectable()
 export class CheckHealthUseCase {
-  async execute() {
+  execute() {
     const memory = process.memoryUsage();
-    const toMB = (bytes: number) => Math.round((bytes / 1024 / 1024) * 100) / 100;
+    const toMB = (bytes: number) =>
+      Math.round((bytes / 1024 / 1024) * 100) / 100;
 
     const uptime = Math.round(process.uptime());
 

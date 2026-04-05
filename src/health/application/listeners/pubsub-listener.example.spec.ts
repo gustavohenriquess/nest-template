@@ -3,80 +3,80 @@ import { PubSubListenerExample } from './pubsub-listener.example';
 import { PubSubService } from '@/core/infrastructure/gcp/pubsub.service';
 
 describe('PubSubListenerExample', () => {
-    let service: PubSubListenerExample;
-    let pubsubService: jest.Mocked<PubSubService>;
+  let service: PubSubListenerExample;
+  let pubsubService: jest.Mocked<PubSubService>;
 
-    beforeEach(async () => {
-        jest.useFakeTimers();
-        const module: TestingModule = await Test.createTestingModule({
-            providers: [
-                PubSubListenerExample,
-                {
-                    provide: PubSubService,
-                    useValue: {
-                        listenForMessages: jest.fn(),
-                    },
-                },
-            ],
-        }).compile();
+  beforeEach(async () => {
+    jest.useFakeTimers();
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        PubSubListenerExample,
+        {
+          provide: PubSubService,
+          useValue: {
+            listenForMessages: jest.fn(),
+          },
+        },
+      ],
+    }).compile();
 
-        service = module.get<PubSubListenerExample>(PubSubListenerExample);
-        pubsubService = module.get(PubSubService);
-    });
+    service = module.get<PubSubListenerExample>(PubSubListenerExample);
+    pubsubService = module.get(PubSubService);
+  });
 
-    afterEach(() => {
-        jest.useRealTimers();
-    });
+  afterEach(() => {
+    jest.useRealTimers();
+  });
 
-    it('should be defined', () => {
-        expect(service).toBeDefined();
-    });
+  it('should be defined', () => {
+    expect(service).toBeDefined();
+  });
 
-    it('should setup listener on module init (delayed)', () => {
-        service.onModuleInit();
+  it('should setup listener on module init (delayed)', () => {
+    service.onModuleInit();
 
-        // At this point it shouldn't have been called yet
-        expect(pubsubService.listenForMessages).not.toHaveBeenCalled();
+    // At this point it shouldn't have been called yet
+    expect(pubsubService.listenForMessages).not.toHaveBeenCalled();
 
-        // Advance timers
-        jest.advanceTimersByTime(1100);
+    // Advance timers
+    jest.advanceTimersByTime(1100);
 
-        expect(pubsubService.listenForMessages).toHaveBeenCalledWith(
-            'health-check-subscription',
-            expect.any(Function),
-        );
-    });
+    expect(pubsubService.listenForMessages).toHaveBeenCalledWith(
+      'health-check-subscription',
+      expect.any(Function),
+    );
+  });
 
-    it('should handle incoming message correctly', () => {
-        service.onModuleInit();
-        jest.advanceTimersByTime(1100);
+  it('should handle incoming message correctly', () => {
+    service.onModuleInit();
+    jest.advanceTimersByTime(1100);
 
-        const handler = pubsubService.listenForMessages.mock.calls[0][1];
+    const handler = pubsubService.listenForMessages.mock.calls[0][1];
 
-        const mockData = { test: 'data' };
-        const mockMessage = {
-            data: Buffer.from(JSON.stringify(mockData)),
-            ack: jest.fn(),
-        };
+    const mockData = { test: 'data' };
+    const mockMessage = {
+      data: Buffer.from(JSON.stringify(mockData)),
+      ack: jest.fn(),
+    };
 
-        handler(mockMessage as any);
+    handler(mockMessage as any);
 
-        expect(mockMessage.ack).toHaveBeenCalled();
-    });
+    expect(mockMessage.ack).toHaveBeenCalled();
+  });
 
-    it('should handle malformed message gracefully', () => {
-        service.onModuleInit();
-        jest.advanceTimersByTime(1100);
+  it('should handle malformed message gracefully', () => {
+    service.onModuleInit();
+    jest.advanceTimersByTime(1100);
 
-        const handler = pubsubService.listenForMessages.mock.calls[0][1];
+    const handler = pubsubService.listenForMessages.mock.calls[0][1];
 
-        const mockMessage = {
-            data: Buffer.from('invalid-json'),
-            ack: jest.fn(),
-        };
+    const mockMessage = {
+      data: Buffer.from('invalid-json'),
+      ack: jest.fn(),
+    };
 
-        handler(mockMessage as any);
+    handler(mockMessage as any);
 
-        expect(mockMessage.ack).toHaveBeenCalled();
-    });
+    expect(mockMessage.ack).toHaveBeenCalled();
+  });
 });

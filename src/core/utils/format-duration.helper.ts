@@ -1,6 +1,6 @@
 /**
  * Formats a duration in seconds into a human-readable string (Years, Months, Days, Hours, Minutes, Seconds).
- * 
+ *
  * @param seconds The duration in seconds.
  * @returns A human-readable string representation of the duration.
  */
@@ -11,16 +11,16 @@ export function formatDuration(seconds: number): string {
   let remaining = seconds;
 
   const years = Math.floor(remaining / (365 * 24 * 60 * 60));
-  remaining %= (365 * 24 * 60 * 60);
+  remaining %= 365 * 24 * 60 * 60;
 
   const months = Math.floor(remaining / (30 * 24 * 60 * 60));
-  remaining %= (30 * 24 * 60 * 60);
+  remaining %= 30 * 24 * 60 * 60;
 
   const days = Math.floor(remaining / (24 * 60 * 60));
-  remaining %= (24 * 60 * 60);
+  remaining %= 24 * 60 * 60;
 
   const hours = Math.floor(remaining / (60 * 60));
-  remaining %= (60 * 60);
+  remaining %= 60 * 60;
 
   const minutes = Math.floor(remaining / 60);
   remaining %= 60;

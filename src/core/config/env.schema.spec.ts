@@ -21,7 +21,7 @@ describe('envSchema', () => {
   it('should use default values', () => {
     const configWithoutPort = { ...validConfig };
     delete (configWithoutPort as any).PORT;
-    
+
     const result = validate(configWithoutPort);
     expect(result.PORT).toBe(3000);
     expect(result.OTEL_SERVICE_NAME).toBe('nest-template');
@@ -35,9 +35,9 @@ describe('envSchema', () => {
   });
 
   it('should throw error on invalid URLs', () => {
-    const invalidConfig = { 
+    const invalidConfig = {
       ...validConfig,
-      DATABASE_URL: 'not-a-url' 
+      DATABASE_URL: 'not-a-url',
     };
 
     expect(() => validate(invalidConfig)).toThrow('Config validation error');
@@ -46,7 +46,7 @@ describe('envSchema', () => {
   it('should coerce string port to number', () => {
     const result = validate({
       ...validConfig,
-      PORT: '5000'
+      PORT: '5000',
     });
     expect(result.PORT).toBe(5000);
   });

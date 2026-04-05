@@ -14,7 +14,7 @@ export class CorrelationLoggerService extends ConsoleLogger {
   ): string {
     const spanContext = trace.getSpanContext(context.active());
     const otelId = spanContext?.traceId;
-    
+
     // Prioritize Context Storage or fallback to OTEL
     const traceId = TraceContext.getCorrelationId() || otelId;
 

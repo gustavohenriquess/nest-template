@@ -46,9 +46,9 @@ describe('TransformInterceptor', () => {
       switchToHttp: jest.fn().mockReturnThis(),
       getHandler: jest.fn(),
       getClass: jest.fn(),
-      getRequest: jest.fn().mockReturnValue({ 
+      getRequest: jest.fn().mockReturnValue({
         url: '/test-path',
-        query: { search: 'term' } 
+        query: { search: 'term' },
       }),
     } as any;
     callHandler = {
@@ -70,7 +70,7 @@ describe('TransformInterceptor', () => {
         data: 'test-data',
         meta: {
           path: '/test-path',
-          filters: { search: 'term' }
+          filters: { search: 'term' },
         },
       });
       done();

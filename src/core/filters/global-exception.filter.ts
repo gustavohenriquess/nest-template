@@ -27,16 +27,20 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
     let code = 'INTERNAL_SERVER_ERROR';
     let message = 'An unexpected error occurred';
-    let details: any = null;
+    let details: unknown = null;
 
     if (exception instanceof HttpException) {
       status = exception.getStatus();
       const res = exception.getResponse();
 
-      if (typeof res === 'object') {
-        code = (res as any).error || (res as any).message || 'HTTP_EXCEPTION';
-        message = (res as any).message || exception.message;
-        details = (res as any).details || null;
+      if (typeof res === 'object' && res !== null) {
+        const responseObj = res as Record<string, unknown>;
+        code =
+          (responseObj.error as string) ||
+          (responseObj.message as string) ||
+          'HTTP_EXCEPTION';
+        message = (responseObj.message as string) || exception.message;
+        details = responseObj.details || null;
       } else {
         message = res;
         code = exception.name.replace('Exception', '').toUpperCase();
@@ -56,7 +60,9 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         exception instanceof Error ? exception.stack : undefined,
       );
     } else {
-      this.logger.warn(`${request.method} ${request.url} ${status} - ${message}`);
+      this.logger.warn(
+        `${request.method} ${request.url} ${status} - ${message}`,
+      );
     }
 
     response.status(status).json({

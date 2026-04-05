@@ -8,9 +8,10 @@ export class CorrelationIdMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
     const spanContext = trace.getSpanContext(context.active());
     const otelId = spanContext?.traceId;
-    
+
     // Accept external correlation ID or fallback to OTEL trace ID
-    const correlationId = (req.headers['x-correlation-id'] as string) || otelId || 'no-trace-id';
+    const correlationId =
+      (req.headers['x-correlation-id'] as string) || otelId || 'no-trace-id';
 
     res.setHeader('x-correlation-id', correlationId);
 

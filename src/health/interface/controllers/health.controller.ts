@@ -1,10 +1,10 @@
 /* istanbul ignore file */
 import { Controller, Get } from '@nestjs/common';
-import { 
-  ApiTags, 
-  ApiOperation, 
-  ApiResponse, 
-  ApiExtraModels 
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiExtraModels,
 } from '@nestjs/swagger';
 import { CheckHealthUseCase } from '../../application/use-cases/check-health.use-case';
 import { CheckIntegrationsUseCase } from '../../application/use-cases/check-integrations.use-case';
@@ -22,15 +22,15 @@ export class HealthController {
 
   @Get()
   @ApiOperation({ summary: 'Check basic system health' })
-  @ApiResponse({ 
-    status: 200, 
+  @ApiResponse({
+    status: 200,
     description: 'System is healthy',
-    type: BaseResponseDto
+    type: BaseResponseDto,
   })
-  @ApiResponse({ 
-    status: 500, 
+  @ApiResponse({
+    status: 500,
     description: 'System is unhealthy',
-    type: ErrorResponseDto 
+    type: ErrorResponseDto,
   })
   @ResponseMeta({ module: 'health', severity: 'low' })
   async handle() {
@@ -50,15 +50,15 @@ export class HealthController {
 
   @Get('integrations')
   @ApiOperation({ summary: 'Check health of all integrations (DB, GCP, etc.)' })
-  @ApiResponse({ 
-    status: 200, 
+  @ApiResponse({
+    status: 200,
     description: 'All integrations are healthy',
-    type: BaseResponseDto
+    type: BaseResponseDto,
   })
-  @ApiResponse({ 
-    status: 503, 
+  @ApiResponse({
+    status: 503,
     description: 'One or more integrations are unhealthy',
-    type: ErrorResponseDto
+    type: ErrorResponseDto,
   })
   @ResponseMeta({ module: 'health', severity: 'high' })
   async handleIntegrations() {

@@ -17,40 +17,40 @@ export interface HealthCheckProps {
 }
 
 export class HealthCheck extends Entity<HealthCheckProps> {
-    get status() {
-        return this.props.status;
-    }
+  get status() {
+    return this.props.status;
+  }
 
-    get timestamp() {
-        return this.props.timestamp;
-    }
+  get timestamp() {
+    return this.props.timestamp;
+  }
 
-    get details() {
-        return this.props.details;
-    }
+  get details() {
+    return this.props.details;
+  }
 
-    get memoryUsage() {
-      return this.props.memoryUsage;
-    }
+  get memoryUsage() {
+    return this.props.memoryUsage;
+  }
 
-    get cpuLoad() {
-      return this.props.cpuLoad;
-    }
+  get cpuLoad() {
+    return this.props.cpuLoad;
+  }
 
-    get uptime() {
-      return this.props.uptime;
-    }
+  get uptime() {
+    return this.props.uptime;
+  }
 
-    get uptimeHuman() {
-      return this.props.uptimeHuman;
-    }
+  get uptimeHuman() {
+    return this.props.uptimeHuman;
+  }
 
-    get nodeVersion() {
-      return this.props.nodeVersion;
-    }
+  get nodeVersion() {
+    return this.props.nodeVersion;
+  }
 
-    static create(props: HealthCheckProps, id?: UniqueEntityId) {
-        const healthCheck = new HealthCheck(props, id);
-        return healthCheck;
-    }
+  static create(props: HealthCheckProps, id?: UniqueEntityId) {
+    const healthCheck = new HealthCheck(props, id);
+    return healthCheck;
+  }
 }

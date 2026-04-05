@@ -34,22 +34,38 @@ describe('CorrelationIdMiddleware', () => {
   });
 
   it('should use traceId from OTEL span context if available', () => {
-    (trace.getSpanContext as jest.Mock).mockReturnValue({ traceId: 'otel-trace-id' });
-    
+    (trace.getSpanContext as jest.Mock).mockReturnValue({
+      traceId: 'otel-trace-id',
+    });
+
     middleware.use(req as Request, res as Response, next);
 
-    expect(res.setHeader).toHaveBeenCalledWith('x-correlation-id', 'otel-trace-id');
-    expect(TraceContext.run).toHaveBeenCalledWith('otel-trace-id', expect.any(Function));
+    expect(res.setHeader).toHaveBeenCalledWith(
+      'x-correlation-id',
+      'otel-trace-id',
+    );
+    expect(TraceContext.run).toHaveBeenCalledWith(
+      'otel-trace-id',
+      expect.any(Function),
+    );
   });
 
   it('should prefer x-correlation-id from request headers', () => {
-    (trace.getSpanContext as jest.Mock).mockReturnValue({ traceId: 'otel-trace-id' });
+    (trace.getSpanContext as jest.Mock).mockReturnValue({
+      traceId: 'otel-trace-id',
+    });
     req.headers = { 'x-correlation-id': 'custom-correlation-id' };
-    
+
     middleware.use(req as Request, res as Response, next);
 
-    expect(res.setHeader).toHaveBeenCalledWith('x-correlation-id', 'custom-correlation-id');
-    expect(TraceContext.run).toHaveBeenCalledWith('custom-correlation-id', expect.any(Function));
+    expect(res.setHeader).toHaveBeenCalledWith(
+      'x-correlation-id',
+      'custom-correlation-id',
+    );
+    expect(TraceContext.run).toHaveBeenCalledWith(
+      'custom-correlation-id',
+      expect.any(Function),
+    );
   });
 
   it('should set correlation.id attribute on active span', () => {
@@ -59,14 +75,20 @@ describe('CorrelationIdMiddleware', () => {
 
     middleware.use(req as Request, res as Response, next);
 
-    expect(mockSpan.setAttribute).toHaveBeenCalledWith('correlation.id', 'otel-id');
+    expect(mockSpan.setAttribute).toHaveBeenCalledWith(
+      'correlation.id',
+      'otel-id',
+    );
   });
 
   it('should fallback to "no-trace-id" if no ID is found', () => {
     (trace.getSpanContext as jest.Mock).mockReturnValue(undefined);
-    
+
     middleware.use(req as Request, res as Response, next);
 
-    expect(res.setHeader).toHaveBeenCalledWith('x-correlation-id', 'no-trace-id');
+    expect(res.setHeader).toHaveBeenCalledWith(
+      'x-correlation-id',
+      'no-trace-id',
+    );
   });
 });

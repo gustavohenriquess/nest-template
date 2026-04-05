@@ -7,17 +7,20 @@ import {
   Inject,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { Request } from 'express';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { RESPONSE_META_KEY } from '../decorators/response-meta.decorator';
-import { 
-  formatSuccessResponse, 
-  TransformResponse 
+import {
+  formatSuccessResponse,
+  TransformResponse,
 } from './transform-response.helper';
 
 @Injectable()
-export class TransformInterceptor<T>
-  implements NestInterceptor<T, TransformResponse<T>> {
+export class TransformInterceptor<T> implements NestInterceptor<
+  T,
+  TransformResponse<T>
+> {
   @Inject(Reflector)
   private readonly reflector: Reflector;
 
@@ -29,19 +32,18 @@ export class TransformInterceptor<T>
       return next.handle();
     }
 
-    const request = context.switchToHttp().getRequest();
-    const customMeta = this.reflector.getAllAndOverride<Record<string, any>>(
-      RESPONSE_META_KEY,
-      [context.getHandler(), context.getClass()],
-    );
+    const http = context.switchToHttp();
+    const request = http.getRequest<Request>();
+    const customMeta = this.reflector.getAllAndOverride<
+      Record<string, unknown>
+    >(RESPONSE_META_KEY, [context.getHandler(), context.getClass()]);
 
-    return next.handle().pipe(
-      map((data) => formatSuccessResponse(
-        data, 
-        request.url, 
-        request.query, 
-        customMeta
-      )),
-    );
+    return next
+      .handle()
+      .pipe(
+        map((data: T) =>
+          formatSuccessResponse(data, request.url, request.query, customMeta),
+        ),
+      );
   }
 }

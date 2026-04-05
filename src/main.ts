@@ -7,7 +7,7 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   // Start the OpenTelemetry SDK
-  await otelSDK.start();
+  otelSDK.start();
 
   process.on('unhandledRejection', (reason, promise) => {
     console.error('Unhandled Rejection at:', promise, 'reason:', reason);
@@ -25,7 +25,9 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('NestJS Enterprise Template')
-    .setDescription('API documentation for the enterprise-ready NestJS template.')
+    .setDescription(
+      'API documentation for the enterprise-ready NestJS template.',
+    )
     .setVersion('1.0')
     .addTag('Health', 'System health and integration monitoring')
     .build();
@@ -39,4 +41,4 @@ async function bootstrap() {
 
   await app.listen(process.env.PORT ?? 3000);
 }
-bootstrap();
+void bootstrap();
