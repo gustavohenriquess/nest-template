@@ -36,7 +36,7 @@ Lista de melhorias planejadas para elevar o template para um padrão "Enterprise
   - [x] Testes unitários para filtros e interceptores globais.
   - [x] Testes de validação de schema de variáveis de ambiente.
   - [x] Testes de infraestrutura (Tracing, Context, Logger).
-- [ ] **Shield de Commit (Husky + Lint-staged)**
+- [x] **Shield de Commit (Husky + Lint-staged)**
   - Impedir commits que quebrem o Lint ou falhem nos testes.
   - Otimizar rastro de build com verificações automáticas pré-commit.
 
