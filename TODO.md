@@ -41,7 +41,7 @@ Lista de melhorias planejadas para elevar o template para um padrão "Enterprise
   - Otimizar rastro de build com verificações automáticas pré-commit.
 
 ## 🛡️ Segurança & Resiliência
-- [ ] **Security Hardening (Helmet)**
+- [x] **Security Hardening (Helmet)**
   - Configurar cabeçalhos HTTP seguros para mitigar vulnerabilidades comuns (XSS, Clickjacking).
 - [ ] **Controle de Origem (CORS)**
   - Implementar política de CORS robusta para permitir apenas domínios autorizados.

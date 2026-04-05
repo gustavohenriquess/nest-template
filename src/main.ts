@@ -1,6 +1,7 @@
 import { otelSDK } from './tracing';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import helmet from 'helmet';
 import { CorrelationLoggerService } from './core/infrastructure/logger/correlation-logger.service';
 import { AppModule } from './app.module';
 
@@ -19,6 +20,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: new CorrelationLoggerService(),
   });
+
+  app.use(helmet());
 
   const config = new DocumentBuilder()
     .setTitle('NestJS Enterprise Template')
