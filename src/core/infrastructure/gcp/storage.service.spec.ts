@@ -63,6 +63,12 @@ describe('StorageService', () => {
 
       await expect(service.listBuckets()).rejects.toThrow(error);
     });
+
+    it('should throw handled string error if listing fails', async () => {
+      storageMock.getBuckets.mockRejectedValue('String error');
+
+      await expect(service.listBuckets()).rejects.toBe('String error');
+    });
   });
 
   describe('uploadFile', () => {
@@ -94,6 +100,19 @@ describe('StorageService', () => {
         service.uploadFile(bucketName, fileName, buffer),
       ).rejects.toThrow(error);
     });
+
+    it('should throw handled string error if upload fails', async () => {
+      const bucketName = 'test-bucket';
+      const fileName = 'test.txt';
+      const buffer = Buffer.from('hello');
+      const fileMock = { save: jest.fn().mockRejectedValue('String error') };
+      const bucketMock = { file: jest.fn().mockReturnValue(fileMock) };
+      storageMock.bucket.mockReturnValue(bucketMock);
+
+      await expect(
+        service.uploadFile(bucketName, fileName, buffer),
+      ).rejects.toBe('String error');
+    });
   });
 
   describe('downloadFile', () => {
@@ -124,6 +143,20 @@ describe('StorageService', () => {
         error,
       );
     });
+
+    it('should throw handled string error if download fails', async () => {
+      const bucketName = 'test-bucket';
+      const fileName = 'test.txt';
+      const fileMock = {
+        download: jest.fn().mockRejectedValue('String error'),
+      };
+      const bucketMock = { file: jest.fn().mockReturnValue(fileMock) };
+      storageMock.bucket.mockReturnValue(bucketMock);
+
+      await expect(service.downloadFile(bucketName, fileName)).rejects.toBe(
+        'String error',
+      );
+    });
   });
 
   describe('deleteFile', () => {
@@ -151,6 +184,18 @@ describe('StorageService', () => {
 
       await expect(service.deleteFile(bucketName, fileName)).rejects.toThrow(
         error,
+      );
+    });
+
+    it('should throw handled string error if deletion fails', async () => {
+      const bucketName = 'test-bucket';
+      const fileName = 'test.txt';
+      const fileMock = { delete: jest.fn().mockRejectedValue('String error') };
+      const bucketMock = { file: jest.fn().mockReturnValue(fileMock) };
+      storageMock.bucket.mockReturnValue(bucketMock);
+
+      await expect(service.deleteFile(bucketName, fileName)).rejects.toBe(
+        'String error',
       );
     });
   });

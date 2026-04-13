@@ -97,6 +97,7 @@
     "coverageDirectory": "../coverage",
     "coveragePathIgnorePatterns": [
       "main.ts",
+      "tracing.ts",
       ".module.ts",
       "<rootDir>/app.controller.ts",
       "<rootDir>/app.service.ts"

@@ -56,6 +56,15 @@ describe('BigQueryService', () => {
 
       await expect(service.createDataset(datasetId)).rejects.toThrow(error);
     });
+
+    it('should throw handled string error if creation fails', async () => {
+      const datasetId = 'test-dataset';
+      bigqueryMock.createDataset.mockRejectedValue('String error');
+
+      await expect(service.createDataset(datasetId)).rejects.toBe(
+        'String error',
+      );
+    });
   });
 
   describe('getDataset', () => {
@@ -90,6 +99,13 @@ describe('BigQueryService', () => {
 
       await expect(service.query(sql)).rejects.toThrow(error);
     });
+
+    it('should throw handled string error if query fails', async () => {
+      const sql = 'SELECT * FROM table';
+      bigqueryMock.query.mockRejectedValue('String error');
+
+      await expect(service.query(sql)).rejects.toBe('String error');
+    });
   });
 
   describe('insertRows', () => {
@@ -120,6 +136,19 @@ describe('BigQueryService', () => {
       await expect(
         service.insertRows(datasetId, tableId, rows),
       ).rejects.toThrow(error);
+    });
+
+    it('should throw handled string error if insertion fails', async () => {
+      const datasetId = 'test-dataset';
+      const tableId = 'test-table';
+      const rows = [{ id: 1 }];
+      const tableMock = { insert: jest.fn().mockRejectedValue('String error') };
+      const datasetMock = { table: jest.fn().mockReturnValue(tableMock) };
+      bigqueryMock.dataset.mockReturnValue(datasetMock);
+
+      await expect(service.insertRows(datasetId, tableId, rows)).rejects.toBe(
+        'String error',
+      );
     });
   });
 });

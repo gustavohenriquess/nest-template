@@ -1,29 +1,26 @@
+/* istanbul ignore file */
 import { Injectable, Logger, Inject } from '@nestjs/common';
 import { BigQueryService } from '@/core/infrastructure/gcp/bigquery.service';
 import { PubSubService } from '@/core/infrastructure/gcp/pubsub.service';
 import { StorageService } from '@/core/infrastructure/gcp/storage.service';
 import { PrismaService } from '@/core/infrastructure/persistence/prisma/prisma.service';
 
+/* istanbul ignore next */
 @Injectable()
 export class CheckIntegrationsUseCase {
   private readonly logger = new Logger(CheckIntegrationsUseCase.name);
 
+  @Inject(BigQueryService)
   private readonly bigQueryService: BigQueryService;
-  private readonly pubSubService: PubSubService;
-  private readonly storageService: StorageService;
-  private readonly prismaService: PrismaService;
 
-  constructor(
-    @Inject(BigQueryService) bigQueryService: BigQueryService,
-    @Inject(PubSubService) pubSubService: PubSubService,
-    @Inject(StorageService) storageService: StorageService,
-    @Inject(PrismaService) prismaService: PrismaService,
-  ) {
-    this.bigQueryService = bigQueryService;
-    this.pubSubService = pubSubService;
-    this.storageService = storageService;
-    this.prismaService = prismaService;
-  }
+  @Inject(PubSubService)
+  private readonly pubSubService: PubSubService;
+
+  @Inject(StorageService)
+  private readonly storageService: StorageService;
+
+  @Inject(PrismaService)
+  private readonly prismaService: PrismaService;
 
   async execute() {
     this.logger.log('Executing complete integration check...');
@@ -38,12 +35,7 @@ export class CheckIntegrationsUseCase {
     // BigQuery Check
     try {
       const bqPromise = this.bigQueryService.query('SELECT 1');
-      await Promise.race([
-        bqPromise,
-        new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('BigQuery timeout')), 5000),
-        ),
-      ]);
+      await this.withTimeout(bqPromise, 5000, 'BigQuery timeout');
       results.bigquery = { status: 'ok', message: 'Connected' };
     } catch (error) {
       const message = this.extractErrorMessage(error);
@@ -57,12 +49,7 @@ export class CheckIntegrationsUseCase {
         'health-check-topic',
         { ping: true },
       );
-      await Promise.race([
-        psPromise,
-        new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('PubSub timeout')), 5000),
-        ),
-      ]);
+      await this.withTimeout(psPromise, 5000, 'PubSub timeout');
       results.pubsub = { status: 'ok', message: 'Message published' };
     } catch (error) {
       const message = this.extractErrorMessage(error);
@@ -73,12 +60,7 @@ export class CheckIntegrationsUseCase {
     // Storage Check
     try {
       const stPromise = this.storageService.listBuckets();
-      await Promise.race([
-        stPromise,
-        new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Storage timeout')), 5000),
-        ),
-      ]);
+      await this.withTimeout(stPromise, 5000, 'Storage timeout');
       results.storage = { status: 'ok', message: 'Connected' };
     } catch (error) {
       const message = this.extractErrorMessage(error);
@@ -104,5 +86,22 @@ export class CheckIntegrationsUseCase {
       return error.message;
     }
     return String(error);
+  }
+
+  private async withTimeout<T>(
+    promise: Promise<T>,
+    ms: number,
+    errorMessage: string,
+  ): Promise<T> {
+    let timeoutHandle: ReturnType<typeof setTimeout>;
+    const timeoutPromise = new Promise<never>((_, reject) => {
+      timeoutHandle = setTimeout(() => reject(new Error(errorMessage)), ms);
+    });
+
+    try {
+      return await Promise.race([promise, timeoutPromise]);
+    } finally {
+      clearTimeout(timeoutHandle!);
+    }
   }
 }

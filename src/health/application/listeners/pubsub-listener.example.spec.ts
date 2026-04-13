@@ -79,8 +79,14 @@ describe('PubSubListenerExample', () => {
       ack: jest.fn(),
     };
 
+    const consoleSpy = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+
     handler(mockMessage as unknown as Message);
 
     expect(mockMessage.ack).toHaveBeenCalled();
+
+    consoleSpy.mockRestore();
   });
 });

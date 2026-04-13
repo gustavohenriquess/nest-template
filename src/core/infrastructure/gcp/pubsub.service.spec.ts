@@ -66,6 +66,18 @@ describe('PubSubService', () => {
         error,
       );
     });
+
+    it('should throw handled string error if publishing fails', async () => {
+      const topicName = 'test-topic';
+      const topicMock = {
+        publishMessage: jest.fn().mockRejectedValue('String error'),
+      };
+      pubsubMock.topic.mockReturnValue(topicMock);
+
+      await expect(service.publishMessage(topicName, {})).rejects.toBe(
+        'String error',
+      );
+    });
   });
 
   describe('createTopic', () => {
@@ -86,6 +98,13 @@ describe('PubSubService', () => {
       pubsubMock.createTopic.mockRejectedValue(error);
 
       await expect(service.createTopic(topicName)).rejects.toThrow(error);
+    });
+
+    it('should throw handled string error if creation fails', async () => {
+      const topicName = 'test-topic';
+      pubsubMock.createTopic.mockRejectedValue('String error');
+
+      await expect(service.createTopic(topicName)).rejects.toBe('String error');
     });
   });
 
@@ -124,9 +143,10 @@ describe('PubSubService', () => {
       const errorHandler = (
         subscriptionMock.on.mock.calls.find(
           (call: unknown[]) => call[0] === 'error',
-        ) as [string, (err: Error) => void]
+        ) as [string, (err: unknown) => void]
       )[1];
       errorHandler(new Error('error'));
+      errorHandler('string error');
     });
 
     it('should handle error if setup fails', async () => {
@@ -134,6 +154,18 @@ describe('PubSubService', () => {
       const error = new Error('Setup failed');
       pubsubMock.subscription.mockImplementation(() => {
         throw error;
+      });
+
+      await service.listenForMessages(subscriptionName, jest.fn());
+
+      expect(pubsubMock.subscription).toHaveBeenCalledWith(subscriptionName);
+    });
+
+    it('should handle string error if setup fails', async () => {
+      const subscriptionName = 'test-sub';
+      pubsubMock.subscription.mockImplementation(() => {
+        // eslint-disable-next-line @typescript-eslint/only-throw-error
+        throw 'String error setup failed';
       });
 
       await service.listenForMessages(subscriptionName, jest.fn());
