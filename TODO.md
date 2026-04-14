@@ -43,7 +43,7 @@ Lista de melhorias planejadas para elevar o template para um padrão "Enterprise
 ## 🛡️ Segurança & Resiliência
 - [x] **Security Hardening (Helmet)**
   - Configurar cabeçalhos HTTP seguros para mitigar vulnerabilidades comuns (XSS, Clickjacking).
-- [ ] **Controle de Origem (CORS)**
+- [x] **Controle de Origem (CORS)**
   - Implementar política de CORS robusta para permitir apenas domínios autorizados.
 - [ ] **Rate Limiting (Controlador de Tráfego)**
   - Implementar limite de requisições por IP/User para prevenir abusos e ataques DoS/Brute-force.

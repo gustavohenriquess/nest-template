@@ -2,6 +2,7 @@ import { otelSDK } from './tracing';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import helmet from 'helmet';
+import { ConfigService } from '@nestjs/config';
 import { CorrelationLoggerService } from './core/infrastructure/logger/correlation-logger.service';
 import { AppModule } from './app.module';
 
@@ -19,6 +20,19 @@ async function bootstrap() {
 
   const app = await NestFactory.create(AppModule, {
     logger: new CorrelationLoggerService(),
+  });
+
+  const configService = app.get(ConfigService);
+  const allowedOriginsStr = configService.get<string>('ALLOWED_ORIGINS') || '*';
+  const allowedOrigins =
+    allowedOriginsStr === '*'
+      ? '*'
+      : allowedOriginsStr.split(',').map((o) => o.trim());
+
+  app.enableCors({
+    origin: allowedOrigins,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
   });
 
   app.use(helmet());

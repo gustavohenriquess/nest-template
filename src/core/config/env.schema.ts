@@ -3,6 +3,9 @@ import { z } from 'zod';
 export const envSchema = z.object({
   PORT: z.coerce.number().default(3000),
 
+  // CORS Configuration
+  ALLOWED_ORIGINS: z.string().default('*'),
+
   // GCP Configuration
   GCP_PRIMARY_PROJECT_ID: z.string(),
   GCP_PROJECT_A_ID: z.string().optional(),
