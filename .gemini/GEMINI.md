@@ -106,3 +106,10 @@ Ao criar novos módulos (ex: `payments`):
 2. **Contexto**: Usar Gemini para ler arquivos e entender a lógica.
 3. **README**: Gerar `README.md` detalhando funcionalidades e regras de negócio das entidades.
 4. **API**: Documentar rigorosamente payloads e responses para facilitar integração e testes.
+
+## 7. Ações a serem feitas
+Sempre que for fazer uma alteração que possa impactar o funcionamento do projeto, rodar:
+- `npm run lint` para corrigir os erros.
+- `npm run test` para verificar se tudo está funcionando corretamente.
+- `npm run test:cov` para verificar se tudo está coberto pelos testes.
+- `npm run build` para verificar se tudo está funcionando corretamente.
