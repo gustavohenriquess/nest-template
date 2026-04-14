@@ -1,6 +1,7 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { APP_INTERCEPTOR, APP_FILTER } from '@nestjs/core';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_INTERCEPTOR, APP_FILTER, APP_GUARD } from '@nestjs/core';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { validate } from './core/config/env.schema';
 import { HealthModule } from './health/health.module';
 import { LoggingMiddleware } from './core/infrastructure/middleware/logging.middleware';
@@ -14,9 +15,23 @@ import { CorrelationIdMiddleware } from './core/infrastructure/middleware/correl
       validate,
       isGlobal: true,
     }),
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => [
+        {
+          ttl: config.get<number>('THROTTLE_TTL') ?? 60000,
+          limit: config.get<number>('THROTTLE_LIMIT') ?? 100,
+        },
+      ],
+    }),
     HealthModule,
   ],
   providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
     {
       provide: APP_INTERCEPTOR,
       useClass: TransformInterceptor,

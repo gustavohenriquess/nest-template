@@ -6,6 +6,10 @@ export const envSchema = z.object({
   // CORS Configuration
   ALLOWED_ORIGINS: z.string().default('*'),
 
+  // Rate Limiting (Throttler)
+  THROTTLE_TTL: z.coerce.number().default(60000), // ms
+  THROTTLE_LIMIT: z.coerce.number().default(100),
+
   // GCP Configuration
   GCP_PRIMARY_PROJECT_ID: z.string(),
   GCP_PROJECT_A_ID: z.string().optional(),
