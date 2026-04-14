@@ -86,6 +86,9 @@ Centralizado e seguro via Injeção de Dependência.
 ### 4.3. Infraestrutura (GCP)
 Serviços dedicados para interagir com Cloud Storage e BigQuery de forma encapsulada.
 
+### 4.4 Lint
+-   Sempre que for fazer uma alteração que possa quebrar o lint, rodar o comando `npm run lint` para corrigir os erros.
+
 ---
 
 ## 5. Padrões de Commit (Commitlint)
