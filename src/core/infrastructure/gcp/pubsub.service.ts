@@ -20,7 +20,11 @@ export class PubSubService {
       return messageId;
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      this.logger.error(`Error publishing message to ${topicName}:`, message);
+      const stack = error instanceof Error ? error.stack : undefined;
+      this.logger.error(
+        `Error publishing message to ${topicName}: ${message}`,
+        stack,
+      );
       throw error;
     }
   }
@@ -32,7 +36,8 @@ export class PubSubService {
       return topic;
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      this.logger.error(`Error creating topic ${topicName}:`, message);
+      const stack = error instanceof Error ? error.stack : undefined;
+      this.logger.error(`Error creating topic ${topicName}: ${message}`, stack);
       throw error;
     }
   }
@@ -53,9 +58,10 @@ export class PubSubService {
 
       subscription.on('error', (error) => {
         const message = error instanceof Error ? error.message : String(error);
+        const stack = error instanceof Error ? error.stack : undefined;
         this.logger.error(
-          `Received error from subscription ${subscriptionName}:`,
-          message,
+          `Received error from subscription ${subscriptionName}: ${message}`,
+          stack,
         );
       });
 
@@ -64,9 +70,10 @@ export class PubSubService {
       );
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
+      const stack = error instanceof Error ? error.stack : undefined;
       this.logger.error(
-        `Failed to initialize listener for ${subscriptionName}:`,
-        message,
+        `Failed to initialize listener for ${subscriptionName}: ${message}`,
+        stack,
       );
     }
   }

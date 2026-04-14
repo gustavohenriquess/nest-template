@@ -20,7 +20,8 @@ export class StorageService {
       return buckets;
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      this.logger.error(`Error listing buckets:`, message);
+      const stack = error instanceof Error ? error.stack : undefined;
+      this.logger.error(`Error listing buckets: ${message}`, stack);
       throw error;
     }
   }
@@ -37,7 +38,11 @@ export class StorageService {
       this.logger.log(`File ${destFileName} uploaded to ${bucketName}.`);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      this.logger.error(`Error uploading file to ${bucketName}:`, message);
+      const stack = error instanceof Error ? error.stack : undefined;
+      this.logger.error(
+        `Error uploading file to ${bucketName}: ${message}`,
+        stack,
+      );
       throw error;
     }
   }
@@ -52,9 +57,10 @@ export class StorageService {
       return content;
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
+      const stack = error instanceof Error ? error.stack : undefined;
       this.logger.error(
-        `Error downloading file ${fileName} from ${bucketName}:`,
-        message,
+        `Error downloading file ${fileName} from ${bucketName}: ${message}`,
+        stack,
       );
       throw error;
     }
@@ -66,7 +72,11 @@ export class StorageService {
       this.logger.log(`File ${fileName} deleted from ${bucketName}.`);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      this.logger.error(`Error deleting file from ${bucketName}:`, message);
+      const stack = error instanceof Error ? error.stack : undefined;
+      this.logger.error(
+        `Error deleting file from ${bucketName}: ${message}`,
+        stack,
+      );
       throw error;
     }
   }

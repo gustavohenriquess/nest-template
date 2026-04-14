@@ -1,10 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import * as os from 'node:os';
 import { HealthCheck } from '../../domain/entities/health-check.entity';
 import { formatDuration } from '@/core/utils/format-duration.helper';
 
 @Injectable()
 export class CheckHealthUseCase {
+  private readonly logger = new Logger(CheckHealthUseCase.name);
+
   execute() {
     const memory = process.memoryUsage();
     const toMB = (bytes: number) =>
@@ -26,7 +28,7 @@ export class CheckHealthUseCase {
       uptimeHuman: formatDuration(uptime),
       nodeVersion: process.version,
     });
-
+    this.logger.warn(healthCheck.status, 'Health check performed successfully');
     return {
       healthCheck,
     };

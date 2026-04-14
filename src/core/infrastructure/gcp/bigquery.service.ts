@@ -17,7 +17,11 @@ export class BigQueryService {
       return dataset;
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      this.logger.error(`Error creating dataset ${datasetId}:`, message);
+      const stack = error instanceof Error ? error.stack : undefined;
+      this.logger.error(
+        `Error creating dataset ${datasetId}: ${message}`,
+        stack,
+      );
       throw error;
     }
   }
@@ -32,7 +36,8 @@ export class BigQueryService {
       return rows as T[];
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      this.logger.error(`Error executing query:`, message);
+      const stack = error instanceof Error ? error.stack : undefined;
+      this.logger.error(`Error executing query: ${message}`, stack);
       throw error;
     }
   }
@@ -47,7 +52,11 @@ export class BigQueryService {
       this.logger.log(`Inserted ${rows.length} rows into ${tableId}`);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      this.logger.error(`Error inserting rows into ${tableId}:`, message);
+      const stack = error instanceof Error ? error.stack : undefined;
+      this.logger.error(
+        `Error inserting rows into ${tableId}: ${message}`,
+        stack,
+      );
       throw error;
     }
   }

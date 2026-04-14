@@ -3,7 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import helmet from 'helmet';
 import { ConfigService } from '@nestjs/config';
-import { CorrelationLoggerService } from './core/infrastructure/logger/correlation-logger.service';
+import { Logger } from 'nestjs-pino';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -19,8 +19,9 @@ async function bootstrap() {
   });
 
   const app = await NestFactory.create(AppModule, {
-    logger: new CorrelationLoggerService(),
+    bufferLogs: true,
   });
+  app.useLogger(app.get(Logger));
 
   const configService = app.get(ConfigService);
   const allowedOriginsStr = configService.get<string>('ALLOWED_ORIGINS') || '*';
