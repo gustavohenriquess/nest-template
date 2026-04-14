@@ -52,5 +52,5 @@ Lista de melhorias planejadas para elevar o template para um padrão "Enterprise
 - [x] **Logging de Alta Performance (Pino)**
   - Migrar para o Pino para logging assíncrono e estruturado (JSON).
   - Integrar o Correlation ID nativamente nos mixins do Pino.
-- [ ] **Otimização de Imagens Docker**
+- [x] **Otimização de Imagens Docker**
   - Revisar imagens alpine e garantir usuários não-root para máxima segurança em cluster.
