@@ -1,47 +1,50 @@
-# Stage 1: Build
-FROM node:24-alpine AS builder
+# Stage 1: Development
+FROM node:24-alpine AS development
 
 WORKDIR /app
 
-# Instalar dependências nativas utilitárias caso algum pacote exija
 RUN apk add --no-cache python3 make g++
 
-# Copiar arquivos de dependências
 COPY package*.json ./
 COPY prisma ./prisma/
 
-# Instalar dependências
+# Instala todas as dependências (dev + prod) para o ambiente local
 RUN npm ci
 
-# Gerar o cliente Prisma
-RUN npx prisma generate
-
-# Copiar o restante do código e buildar
 COPY . .
+
+# Stage 2: Builder
+FROM node:24-alpine AS builder
+
+WORKDIR /app
+COPY --from=development /app ./
+
+# Gera Prisma e builda
+RUN npx prisma generate
 RUN npm run build
 
-# Otimização: Remover pacotes de desenvolvimento ANTES de copiar
+# Otimização: Remover pacotes de desenvolvimento ANTES de copiar para prod
 RUN npm prune --omit=dev
 
-# Stage 2: Production
-FROM node:24-alpine
+# Stage 3: Production
+FROM node:24-alpine AS production
 
 # Setar modo de produção 
 ENV NODE_ENV=production
 
 WORKDIR /app
 
-# Copiar arquivos necessários atribuindo as permissões ao usuário seguro
+# Copiar arquivos necessários com as permissões corretas
 COPY --chown=node:node --from=builder /app/package*.json ./
 COPY --chown=node:node --from=builder /app/node_modules ./node_modules
 COPY --chown=node:node --from=builder /app/dist ./dist
 COPY --chown=node:node --from=builder /app/prisma ./prisma
 
-# Mudar para o usuário não-root 'node' (padrão em imagens node baseadas em Alpine)
+# Mudar para o usuário não-root 'node'
 USER node
 
 # Expor a porta
 EXPOSE 3000
 
-# Comando para rodar a aplicação
+# Comando para rodar a aplicação em produção
 CMD ["node", "dist/main"]
