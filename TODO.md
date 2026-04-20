@@ -54,3 +54,18 @@ Lista de melhorias planejadas para elevar o template para um padrão "Enterprise
   - Integrar o Correlation ID nativamente nos mixins do Pino.
 - [x] **Otimização de Imagens Docker**
   - Revisar imagens alpine e garantir usuários não-root para máxima segurança em cluster.
+- [ ] **Graceful Shutdown (Desligamento Suave)**
+  - Implementar `app.enableShutdownHooks()` no `main.ts`.
+  - Garantir o fechamento correto do SDK do OpenTelemetry e conexões Prisma.
+
+## 🚀 Enterprise Hardening
+- [ ] **Redação de Logs (Segurança)**
+  - Configurar `redact` no Pino para omitir campos sensíveis (passcodes, tokens, PII).
+- [ ] **Validação Global de Entrada (Zod/Pipes)**
+  - Implementar um Pipe global para validar todos os inputs da API automaticamente.
+- [ ] **Health Checks Reais (Terminus)**
+  - Expandir o Health Check para monitorar DB e PubSub ativamente com `@nestjs/terminus`.
+- [ ] **Infraestrutura de Testes E2E**
+  - Criar helpers para isolamento e seeding de banco de dados nos testes E2E.
+- [ ] **Automação de CI/CD (GitHub Actions)**
+  - Criar workflows para build, lint e testes automáticos em cada commit.
