@@ -10,11 +10,11 @@ jobs:
       postgres:
         image: bitnami/postgresql:latest
         env:
-          POSTGRESQL_USERNAME: bn_user
-          POSTGRESQL_PASSWORD: bn_password
+          POSTGRESQL_USERNAME: postgres
+          POSTGRESQL_PASSWORD: postgres
           POSTGRESQL_DATABASE: nest_db
         options: >-
-          --health-cmd="pg_isready -U bn_user"
+          --health-cmd="pg_isready -U postgres"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
