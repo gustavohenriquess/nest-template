@@ -51,6 +51,9 @@ describe('loggerConfig', () => {
         const req = {
           headers: { 'x-correlation-id': 'existing-id' },
         };
+        if (!pinoHttp.genReqId) {
+          throw new Error('genReqId not found');
+        }
         expect(pinoHttp.genReqId(req)).toBe('existing-id');
       });
 
@@ -145,6 +148,9 @@ describe('loggerConfig', () => {
         const otlpTarget = targets.find((t) =>
           t.target.includes('pino-opentelemetry-transport'),
         );
+        if (!otlpTarget) {
+          throw new Error('OTLP transport not found');
+        }
         expect(otlpTarget).toBeDefined();
         expect(otlpTarget.level).toBe('info');
       });
