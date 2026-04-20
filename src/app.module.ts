@@ -1,6 +1,6 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { APP_INTERCEPTOR, APP_FILTER, APP_GUARD } from '@nestjs/core';
+import { APP_INTERCEPTOR, APP_FILTER, APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { LoggerModule } from 'nestjs-pino';
 import { validate } from './core/config/env.schema';
@@ -10,6 +10,7 @@ import { GlobalExceptionFilter } from './core/filters/global-exception.filter';
 import { CorrelationIdMiddleware } from './core/infrastructure/middleware/correlation-id.middleware';
 import { loggerConfig } from './core/config/logger.config';
 import { LifecycleService } from './core/infrastructure/lifecycle.service';
+import { ZodValidationPipe } from './core/pipes/zod-validation.pipe';
 
 @Module({
   imports: [
@@ -42,6 +43,10 @@ import { LifecycleService } from './core/infrastructure/lifecycle.service';
     {
       provide: APP_FILTER,
       useClass: GlobalExceptionFilter,
+    },
+    {
+      provide: APP_PIPE,
+      useClass: ZodValidationPipe,
     },
     LifecycleService,
   ],

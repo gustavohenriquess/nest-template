@@ -2,18 +2,34 @@ import {
   PipeTransform,
   ArgumentMetadata,
   BadRequestException,
+  Injectable,
+  Optional,
 } from '@nestjs/common';
-import { ZodError, ZodSchema } from 'zod';
+import * as zod from 'zod';
+import { ZOD_SCHEMA_KEY } from '../decorators/zod.decorator';
 
+@Injectable()
 export class ZodValidationPipe implements PipeTransform {
-  constructor(private schema: ZodSchema) {}
+  private readonly schema?: zod.ZodSchema;
 
-  transform(value: unknown, _metadata: ArgumentMetadata) {
+  constructor(
+    @Optional()
+    schema: zod.ZodSchema | undefined = undefined,
+  ) {
+    this.schema = schema;
+  }
+
+  transform(value: unknown, metadata: ArgumentMetadata) {
+    const schema = this.getSchema(metadata);
+
+    if (!schema) {
+      return value;
+    }
+
     try {
-      const parsedValue = this.schema.parse(value);
-      return parsedValue;
+      return schema.parse(value);
     } catch (error) {
-      if (error instanceof ZodError) {
+      if (error instanceof zod.ZodError) {
         throw new BadRequestException({
           message: 'Validation failed',
           errors: error.flatten().fieldErrors,
@@ -21,5 +37,19 @@ export class ZodValidationPipe implements PipeTransform {
       }
       throw new BadRequestException('Validation failed');
     }
+  }
+
+  private getSchema(metadata: ArgumentMetadata): zod.ZodSchema | undefined {
+    if (this.schema) {
+      return this.schema;
+    }
+
+    if (metadata.metatype) {
+      return Reflect.getMetadata(ZOD_SCHEMA_KEY, metadata.metatype) as
+        | zod.ZodSchema
+        | undefined;
+    }
+
+    return undefined;
   }
 }
