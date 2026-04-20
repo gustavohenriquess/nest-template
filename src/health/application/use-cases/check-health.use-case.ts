@@ -28,7 +28,7 @@ export class CheckHealthUseCase {
       uptimeHuman: formatDuration(uptime),
       nodeVersion: process.version,
     });
-    this.logger.warn(healthCheck.status, 'Health check performed successfully');
+    this.logger.warn({ status: healthCheck.status }, 'status');
     return {
       healthCheck,
     };

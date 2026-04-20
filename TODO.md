@@ -59,8 +59,8 @@ Lista de melhorias planejadas para elevar o template para um padrão "Enterprise
   - [x] Garantir o fechamento correto do SDK do OpenTelemetry e conexões Prisma.
 
 ## 🚀 Enterprise Hardening
-- [ ] **Redação de Logs (Segurança)**
-  - Configurar `redact` no Pino para omitir campos sensíveis (passcodes, tokens, PII).
+- [x] **Redação de Logs (Segurança)**
+  - [x] Configurar `redact` no Pino para omitir campos sensíveis (passcodes, tokens, PII).
 - [ ] **Validação Global de Entrada (Zod/Pipes)**
   - Implementar um Pipe global para validar todos os inputs da API automaticamente.
 - [ ] **Health Checks Reais (Terminus)**

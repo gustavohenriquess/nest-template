@@ -2,12 +2,32 @@ import { randomUUID } from 'crypto';
 import { Params } from 'nestjs-pino';
 import { TraceContext } from '../utils/trace-context';
 
+const maskValue = (val: unknown) =>
+  typeof val === 'string' ? `****${val.slice(-2)}****` : val;
+
 export const loggerConfig: Params = {
   pinoHttp: {
     genReqId: (req) => req.headers['x-correlation-id'] || randomUUID(),
     mixin: () => ({
       correlationId: TraceContext.getCorrelationId(),
     }),
+    serializers: {
+      serialized: maskValue,
+    },
+    redact: {
+      paths: [
+        'req.headers.authorization',
+        'req.headers.cookie',
+        'password',
+        'password_confirmation',
+        'token',
+        'accessToken',
+        'refreshToken',
+        'secret',
+        'client_secret',
+      ],
+      censor: '[REDACTED]',
+    },
     customSuccessMessage: (req, res, time) =>
       `${req.method} ${req.url} ${res.statusCode} +${time}ms`,
     customErrorMessage: (req, res, err) =>

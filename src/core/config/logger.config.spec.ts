@@ -27,6 +27,11 @@ interface PinoHttpOptions {
   customSuccessMessage?: (req: any, res: any, time: number) => string;
   customErrorMessage?: (req: any, res: any, err: Error) => string;
   transport?: PinoTransportOptions;
+  serializers?: Record<string, (val: any) => any>;
+  redact?: {
+    paths: string[];
+    censor: string;
+  };
 }
 
 jest.mock('../utils/trace-context');
@@ -45,6 +50,35 @@ describe('loggerConfig', () => {
   describe('pinoHttp options', () => {
     // Cast to local interface for type safety in tests
     const pinoHttp = loggerConfig.pinoHttp as PinoHttpOptions;
+
+    describe('redact', () => {
+      it('should be configured with sensitive paths and [REDACTED] censor', () => {
+        expect(pinoHttp.redact).toBeDefined();
+        expect(pinoHttp.redact?.censor).toBe('[REDACTED]');
+        expect(pinoHttp.redact?.paths).toEqual(
+          expect.arrayContaining([
+            'req.headers.authorization',
+            'req.headers.cookie',
+            'password',
+            'password_confirmation',
+            'token',
+            'accessToken',
+            'refreshToken',
+            'secret',
+            'client_secret',
+          ]),
+        );
+      });
+    });
+
+    describe('serializers', () => {
+      it('should partially mask values using maskValue logic', () => {
+        const mask = pinoHttp.serializers?.serialized;
+        expect(mask).toBeDefined();
+        expect(mask!('123456')).toBe('****56****');
+        expect(mask!(123)).toBe(123);
+      });
+    });
 
     describe('genReqId', () => {
       it('should return x-correlation-id from headers if present', () => {
