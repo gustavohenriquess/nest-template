@@ -1,4 +1,4 @@
-import { Controller, Get, Inject } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
@@ -10,14 +10,7 @@ import {
   HealthCheck,
   MemoryHealthIndicator,
 } from '@nestjs/terminus';
-import { PrismaHealthIndicator } from '../../application/indicators/prisma.health';
-import { PubSubHealthIndicator } from '../../application/indicators/pubsub.health';
-import { BigQueryHealthIndicator } from '../../application/indicators/bigquery.health';
-import { StorageHealthIndicator } from '../../application/indicators/storage.health';
-import { BigQueryService } from '@/core/infrastructure/gcp/bigquery.service';
-import { PubSubService } from '@/core/infrastructure/gcp/pubsub.service';
-import { StorageService } from '@/core/infrastructure/gcp/storage.service';
-import { PrismaService } from '@/core/infrastructure/persistence/prisma/prisma.service';
+import { HealthIntegrationsService } from '../../application/services/health-integrations.service';
 import { ResponseMeta } from '@/core/decorators/response-meta.decorator';
 import { ErrorResponseDto, BaseResponseDto } from '@/core/dto/api-response.dto';
 
@@ -25,20 +18,19 @@ import { ErrorResponseDto, BaseResponseDto } from '@/core/dto/api-response.dto';
 @ApiExtraModels(BaseResponseDto, ErrorResponseDto)
 @Controller('health')
 export class HealthController {
+  private readonly health: HealthCheckService;
+  private readonly memory: MemoryHealthIndicator;
+  private readonly integrations: HealthIntegrationsService;
+
   constructor(
-    private readonly health: HealthCheckService,
-    private readonly memory: MemoryHealthIndicator,
-    private readonly prisma: PrismaHealthIndicator,
-    private readonly pubsub: PubSubHealthIndicator,
-    private readonly bigquery: BigQueryHealthIndicator,
-    private readonly storage: StorageHealthIndicator,
-    private readonly bigqueryService: BigQueryService,
-    private readonly pubsubService: PubSubService,
-    private readonly storageService: StorageService,
-    @Inject(PrismaService) private readonly defaultPrisma: PrismaService,
-    @Inject('PRIMARY_PRISMA') private readonly primaryPrisma: PrismaService,
-    @Inject('SECONDARY_PRISMA') private readonly secondaryPrisma: PrismaService,
-  ) {}
+    health: HealthCheckService,
+    memory: MemoryHealthIndicator,
+    integrations: HealthIntegrationsService,
+  ) {
+    this.health = health;
+    this.memory = memory;
+    this.integrations = integrations;
+  }
 
   @Get()
   @HealthCheck()
@@ -78,13 +70,6 @@ export class HealthController {
   })
   @ResponseMeta({ module: 'health', severity: 'high' })
   async handleIntegrations() {
-    return this.health.check([
-      () => this.prisma.isHealthy('database_default', this.defaultPrisma),
-      () => this.prisma.isHealthy('database_primary', this.primaryPrisma),
-      () => this.prisma.isHealthy('database_secondary', this.secondaryPrisma),
-      () => this.pubsub.isHealthy('pubsub', this.pubsubService),
-      () => this.bigquery.isHealthy('bigquery', this.bigqueryService),
-      () => this.storage.isHealthy('storage', this.storageService),
-    ]);
+    return this.health.check(this.integrations.getIndicators());
   }
 }

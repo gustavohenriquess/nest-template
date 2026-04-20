@@ -15,6 +15,10 @@ import {
   UnauthorizedError,
 } from '../errors/domain.error';
 
+interface RequestWithMeta extends Request {
+  customMeta?: Record<string, unknown>;
+}
+
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
   private readonly logger = new Logger(GlobalExceptionFilter.name);
@@ -22,7 +26,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
-    const request = ctx.getRequest<Request>();
+    const request = ctx.getRequest<RequestWithMeta>();
 
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
     let code = 'INTERNAL_SERVER_ERROR';
@@ -65,10 +69,15 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       );
     }
 
+    const customMeta = request.customMeta ?? {};
+    const filters = request.query ?? {};
+
     response.status(status).json({
       meta: {
         timestamp: new Date().toISOString(),
         path: request.url,
+        filters,
+        ...customMeta,
       },
       error: {
         code,

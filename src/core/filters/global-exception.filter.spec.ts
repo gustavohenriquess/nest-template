@@ -9,10 +9,14 @@ import {
   DomainError,
 } from '../errors/domain.error';
 
+interface RequestWithMeta extends Request {
+  customMeta?: Record<string, unknown>;
+}
+
 describe('GlobalExceptionFilter', () => {
   let filter: GlobalExceptionFilter;
   let mockResponse: Partial<Response>;
-  let mockRequest: Partial<Request>;
+  let mockRequest: Partial<RequestWithMeta>;
   let mockArgumentsHost: ArgumentsHost;
 
   beforeEach(() => {
@@ -188,6 +192,26 @@ describe('GlobalExceptionFilter', () => {
         error: expect.objectContaining({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'An unexpected error occurred',
+        }) as unknown,
+      }) as unknown,
+    );
+  });
+
+  it('should include customMeta and filters in response meta', () => {
+    const customMeta = { module: 'health', severity: 'high' };
+    const query = { foo: 'bar' };
+    mockRequest.customMeta = customMeta;
+    mockRequest.query = query as unknown as Record<string, string>;
+
+    const exception = new Error('Test error');
+    filter.catch(exception, mockArgumentsHost);
+
+    expect(mockResponse.json).toHaveBeenCalledWith(
+      expect.objectContaining({
+        meta: expect.objectContaining({
+          module: 'health',
+          severity: 'high',
+          filters: { foo: 'bar' },
         }) as unknown,
       }) as unknown,
     );

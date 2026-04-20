@@ -11,6 +11,7 @@ import { PubSubService } from '@/core/infrastructure/gcp/pubsub.service';
 import { StorageService } from '@/core/infrastructure/gcp/storage.service';
 import { PrismaService } from '@/core/infrastructure/persistence/prisma/prisma.service';
 import { PubSubListenerExample } from './application/listeners/pubsub-listener.example';
+import { HealthIntegrationsService } from './application/services/health-integrations.service';
 
 @Module({
   imports: [TerminusModule],
@@ -21,6 +22,7 @@ import { PubSubListenerExample } from './application/listeners/pubsub-listener.e
     BigQueryHealthIndicator,
     StorageHealthIndicator,
     PubSubListenerExample,
+    HealthIntegrationsService,
     // Em um cenário real, você teria providers nomeados para cada instância
     {
       provide: 'PRIMARY_PRISMA',

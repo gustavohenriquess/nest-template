@@ -16,6 +16,10 @@ import {
   TransformResponse,
 } from './transform-response.helper';
 
+interface RequestWithMeta extends Request {
+  customMeta?: Record<string, unknown>;
+}
+
 @Injectable()
 export class TransformInterceptor<T> implements NestInterceptor<
   T,
@@ -33,10 +37,12 @@ export class TransformInterceptor<T> implements NestInterceptor<
     }
 
     const http = context.switchToHttp();
-    const request = http.getRequest<Request>();
+    const request = http.getRequest<RequestWithMeta>();
     const customMeta = this.reflector.getAllAndOverride<
       Record<string, unknown>
     >(RESPONSE_META_KEY, [context.getHandler(), context.getClass()]);
+
+    request.customMeta = customMeta;
 
     return next
       .handle()

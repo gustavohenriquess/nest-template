@@ -107,7 +107,9 @@
       "tracing.ts",
       ".module.ts",
       "<rootDir>/app.controller.ts",
-      "<rootDir>/app.service.ts"
+      "<rootDir>/app.service.ts",
+      "health.controller.ts",
+      "health-integrations.service.ts"
     ],
     "moduleNameMapper": {
       "^@/(.*)$": "<rootDir>/$1"
