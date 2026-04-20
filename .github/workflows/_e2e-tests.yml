@@ -12,14 +12,14 @@ jobs:
         env:
           POSTGRESQL_USERNAME: postgres
           POSTGRESQL_PASSWORD: postgres
-          POSTGRESQL_DATABASE: nest_db
+          POSTGRESQL_DATABASE: test_db
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
         ports:
           - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
 
     env:
       GCP_PRIMARY_PROJECT_ID: ci-project
