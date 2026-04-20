@@ -1,6 +1,6 @@
 services:
   app:
-    build: 
+    build:
       context: .
       target: development
     container_name: nest-template-app
@@ -57,18 +57,52 @@ services:
     container_name: otel-collector
     env_file:
       - .env
-    command: ["--config=/etc/otel-collector-config.yml"]
+    command: [ "--config=/etc/otel-collector-config.yml" ]
     volumes:
       - ./otel-collector-config.yml:/etc/otel-collector-config.yml
     ports:
-      - "1888:1888"   # pprof extension
+      - "1888:1888" # pprof extension
       - "13133:13133" # health_check extension
-      - "4318:4318"   # http gRPC receiver
+      - "4318:4318" # http gRPC receiver
       - "55679:55679" # zpages extension
     depends_on:
       jaeger:
         condition: service_started
 
+  loki:
+    image: grafana/loki:3.4
+    container_name: loki
+    command: -config.file=/etc/loki/loki-config.yml
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./loki/loki-config.yml:/etc/loki/loki-config.yml
+      - loki_data:/loki
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "${GRAFANA_PORT:-3090}:3000" # UI disponível em http://localhost:3090
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=${GF_AUTH_ANONYMOUS_ENABLED}
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=${GF_AUTH_ANONYMOUS_ORG_ROLE}
+      - GF_AUTH_DISABLE_LOGIN_FORM=${GF_AUTH_DISABLE_LOGIN_FORM}
+      - LOKI_URL=${LOKI_URL}
+      - JAEGER_UI_URL=${JAEGER_UI_URL}
+    depends_on:
+      - loki
+      - jaeger
+    restart: unless-stopped
+
 volumes:
   postgres_data:
+    driver: local
+  loki_data:
+    driver: local
+  grafana_data:
     driver: local

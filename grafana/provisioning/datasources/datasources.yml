@@ -1,0 +1,35 @@
+apiVersion: 1
+
+datasources:
+  # Loki: Logs vindos do OTEL Collector via OTLP
+  - name: Loki
+    type: loki
+    uid: loki
+    access: proxy
+    url: ${LOKI_URL}
+    isDefault: true
+    jsonData:
+      maxLines: 1000
+      derivedFields:
+        # Cria link clicável do correlationId no log → Trace no Jaeger
+        - name: TraceID
+          matcherRegex: '"correlationId":"([a-f0-9]+)"'
+          url: '$${__value.raw}'
+          datasourceUid: jaeger
+          urlDisplayLabel: 'Ver Trace no Jaeger'
+
+  # Jaeger: Traces da aplicação
+  - name: Jaeger
+    type: jaeger
+    uid: jaeger
+    access: proxy
+    url: ${JAEGER_UI_URL}
+    jsonData:
+      tracesToLogsV2:
+        datasourceUid: loki
+        filterByTraceID: false
+        customQuery: true
+        # Ao clicar num trace no Jaeger, abre os logs correlacionados no Loki
+        query: '{service_name="nest-template"} | json | correlationId="$${__value.raw}"'
+      nodeGraph:
+        enabled: true

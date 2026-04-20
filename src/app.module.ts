@@ -1,4 +1,3 @@
-import { randomUUID } from 'crypto';
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_INTERCEPTOR, APP_FILTER, APP_GUARD } from '@nestjs/core';
@@ -6,10 +5,10 @@ import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { LoggerModule } from 'nestjs-pino';
 import { validate } from './core/config/env.schema';
 import { HealthModule } from './health/health.module';
-import { TraceContext } from './core/utils/trace-context';
 import { TransformInterceptor } from './core/interceptors/transform.interceptor';
 import { GlobalExceptionFilter } from './core/filters/global-exception.filter';
 import { CorrelationIdMiddleware } from './core/infrastructure/middleware/correlation-id.middleware';
+import { loggerConfig } from './core/config/logger.config';
 
 @Module({
   imports: [
@@ -27,31 +26,7 @@ import { CorrelationIdMiddleware } from './core/infrastructure/middleware/correl
         },
       ],
     }),
-    LoggerModule.forRoot({
-      pinoHttp: {
-        genReqId: (req) => req.headers['x-correlation-id'] || randomUUID(),
-        mixin: () => ({
-          correlationId: TraceContext.getCorrelationId(),
-        }),
-        customSuccessMessage: (req, res, time) =>
-          `${req.method} ${req.url} ${res.statusCode} +${time}ms`,
-        customErrorMessage: (req, res, err) =>
-          `${req.method} ${req.url} ${res.statusCode} - ${err.message}`,
-        transport:
-          process.env.NODE_ENV !== 'production'
-            ? {
-                target: 'pino-pretty',
-                options: {
-                  singleLine: true,
-                  messageFormat:
-                    '{if correlationId}[{correlationId}] {end}{if context}[{context}] {end}{msg}{if trace}\n{trace}{end}',
-                  ignore:
-                    'pid,hostname,req,res,responseTime,correlationId,context,trace',
-                },
-              }
-            : undefined,
-      },
-    }),
+    LoggerModule.forRoot(loggerConfig),
     HealthModule,
   ],
   providers: [

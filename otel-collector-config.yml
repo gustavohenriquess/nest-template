@@ -10,6 +10,15 @@ exporters:
   debug:
     verbosity: detailed
 
+  # O exporter 'loki' foi removido do contrib. Loki 3.x aceita OTLP nativamente.
+  # Usamos otlphttp com um alias /loki para não conflitar com o exporter 'otlp' (Jaeger).
+  # IMPORTANTE: o otlphttp acrescenta /v1/logs automaticamente ao endpoint.
+  # Então o endpoint base deve ser apenas http://loki:3100/otlp
+  otlphttp/loki:
+    endpoint: ${LOKI_OTLP_ENDPOINT}
+    tls:
+      insecure: true
+
   otlp:
     endpoint: ${JAEGER_URL}
     tls:
@@ -43,11 +52,14 @@ service:
     traces:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlp, datadog, datadog/connector]
+      exporters: [otlp]
     metrics:
-      receivers: [otlp, datadog/connector]
+      receivers: [otlp]
       processors: [batch]
-      exporters: [datadog]
+      exporters: [debug]
     logs:
       receivers: [otlp]
-      exporters: [datadog]
+      processors: [batch]
+      # debug: exibe os logs no console do Collector para validação local
+      # loki: envia para o Loki para visualização no Grafana
+      exporters: [debug, otlphttp/loki]
