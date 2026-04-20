@@ -54,9 +54,9 @@ Lista de melhorias planejadas para elevar o template para um padrão "Enterprise
   - Integrar o Correlation ID nativamente nos mixins do Pino.
 - [x] **Otimização de Imagens Docker**
   - Revisar imagens alpine e garantir usuários não-root para máxima segurança em cluster.
-- [ ] **Graceful Shutdown (Desligamento Suave)**
-  - Implementar `app.enableShutdownHooks()` no `main.ts`.
-  - Garantir o fechamento correto do SDK do OpenTelemetry e conexões Prisma.
+- [x] **Graceful Shutdown (Desligamento Suave)**
+  - [x] Implementar `app.enableShutdownHooks()` no `main.ts`.
+  - [x] Garantir o fechamento correto do SDK do OpenTelemetry e conexões Prisma.
 
 ## 🚀 Enterprise Hardening
 - [ ] **Redação de Logs (Segurança)**

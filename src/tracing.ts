@@ -12,10 +12,7 @@ import { HttpInstrumentation } from '@opentelemetry/instrumentation-http';
 import { ExpressInstrumentation } from '@opentelemetry/instrumentation-express';
 import { NestInstrumentation } from '@opentelemetry/instrumentation-nestjs-core';
 import { PrismaInstrumentation } from '@prisma/instrumentation';
-import { Logger } from '@nestjs/common';
 import { TraceContext } from './core/utils/trace-context';
-
-const logger = new Logger('OpenTelemetry');
 
 /**
  * Manual implementation of a MultiSpanProcessor since it's not exported publicly in some versions.
@@ -71,15 +68,4 @@ export const otelSDK = new NodeSDK({
     new NestInstrumentation(),
     new PrismaInstrumentation(),
   ],
-});
-
-// Graceful shutdown
-process.on('SIGTERM', () => {
-  otelSDK
-    .shutdown()
-    .then(
-      () => logger.log('SDK shut down successfully'),
-      (err) => logger.error('Error shutting down SDK', err),
-    )
-    .finally(() => process.exit(0));
 });

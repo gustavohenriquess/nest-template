@@ -9,6 +9,7 @@ import { TransformInterceptor } from './core/interceptors/transform.interceptor'
 import { GlobalExceptionFilter } from './core/filters/global-exception.filter';
 import { CorrelationIdMiddleware } from './core/infrastructure/middleware/correlation-id.middleware';
 import { loggerConfig } from './core/config/logger.config';
+import { LifecycleService } from './core/infrastructure/lifecycle.service';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { loggerConfig } from './core/config/logger.config';
       provide: APP_FILTER,
       useClass: GlobalExceptionFilter,
     },
+    LifecycleService,
   ],
 })
 export class AppModule implements NestModule {

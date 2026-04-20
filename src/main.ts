@@ -37,6 +37,7 @@ async function bootstrap() {
   });
 
   app.use(helmet());
+  app.enableShutdownHooks();
 
   const config = new DocumentBuilder()
     .setTitle('NestJS Enterprise Template')
