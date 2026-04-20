@@ -1,38 +1,82 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HealthController } from './health.controller';
-import { CheckHealthUseCase } from '../../application/use-cases/check-health.use-case';
-import { CheckIntegrationsUseCase } from '../../application/use-cases/check-integrations.use-case';
-
-// Mocking @prisma/client to avoid module resolution issues
-jest.mock('@prisma/client', () => {
-  return {
-    PrismaClient: class {},
-  };
-});
+import {
+  HealthCheckService,
+  MemoryHealthIndicator,
+  HealthCheckResult,
+} from '@nestjs/terminus';
+import { PrismaHealthIndicator } from '../../application/indicators/prisma.health';
+import { PubSubHealthIndicator } from '../../application/indicators/pubsub.health';
+import { BigQueryHealthIndicator } from '../../application/indicators/bigquery.health';
+import { StorageHealthIndicator } from '../../application/indicators/storage.health';
+import { BigQueryService } from '@/core/infrastructure/gcp/bigquery.service';
+import { PubSubService } from '@/core/infrastructure/gcp/pubsub.service';
+import { StorageService } from '@/core/infrastructure/gcp/storage.service';
+import { PrismaService } from '@/core/infrastructure/persistence/prisma/prisma.service';
 
 describe('HealthController', () => {
   let controller: HealthController;
-  let checkHealth: jest.Mocked<CheckHealthUseCase>;
-  let checkIntegrations: jest.Mocked<CheckIntegrationsUseCase>;
+  let health: jest.Mocked<HealthCheckService>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [HealthController],
       providers: [
         {
-          provide: CheckHealthUseCase,
-          useValue: { execute: jest.fn() },
+          provide: HealthCheckService,
+          useValue: { check: jest.fn() },
         },
         {
-          provide: CheckIntegrationsUseCase,
-          useValue: { execute: jest.fn() },
+          provide: MemoryHealthIndicator,
+          useValue: { checkHeap: jest.fn(), checkRSS: jest.fn() },
+        },
+        {
+          provide: PrismaHealthIndicator,
+          useValue: { isHealthy: jest.fn() },
+        },
+        {
+          provide: PubSubHealthIndicator,
+          useValue: { isHealthy: jest.fn() },
+        },
+        {
+          provide: BigQueryHealthIndicator,
+          useValue: { isHealthy: jest.fn() },
+        },
+        {
+          provide: StorageHealthIndicator,
+          useValue: { isHealthy: jest.fn() },
+        },
+        {
+          provide: BigQueryService,
+          useValue: { query: jest.fn() },
+        },
+        {
+          provide: PubSubService,
+          useValue: { publishMessage: jest.fn() },
+        },
+        {
+          provide: StorageService,
+          useValue: { listBuckets: jest.fn() },
+        },
+        {
+          provide: PrismaService,
+          useValue: { $queryRaw: jest.fn() },
+        },
+        {
+          provide: 'PRIMARY_PRISMA',
+          useValue: { $queryRaw: jest.fn() },
+        },
+        {
+          provide: 'SECONDARY_PRISMA',
+          useValue: { $queryRaw: jest.fn() },
         },
       ],
     }).compile();
 
     controller = module.get<HealthController>(HealthController);
-    checkHealth = module.get(CheckHealthUseCase);
-    checkIntegrations = module.get(CheckIntegrationsUseCase);
+    health = module.get<HealthCheckService>(
+      HealthCheckService,
+    ) as unknown as jest.Mocked<HealthCheckService>;
   });
 
   it('should be defined', () => {
@@ -40,53 +84,34 @@ describe('HealthController', () => {
   });
 
   describe('handle', () => {
-    it('should return health status', () => {
-      const mockResult = {
-        healthCheck: {
-          status: 'ok',
-          timestamp: new Date(),
-          details: 'all good',
-          memoryUsage: { heapTotal: 0, heapUsed: 0, rss: 0 },
-          cpuLoad: [0, 0, 0],
-          uptime: 0,
-          uptimeHuman: '0s',
-          nodeVersion: '18',
-        },
-      };
-      checkHealth.execute.mockReturnValue(
-        mockResult as unknown as ReturnType<CheckHealthUseCase['execute']>,
-      );
-
-      const result = controller.handle();
-
-      expect(result).toEqual({
-        status: 'ok',
-        timestamp: mockResult.healthCheck.timestamp,
-        details: 'all good',
-        memoryUsage: { heapTotal: 0, heapUsed: 0, rss: 0 },
-        cpuLoad: [0, 0, 0],
-        uptime: 0,
-        uptimeHuman: '0s',
-        nodeVersion: '18',
+    it('should call health.check with memory indicators', async () => {
+      const mockResult = { status: 'ok', details: {} } as HealthCheckResult;
+      health.check.mockImplementation(async (fns: Array<() => unknown>) => {
+        for (const fn of fns) await fn();
+        return mockResult;
       });
+
+      const result = await controller.handle();
+
+      expect(result).toEqual(mockResult);
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(health.check).toHaveBeenCalled();
     });
   });
 
   describe('handleIntegrations', () => {
-    it('should return integrations status', async () => {
-      const mockResult = {
-        bigquery: { status: 'integrated', message: '' },
-        pubsub: { status: 'integrated', message: '123' },
-        storage: { status: 'integrated', message: '' },
-        prisma: { status: 'integrated', message: '' },
-      };
-      checkIntegrations.execute.mockResolvedValue(
-        mockResult as unknown as never,
-      );
+    it('should call health.check with all integration indicators', async () => {
+      const mockResult = { status: 'ok', details: {} } as HealthCheckResult;
+      health.check.mockImplementation(async (fns: Array<() => unknown>) => {
+        for (const fn of fns) await fn();
+        return mockResult;
+      });
 
       const result = await controller.handleIntegrations();
 
       expect(result).toEqual(mockResult);
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(health.check).toHaveBeenCalled();
     });
   });
 });

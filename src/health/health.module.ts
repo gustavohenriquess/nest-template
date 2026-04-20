@@ -1,9 +1,11 @@
-/* istanbul ignore file */
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { TerminusModule } from '@nestjs/terminus';
 import { HealthController } from './interface/controllers/health.controller';
-import { CheckHealthUseCase } from './application/use-cases/check-health.use-case';
-import { CheckIntegrationsUseCase } from './application/use-cases/check-integrations.use-case';
+import { PrismaHealthIndicator } from './application/indicators/prisma.health';
+import { PubSubHealthIndicator } from './application/indicators/pubsub.health';
+import { BigQueryHealthIndicator } from './application/indicators/bigquery.health';
+import { StorageHealthIndicator } from './application/indicators/storage.health';
 import { BigQueryService } from '@/core/infrastructure/gcp/bigquery.service';
 import { PubSubService } from '@/core/infrastructure/gcp/pubsub.service';
 import { StorageService } from '@/core/infrastructure/gcp/storage.service';
@@ -11,12 +13,15 @@ import { PrismaService } from '@/core/infrastructure/persistence/prisma/prisma.s
 import { PubSubListenerExample } from './application/listeners/pubsub-listener.example';
 
 @Module({
+  imports: [TerminusModule],
   controllers: [HealthController],
   providers: [
-    CheckHealthUseCase,
-    CheckIntegrationsUseCase,
+    PrismaHealthIndicator,
+    PubSubHealthIndicator,
+    BigQueryHealthIndicator,
+    StorageHealthIndicator,
     PubSubListenerExample,
-    // Exemplo: Instanciando múltiplos databases com Prisma usando ConfigService
+    // Em um cenário real, você teria providers nomeados para cada instância
     {
       provide: 'PRIMARY_PRISMA',
       useFactory: (configService: ConfigService) => {
@@ -37,7 +42,6 @@ import { PubSubListenerExample } from './application/listeners/pubsub-listener.e
       },
       inject: [ConfigService],
     },
-    // Provendo instâncias padrão com ConfigService
     {
       provide: BigQueryService,
       useFactory: (configService: ConfigService) => {
