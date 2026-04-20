@@ -63,7 +63,7 @@ Lista de melhorias planejadas para elevar o template para um padrão "Enterprise
   - [x] Configurar `redact` no Pino para omitir campos sensíveis (passcodes, tokens, PII).
 - [x] **Validação Global de Entrada (Zod/Pipes)**
   - [x] Implementar um Pipe global para validar todos os inputs da API automaticamente.
-- [ ] **Health Checks Reais (Terminus)**
+- [x] **Health Checks Reais (Terminus)**
   - Expandir o Health Check para monitorar DB e PubSub ativamente com `@nestjs/terminus`.
 - [ ] **Infraestrutura de Testes E2E**
   - Criar helpers para isolamento e seeding de banco de dados nos testes E2E.
