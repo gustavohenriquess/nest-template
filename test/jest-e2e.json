@@ -12,5 +12,6 @@
   },
   "moduleNameMapper": {
     "^@/(.*)$": "<rootDir>/../src/$1"
-  }
+  },
+  "setupFiles": ["<rootDir>/setup-env.ts"]
 }

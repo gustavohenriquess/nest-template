@@ -1,37 +1,70 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
-import { AppModule } from '../src/app.module';
+import { E2EHelper } from './utils/e2e-helper';
 
 describe('HealthController (e2e)', () => {
-  let app: INestApplication;
+  const helper = new E2EHelper();
 
-  beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
-    await app.init();
+  beforeAll(async () => {
+    await helper.bootstrap();
   });
 
   afterAll(async () => {
-    await app.close();
+    await helper.teardown();
   });
 
   it('/health (GET)', () => {
-    return request(app.getHttpServer() as never)
+    return request(helper.getApp().getHttpServer() as never)
       .get('/health')
       .expect(200)
       .expect((res) => {
-        const body = res.body as {
-          status: string;
-          timestamp: string;
-          details: string;
+        const { meta, data } = res.body as {
+          meta: {
+            module: string;
+            severity: string;
+          };
+          data: {
+            status: string;
+            info: Record<string, unknown>;
+          };
         };
-        expect(body.status).toBe('ok');
-        expect(body).toHaveProperty('timestamp');
-        expect(body.details).toBe('Service is running correctly');
+
+        expect(meta).toBeDefined();
+        expect(meta.module).toBe('health');
+        expect(meta.severity).toBe('low');
+
+        expect(data.status).toBe('ok');
+        expect(data.info).toHaveProperty('memory_heap');
+        expect(data.info).toHaveProperty('memory_rss');
+      });
+  });
+
+  it('/health/integrations (GET)', () => {
+    return request(helper.getApp().getHttpServer() as never)
+      .get('/health/integrations')
+      .expect(200)
+      .expect((res) => {
+        const { meta, data } = res.body as {
+          meta: {
+            module: string;
+            severity: string;
+          };
+          data: {
+            status: string;
+            info: Record<string, unknown>;
+          };
+        };
+
+        expect(meta.severity).toBe('high');
+        expect(meta.module).toBe('health');
+
+        expect(data.status).toBe('ok');
+        // Check standard indicators are present via info object returned by Terminus
+        expect(data.info).toHaveProperty('prisma_default');
+        expect(data.info).toHaveProperty('prisma_primary');
+        expect(data.info).toHaveProperty('prisma_secondary');
+        expect(data.info).toHaveProperty('pubsub');
+        expect(data.info).toHaveProperty('bigquery');
+        expect(data.info).toHaveProperty('storage');
       });
   });
 });

@@ -65,7 +65,7 @@ Lista de melhorias planejadas para elevar o template para um padrão "Enterprise
   - [x] Implementar um Pipe global para validar todos os inputs da API automaticamente.
 - [x] **Health Checks Reais (Terminus)**
   - Expandir o Health Check para monitorar DB e PubSub ativamente com `@nestjs/terminus`.
-- [ ] **Infraestrutura de Testes E2E**
-  - Criar helpers para isolamento e seeding de banco de dados nos testes E2E.
+- [x] **Infraestrutura de Testes E2E**
+  - [x] Criar helpers para isolamento e seeding de banco de dados nos testes E2E.
 - [ ] **Automação de CI/CD (GitHub Actions)**
   - Criar workflows para build, lint e testes automáticos em cada commit.

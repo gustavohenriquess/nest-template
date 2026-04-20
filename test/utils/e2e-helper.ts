@@ -1,0 +1,80 @@
+import { Test, TestingModule } from '@nestjs/testing';
+import { INestApplication } from '@nestjs/common';
+import { Logger } from 'nestjs-pino';
+import { MemoryHealthIndicator } from '@nestjs/terminus';
+import { AppModule } from '@/app.module';
+import { BigQueryService } from '@/core/infrastructure/gcp/bigquery.service';
+import { PubSubService } from '@/core/infrastructure/gcp/pubsub.service';
+import { StorageService } from '@/core/infrastructure/gcp/storage.service';
+import { PrismaService } from '@/core/infrastructure/persistence/prisma/prisma.service';
+
+export class E2EHelper {
+  private app: INestApplication;
+
+  async bootstrap() {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
+    })
+      // Overriding GCP services with mocks to avoid real connections in E2E
+      .overrideProvider(MemoryHealthIndicator)
+      .useValue({
+        checkHeap: jest
+          .fn()
+          .mockResolvedValue({ memory_heap: { status: 'up' } }),
+        checkRSS: jest.fn().mockResolvedValue({ memory_rss: { status: 'up' } }),
+      })
+      .overrideProvider(BigQueryService)
+      .useValue({
+        query: jest.fn().mockResolvedValue([]),
+        createDataset: jest.fn().mockResolvedValue({}),
+        insertRows: jest.fn().mockResolvedValue({}),
+      })
+      .overrideProvider(PubSubService)
+      .useValue({
+        publishMessage: jest.fn().mockResolvedValue('msg-id'),
+        createTopic: jest.fn().mockResolvedValue({}),
+        listenForMessages: jest.fn().mockResolvedValue({}),
+      })
+      .overrideProvider(StorageService)
+      .useValue({
+        listBuckets: jest.fn().mockResolvedValue([]),
+        uploadFile: jest.fn().mockResolvedValue({}),
+        downloadFile: jest.fn().mockResolvedValue(Buffer.from('')),
+        deleteFile: jest.fn().mockResolvedValue({}),
+      })
+      // Overriding potentially multi-instance Prisma providers if needed
+      // For basic E2E, we can use the main prisma instance or a mock
+      .overrideProvider('PRIMARY_PRISMA')
+      .useFactory({
+        factory: (prisma: PrismaService) => prisma,
+        inject: [PrismaService],
+      })
+      .overrideProvider('SECONDARY_PRISMA')
+      .useFactory({
+        factory: (prisma: PrismaService) => prisma,
+        inject: [PrismaService],
+      })
+      .compile();
+
+    this.app = moduleFixture.createNestApplication({ bufferLogs: true });
+
+    // Silence logger or use a simple one for E2E
+    this.app.useLogger(this.app.get(Logger));
+
+    await this.app.init();
+    return this.app;
+  }
+
+  async teardown() {
+    if (this.app) {
+      await this.app.close();
+    }
+  }
+
+  getApp() {
+    if (!this.app) {
+      throw new Error('App not bootstrapped! Call bootstrap() first.');
+    }
+    return this.app;
+  }
+}

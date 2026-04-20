@@ -120,7 +120,7 @@
     "**/*.ts": [
       "npm run lint",
       "npm run format",
-      "jest --findRelatedTests --bail"
+      "jest --findRelatedTests --bail --passWithNoTests"
     ]
   }
 }
