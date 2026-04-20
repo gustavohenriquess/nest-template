@@ -59,7 +59,7 @@ services:
       - .env
     command: [ "--config=/etc/otel-collector-config.yml" ]
     volumes:
-      - ./otel-collector-config.yml:/etc/otel-collector-config.yml
+      - ./otel-collector/otel-collector-config.yml:/etc/otel-collector-config.yml
     ports:
       - "1888:1888" # pprof extension
       - "13133:13133" # health_check extension
