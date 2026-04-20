@@ -67,5 +67,5 @@ Lista de melhorias planejadas para elevar o template para um padrão "Enterprise
   - Expandir o Health Check para monitorar DB e PubSub ativamente com `@nestjs/terminus`.
 - [x] **Infraestrutura de Testes E2E**
   - [x] Criar helpers para isolamento e seeding de banco de dados nos testes E2E.
-- [ ] **Automação de CI/CD (GitHub Actions)**
-  - Criar workflows para build, lint e testes automáticos em cada commit.
+- [x] **Automação de CI/CD (GitHub Actions)**
+  - [x] Criar workflows para build, lint e testes automáticos em cada commit.
