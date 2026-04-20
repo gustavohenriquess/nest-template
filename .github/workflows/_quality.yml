@@ -1,36 +1,31 @@
 name: Quality & Build
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  workflow_call:
 
 jobs:
   lint_and_build:
     runs-on: ubuntu-latest
-
     env:
       GCP_PRIMARY_PROJECT_ID: ci-project
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: nest_db
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/nest_db
-
     steps:
       - uses: actions/checkout@v4
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 24
-          cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Prisma Generate
-        run: npx prisma generate
+      - name: Restore Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            ~/.npm
+          key: node-v1-${{ runner.os }}-${{ hashFiles('package-lock.json', 'prisma/schema.prisma') }}
 
       - name: Lint
         run: npm run lint

@@ -1,0 +1,30 @@
+name: CI Orchestration (Main)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # The "Do Once" root
+  setup:
+    uses: ./.github/workflows/_setup.yml
+
+  # The parallel "Break into More" branches
+  quality:
+    needs: setup
+    uses: ./.github/workflows/_quality.yml
+
+  unit-tests:
+    needs: setup
+    uses: ./.github/workflows/_unit-tests.yml
+
+  coverage:
+    needs: setup
+    uses: ./.github/workflows/_coverage.yml
+
+  # E2E depends on Quality to fail fast and save resources
+  e2e-tests:
+    needs: [setup, quality]
+    uses: ./.github/workflows/_e2e-tests.yml
