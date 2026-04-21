@@ -25,8 +25,12 @@ Lista de melhorias planejadas para elevar o template para um padrão "Enterprise
 - [x] **Swagger (OpenAPI) Integration**
   - Configurar `SwaggerModule` no `main.ts`.
   - Adicionar metadados básicos às rotas de saúde.
+- [ ] **Versionamento e Changelog Automático**
+  - Implementar `Standard Version` ou `Release-it` para automação de tags e histórico de mudanças.
 - [x] **Makefile / Automação**
   - Criar `Makefile` com comandos: `make setup`, `make test`, `make db-up`, `make prisma-gen`.
+- [ ] **Padronização de IDE (.editorconfig)**
+  - Adicionar `.editorconfig` para garantir consistência de indentação e formato entre diferentes editores.
 - [x] **Docker Hot Reload**
   - Configurar volumes no `docker-compose.yml`.
   - Habilitar watch mode dentro do container.
@@ -47,6 +51,8 @@ Lista de melhorias planejadas para elevar o template para um padrão "Enterprise
   - Implementar política de CORS robusta para permitir apenas domínios autorizados.
 - [x] **Rate Limiting (Controlador de Tráfego)**
   - Implementar limite de requisições por IP/User para prevenir abusos e ataques DoS/Brute-force.
+- [ ] **Auditoria de Segurança na CI**
+  - Adicionar um job de `npm audit` ou similar para detectar vulnerabilidades em dependências automaticamente.
 
 ## ⚡ Performance & Produção
 - [x] **Logging de Alta Performance (Pino)**
@@ -69,3 +75,5 @@ Lista de melhorias planejadas para elevar o template para um padrão "Enterprise
   - [x] Criar helpers para isolamento e seeding de banco de dados nos testes E2E.
 - [x] **Automação de CI/CD (GitHub Actions)**
   - [x] Criar workflows para build, lint e testes automáticos em cada commit.
+- [ ] **Catálogo de Códigos de Erro de Negócio**
+  - Implementar um padrão de codificação (ex: `APP-001`) para facilitar o tratamento de erros pelo Frontend.
