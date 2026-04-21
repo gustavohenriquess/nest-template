@@ -53,6 +53,9 @@ Lista de melhorias planejadas para elevar o template para um padrão "Enterprise
   - Implementar limite de requisições por IP/User para prevenir abusos e ataques DoS/Brute-force.
 - [x] **Auditoria de Segurança na CI**
   - Adicionar um job de `npm audit` ou similar para detectar vulnerabilidades em dependências automaticamente.
+- [ ] **Atualização Automática de Dependências (Renovate Bot)**
+  - Adicionar o arquivo `renovate.json` e configurar o bot no repositório para gerenciar atualizações de pacotes e corrigir vulnerabilidades automaticamente.
+
 
 ## ⚡ Performance & Produção
 - [x] **Logging de Alta Performance (Pino)**
