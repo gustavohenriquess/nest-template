@@ -51,7 +51,7 @@ Lista de melhorias planejadas para elevar o template para um padrão "Enterprise
   - Implementar política de CORS robusta para permitir apenas domínios autorizados.
 - [x] **Rate Limiting (Controlador de Tráfego)**
   - Implementar limite de requisições por IP/User para prevenir abusos e ataques DoS/Brute-force.
-- [ ] **Auditoria de Segurança na CI**
+- [x] **Auditoria de Segurança na CI**
   - Adicionar um job de `npm audit` ou similar para detectar vulnerabilidades em dependências automaticamente.
 
 ## ⚡ Performance & Produção
