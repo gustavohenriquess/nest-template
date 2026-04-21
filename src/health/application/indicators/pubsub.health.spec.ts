@@ -10,7 +10,7 @@ describe('PubSubHealthIndicator', () => {
   beforeEach(async () => {
     pubSubMock = {
       publishMessage: jest.fn(),
-    } as unknown as jest.Mocked<PubSubService>;
+    };
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         PubSubHealthIndicator,

@@ -32,12 +32,10 @@ describe('HealthController', () => {
     }).compile();
 
     controller = module.get<HealthController>(HealthController);
-    health = module.get<HealthCheckService>(
-      HealthCheckService,
-    ) as unknown as jest.Mocked<HealthCheckService>;
+    health = module.get<HealthCheckService>(HealthCheckService);
     integrations = module.get<HealthIntegrationsService>(
       HealthIntegrationsService,
-    ) as unknown as jest.Mocked<HealthIntegrationsService>;
+    );
   });
 
   it('should be defined', () => {
@@ -55,6 +53,7 @@ describe('HealthController', () => {
       const result = await controller.handle();
 
       expect(result).toEqual(mockResult);
+
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(health.check).toHaveBeenCalled();
     });
@@ -71,6 +70,7 @@ describe('HealthController', () => {
       const result = await controller.handleIntegrations();
 
       expect(result).toEqual(mockResult);
+
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(health.check).toHaveBeenCalledWith(mockIndicators);
     });

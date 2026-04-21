@@ -10,7 +10,7 @@ describe('StorageHealthIndicator', () => {
   beforeEach(async () => {
     storageMock = {
       listBuckets: jest.fn(),
-    } as unknown as jest.Mocked<StorageService>;
+    };
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         StorageHealthIndicator,

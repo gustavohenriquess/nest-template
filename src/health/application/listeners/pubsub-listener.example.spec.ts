@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PubSubListenerExample } from './pubsub-listener.example';
 import { PubSubService } from '@/core/infrastructure/gcp/pubsub.service';
-import { Message } from '@google-cloud/pubsub';
 
 describe('PubSubListenerExample', () => {
   let service: PubSubListenerExample;
@@ -63,7 +62,7 @@ describe('PubSubListenerExample', () => {
       ack: jest.fn(),
     };
 
-    handler(mockMessage as unknown as Message);
+    handler(mockMessage);
 
     expect(mockMessage.ack).toHaveBeenCalled();
   });
@@ -83,7 +82,7 @@ describe('PubSubListenerExample', () => {
       .spyOn(console, 'error')
       .mockImplementation(() => {});
 
-    handler(mockMessage as unknown as Message);
+    handler(mockMessage);
 
     expect(mockMessage.ack).toHaveBeenCalled();
 

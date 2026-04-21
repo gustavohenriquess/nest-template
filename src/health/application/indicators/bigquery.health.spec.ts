@@ -10,7 +10,7 @@ describe('BigQueryHealthIndicator', () => {
   beforeEach(async () => {
     bqMock = {
       query: jest.fn(),
-    } as unknown as jest.Mocked<BigQueryService>;
+    };
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         BigQueryHealthIndicator,

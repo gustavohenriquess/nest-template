@@ -10,7 +10,7 @@ describe('PrismaHealthIndicator', () => {
   beforeEach(async () => {
     prismaMock = {
       $queryRaw: jest.fn(),
-    } as unknown as jest.Mocked<PrismaClient>;
+    };
     const module: TestingModule = await Test.createTestingModule({
       providers: [PrismaHealthIndicator],
     }).compile();

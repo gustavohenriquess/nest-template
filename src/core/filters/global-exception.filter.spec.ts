@@ -201,7 +201,7 @@ describe('GlobalExceptionFilter', () => {
     const customMeta = { module: 'health', severity: 'high' };
     const query = { foo: 'bar' };
     mockRequest.customMeta = customMeta;
-    mockRequest.query = query as unknown as Record<string, string>;
+    mockRequest.query = query;
 
     const exception = new Error('Test error');
     filter.catch(exception, mockArgumentsHost);
