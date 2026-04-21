@@ -1,0 +1,25 @@
+name: Create GitHub Release
+
+on:
+  push:
+    tags:
+      - 'v*' # Trigger build on any tag starting with v
+
+permissions:
+  contents: write # Dá permissão para o GITHUB_TOKEN criar a release e fazer upload das notas
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          # Note: Standard Version already updates CHANGELOG.md,
+          # but this action will also create the GitHub UI release notes.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

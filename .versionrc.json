@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "postchangelog": "chmod +x scripts/generate-version-changelog.sh && bash scripts/generate-version-changelog.sh && git add docs/changelogs/"
+  }
+}

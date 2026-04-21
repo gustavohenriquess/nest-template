@@ -25,7 +25,7 @@ Lista de melhorias planejadas para elevar o template para um padrão "Enterprise
 - [x] **Swagger (OpenAPI) Integration**
   - Configurar `SwaggerModule` no `main.ts`.
   - Adicionar metadados básicos às rotas de saúde.
-- [ ] **Versionamento e Changelog Automático**
+- [x] **Versionamento e Changelog Automático**
   - Implementar `Standard Version` ou `Release-it` para automação de tags e histórico de mudanças.
 - [x] **Makefile / Automação**
   - Criar `Makefile` com comandos: `make setup`, `make test`, `make db-up`, `make prisma-gen`.

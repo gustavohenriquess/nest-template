@@ -15,6 +15,7 @@ help:
 	@echo "  build       Build the application"
 	@echo "  start       Start application in development mode"
 	@echo "  clean       Remove dist and coverage folders"
+	@echo "  release     Create a new version tag and update CHANGELOG.md"
 
 setup: install sys-up prisma-gen
 
@@ -44,3 +45,7 @@ start:
 
 clean:
 	rm -rf dist coverage
+
+release:
+	npm run release
+	git push --follow-tags origin $$(git rev-parse --abbrev-ref HEAD)
