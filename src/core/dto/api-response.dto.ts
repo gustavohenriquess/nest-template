@@ -2,10 +2,10 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class MetaDto {
   @ApiProperty({ example: '2026-04-04T18:00:00.000Z' })
-  timestamp: string;
+  timestamp!: string;
 
   @ApiProperty({ example: '/health' })
-  path: string;
+  path!: string;
 
   @ApiProperty({ example: {} })
   filters: any;
@@ -18,17 +18,17 @@ export class MetaDto {
 
 export class BaseResponseDto<T> {
   @ApiProperty()
-  meta: MetaDto;
+  meta!: MetaDto;
 
-  data: T;
+  data!: T;
 }
 
 export class ErrorDetailDto {
   @ApiProperty({ example: 'BUSINESS_RULE_ERROR' })
-  code: string;
+  code!: string;
 
   @ApiProperty({ example: 'Validation failed' })
-  message: string;
+  message!: string;
 
   @ApiProperty({ required: false, example: 'Resource already exists' })
   details?: any;
@@ -36,8 +36,8 @@ export class ErrorDetailDto {
 
 export class ErrorResponseDto {
   @ApiProperty()
-  meta: MetaDto;
+  meta!: MetaDto;
 
   @ApiProperty()
-  error: ErrorDetailDto;
+  error!: ErrorDetailDto;
 }

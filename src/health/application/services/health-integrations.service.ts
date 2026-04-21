@@ -11,13 +11,13 @@ import { PrismaService } from '@/core/infrastructure/persistence/prisma/prisma.s
 @Injectable()
 export class HealthIntegrationsService {
   @Inject(PrismaService)
-  private readonly defaultPrisma: PrismaService;
+  private readonly defaultPrisma!: PrismaService;
 
   @Inject('PRIMARY_PRISMA')
-  private readonly primaryPrisma: PrismaService;
+  private readonly primaryPrisma!: PrismaService;
 
   @Inject('SECONDARY_PRISMA')
-  private readonly secondaryPrisma: PrismaService;
+  private readonly secondaryPrisma!: PrismaService;
 
   private readonly prisma: PrismaHealthIndicator;
   private readonly pubsub: PubSubHealthIndicator;

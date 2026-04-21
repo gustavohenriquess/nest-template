@@ -26,7 +26,7 @@ export class TransformInterceptor<T> implements NestInterceptor<
   TransformResponse<T>
 > {
   @Inject(Reflector)
-  private readonly reflector: Reflector;
+  private readonly reflector!: Reflector;
 
   intercept(
     context: ExecutionContext,
