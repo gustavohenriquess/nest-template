@@ -16,13 +16,9 @@ jobs:
     needs: setup
     uses: ./.github/workflows/_quality.yml
 
-  unit-tests:
+  tests:
     needs: setup
-    uses: ./.github/workflows/_unit-tests.yml
-
-  coverage:
-    needs: setup
-    uses: ./.github/workflows/_coverage.yml
+    uses: ./.github/workflows/_tests.yml
 
   # E2E depends on Quality to fail fast and save resources
   e2e-tests:

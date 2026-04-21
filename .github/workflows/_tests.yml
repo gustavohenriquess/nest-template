@@ -1,10 +1,10 @@
-name: Unit Tests
+name: Test Coverage
 
 on:
   workflow_call:
 
 jobs:
-  unit_tests:
+  coverage:
     runs-on: ubuntu-latest
     env:
       GCP_PRIMARY_PROJECT_ID: ci-project
@@ -27,5 +27,5 @@ jobs:
             ~/.npm
           key: node-v1-${{ runner.os }}-${{ hashFiles('package-lock.json', 'prisma/schema.prisma') }}
 
-      - name: Run Unit Tests
-        run: npm run test
+      - name: Run Tests & Coverage
+        run: npm run test:cov
