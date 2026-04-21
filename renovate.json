@@ -7,27 +7,43 @@
     ":prHourlyLimitNone",
     ":prConcurrentLimitNone"
   ],
-  "labels": ["dependencies", "security"],
+  "labels": [
+    "dependencies",
+    "security"
+  ],
   "packageRules": [
     {
-      "matchPackageNames": ["@nestjs/*", "nestjs-*"],
+      "matchPackageNames": [
+        "@nestjs/*",
+        "nestjs-*"
+      ],
       "groupName": "NestJS framework"
     },
     {
-      "matchPackageNames": ["@prisma/*", "prisma"],
+      "matchPackageNames": [
+        "@prisma/*",
+        "prisma"
+      ],
       "groupName": "Prisma ORM"
     },
     {
-      "matchPackageNames": ["@opentelemetry/*"],
+      "matchPackageNames": [
+        "@opentelemetry/*"
+      ],
       "groupName": "OpenTelemetry SDK"
     },
     {
-      "matchPackageNames": ["@google-cloud/*"],
+      "matchPackageNames": [
+        "@google-cloud/*"
+      ],
       "groupName": "Google Cloud SDKs"
     },
     {
-      "matchUpdateTypes": ["minor", "patch"],
-      "automerge": false
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "automerge": true
     }
   ]
 }
