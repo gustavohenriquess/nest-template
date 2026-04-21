@@ -13,12 +13,6 @@ export class HealthIntegrationsService {
   @Inject(PrismaService)
   private readonly defaultPrisma!: PrismaService;
 
-  @Inject('PRIMARY_PRISMA')
-  private readonly primaryPrisma!: PrismaService;
-
-  @Inject('SECONDARY_PRISMA')
-  private readonly secondaryPrisma!: PrismaService;
-
   private readonly prisma: PrismaHealthIndicator;
   private readonly pubsub: PubSubHealthIndicator;
   private readonly bigquery: BigQueryHealthIndicator;
@@ -48,8 +42,6 @@ export class HealthIntegrationsService {
   getIndicators() {
     return [
       () => this.prisma.isHealthy('prisma_default', this.defaultPrisma),
-      () => this.prisma.isHealthy('prisma_primary', this.primaryPrisma),
-      () => this.prisma.isHealthy('prisma_secondary', this.secondaryPrisma),
       () => this.pubsub.isHealthy('pubsub', this.pubsubService),
       () => this.bigquery.isHealthy('bigquery', this.bigqueryService),
       () => this.storage.isHealthy('storage', this.storageService),

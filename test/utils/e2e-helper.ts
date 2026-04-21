@@ -6,7 +6,6 @@ import { AppModule } from '@/app.module';
 import { BigQueryService } from '@/core/infrastructure/gcp/bigquery.service';
 import { PubSubService } from '@/core/infrastructure/gcp/pubsub.service';
 import { StorageService } from '@/core/infrastructure/gcp/storage.service';
-import { PrismaService } from '@/core/infrastructure/persistence/prisma/prisma.service';
 
 export class E2EHelper {
   private app: INestApplication;
@@ -42,18 +41,7 @@ export class E2EHelper {
         downloadFile: jest.fn().mockResolvedValue(Buffer.from('')),
         deleteFile: jest.fn().mockResolvedValue({}),
       })
-      // Overriding potentially multi-instance Prisma providers if needed
-      // For basic E2E, we can use the main prisma instance or a mock
-      .overrideProvider('PRIMARY_PRISMA')
-      .useFactory({
-        factory: (prisma: PrismaService) => prisma,
-        inject: [PrismaService],
-      })
-      .overrideProvider('SECONDARY_PRISMA')
-      .useFactory({
-        factory: (prisma: PrismaService) => prisma,
-        inject: [PrismaService],
-      })
+
       .compile();
 
     this.app = moduleFixture.createNestApplication({ bufferLogs: true });

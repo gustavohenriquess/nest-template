@@ -23,27 +23,7 @@ import { HealthIntegrationsService } from './application/services/health-integra
     StorageHealthIndicator,
     PubSubListenerExample,
     HealthIntegrationsService,
-    // Em um cenário real, você teria providers nomeados para cada instância
-    {
-      provide: 'PRIMARY_PRISMA',
-      useFactory: (configService: ConfigService) => {
-        const url =
-          configService.get<string>('DATABASE_URL_PRIMARY') ||
-          'postgresql://user:pass@localhost:5432/primary';
-        return new PrismaService(url);
-      },
-      inject: [ConfigService],
-    },
-    {
-      provide: 'SECONDARY_PRISMA',
-      useFactory: (configService: ConfigService) => {
-        const url =
-          configService.get<string>('DATABASE_URL_SECONDARY') ||
-          'postgresql://user:pass@localhost:5432/secondary';
-        return new PrismaService(url);
-      },
-      inject: [ConfigService],
-    },
+
     {
       provide: BigQueryService,
       useFactory: (configService: ConfigService) => {

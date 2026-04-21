@@ -37,8 +37,6 @@ describe('HealthIntegrationsService', () => {
         { provide: PubSubService, useValue: {} },
         { provide: StorageService, useValue: {} },
         { provide: PrismaService, useValue: {} },
-        { provide: 'PRIMARY_PRISMA', useValue: {} },
-        { provide: 'SECONDARY_PRISMA', useValue: {} },
       ],
     }).compile();
 
@@ -52,7 +50,7 @@ describe('HealthIntegrationsService', () => {
 
   it('should return 6 indicator functions', () => {
     const indicators = service.getIndicators();
-    expect(indicators).toHaveLength(6);
+    expect(indicators).toHaveLength(4);
     indicators.forEach((fn) => expect(typeof fn).toBe('function'));
   });
 
@@ -62,6 +60,6 @@ describe('HealthIntegrationsService', () => {
       await fn();
     }
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(prismaIndicator.isHealthy).toHaveBeenCalledTimes(3);
+    expect(prismaIndicator.isHealthy).toHaveBeenCalledTimes(1);
   });
 });
