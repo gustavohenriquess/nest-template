@@ -29,7 +29,7 @@ Lista de melhorias planejadas para elevar o template para um padrão "Enterprise
   - Implementar `Standard Version` ou `Release-it` para automação de tags e histórico de mudanças.
 - [x] **Makefile / Automação**
   - Criar `Makefile` com comandos: `make setup`, `make test`, `make db-up`, `make prisma-gen`.
-- [ ] **Padronização de IDE (.editorconfig)**
+- [x] **Padronização de IDE (.editorconfig)**
   - Adicionar `.editorconfig` para garantir consistência de indentação e formato entre diferentes editores.
 - [x] **Docker Hot Reload**
   - Configurar volumes no `docker-compose.yml`.
