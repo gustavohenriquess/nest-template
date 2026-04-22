@@ -1,21 +1,33 @@
 /* istanbul ignore file */
-import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  OnModuleInit,
+  OnModuleDestroy,
+  Logger,
+} from '@nestjs/common';
 import { PubSubService } from '@/core/infrastructure/gcp/pubsub.service';
 import { Message } from '@google-cloud/pubsub';
 
 @Injectable()
-export class PubSubListenerExample implements OnModuleInit {
+export class PubSubListenerExample implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(PubSubListenerExample.name);
+  private initTimeout: NodeJS.Timeout | null = null;
 
   constructor(private readonly pubsub: PubSubService) {}
 
   onModuleInit() {
     // Envolver em um timeout ou try/catch para garantir que não trave o bootstrap
     // Em um template, é melhor ser resiliente a falhas de infra local
-    setTimeout(() => {
+    this.initTimeout = setTimeout(() => {
       this.logger.log('Initializing PubSub Listener Example (Delayed)...');
       this.setupListener();
     }, 1000);
+  }
+
+  onModuleDestroy() {
+    if (this.initTimeout) {
+      clearTimeout(this.initTimeout);
+    }
   }
 
   private setupListener() {
