@@ -1,3 +1,5 @@
+import { ErrorCode } from './error-codes';
+
 export abstract class DomainError extends Error {
   constructor(
     public readonly message: string,
@@ -11,24 +13,27 @@ export abstract class DomainError extends Error {
 
 export class EntityNotFoundError extends DomainError {
   constructor(message: string) {
-    super(message, 'ENTITY_NOT_FOUND');
+    super(message, ErrorCode.NOT_FOUND);
   }
 }
 
 export class BusinessRuleError extends DomainError {
-  constructor(message: string, code = 'BUSINESS_RULE_VIOLATION') {
+  constructor(
+    message: string,
+    code: string = ErrorCode.BUSINESS_RULE_VIOLATION,
+  ) {
     super(message, code);
   }
 }
 
 export class ConflictError extends DomainError {
   constructor(message: string) {
-    super(message, 'CONFLICT');
+    super(message, ErrorCode.CONFLICT);
   }
 }
 
 export class UnauthorizedError extends DomainError {
   constructor(message = 'Unauthorized') {
-    super(message, 'UNAUTHORIZED');
+    super(message, ErrorCode.UNAUTHORIZED);
   }
 }

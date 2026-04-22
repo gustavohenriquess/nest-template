@@ -15,6 +15,8 @@ import {
   UnauthorizedError,
 } from '../errors/domain.error';
 
+import { ErrorCode } from '../errors/error-codes';
+
 interface RequestWithMeta extends Request {
   customMeta?: Record<string, unknown>;
 }
@@ -29,7 +31,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest<RequestWithMeta>();
 
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
-    let code = 'INTERNAL_SERVER_ERROR';
+    let code: string = ErrorCode.INTERNAL_ERROR;
     let message = 'An unexpected error occurred';
     let details: unknown = null;
 

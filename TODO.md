@@ -78,5 +78,5 @@ Lista de melhorias planejadas para elevar o template para um padrão "Enterprise
   - [x] Criar helpers para isolamento e seeding de banco de dados nos testes E2E.
 - [x] **Automação de CI/CD (GitHub Actions)**
   - [x] Criar workflows para build, lint e testes automáticos em cada commit.
-- [ ] **Catálogo de Códigos de Erro de Negócio**
+- [x] **Catálogo de Códigos de Erro de Negócio**
   - Implementar um padrão de codificação (ex: `APP-001`) para facilitar o tratamento de erros pelo Frontend.

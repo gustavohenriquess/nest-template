@@ -8,6 +8,7 @@ import {
   UnauthorizedError,
   DomainError,
 } from '../errors/domain.error';
+import { ErrorCode } from '../errors/error-codes';
 
 interface RequestWithMeta extends Request {
   customMeta?: Record<string, unknown>;
@@ -115,7 +116,7 @@ describe('GlobalExceptionFilter', () => {
     expect(mockResponse.json).toHaveBeenCalledWith(
       expect.objectContaining({
         error: expect.objectContaining({
-          code: 'ENTITY_NOT_FOUND',
+          code: ErrorCode.NOT_FOUND,
           message: 'User not found',
         }) as unknown,
       }) as unknown,
@@ -130,7 +131,7 @@ describe('GlobalExceptionFilter', () => {
     expect(mockResponse.json).toHaveBeenCalledWith(
       expect.objectContaining({
         error: expect.objectContaining({
-          code: 'BUSINESS_RULE_VIOLATION',
+          code: ErrorCode.BUSINESS_RULE_VIOLATION,
         }) as unknown,
       }) as unknown,
     );
@@ -144,7 +145,7 @@ describe('GlobalExceptionFilter', () => {
     expect(mockResponse.json).toHaveBeenCalledWith(
       expect.objectContaining({
         error: expect.objectContaining({
-          code: 'CONFLICT',
+          code: ErrorCode.CONFLICT,
         }) as unknown,
       }) as unknown,
     );
@@ -158,7 +159,7 @@ describe('GlobalExceptionFilter', () => {
     expect(mockResponse.json).toHaveBeenCalledWith(
       expect.objectContaining({
         error: expect.objectContaining({
-          code: 'UNAUTHORIZED',
+          code: ErrorCode.UNAUTHORIZED,
         }) as unknown,
       }) as unknown,
     );
@@ -174,7 +175,7 @@ describe('GlobalExceptionFilter', () => {
     expect(mockResponse.json).toHaveBeenCalledWith(
       expect.objectContaining({
         error: expect.objectContaining({
-          code: 'INTERNAL_SERVER_ERROR',
+          code: ErrorCode.INTERNAL_ERROR,
           message: 'Unexpected problem',
         }) as unknown,
       }) as unknown,
@@ -190,7 +191,7 @@ describe('GlobalExceptionFilter', () => {
     expect(mockResponse.json).toHaveBeenCalledWith(
       expect.objectContaining({
         error: expect.objectContaining({
-          code: 'INTERNAL_SERVER_ERROR',
+          code: ErrorCode.INTERNAL_ERROR,
           message: 'An unexpected error occurred',
         }) as unknown,
       }) as unknown,
