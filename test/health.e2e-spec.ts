@@ -12,9 +12,9 @@ describe('HealthController (e2e)', () => {
     await helper.teardown();
   });
 
-  it('/health (GET)', () => {
+  it('/v1/health (GET)', () => {
     return request(helper.getApp().getHttpServer() as never)
-      .get('/health')
+      .get('/v1/health')
       .expect(200)
       .expect((res) => {
         const { meta, data } = res.body as {
@@ -38,9 +38,9 @@ describe('HealthController (e2e)', () => {
       });
   });
 
-  it('/health/integrations (GET)', () => {
+  it('/v1/health/integrations (GET)', () => {
     return request(helper.getApp().getHttpServer() as never)
-      .get('/health/integrations')
+      .get('/v1/health/integrations')
       .expect(200)
       .expect((res) => {
         const { meta, data } = res.body as {

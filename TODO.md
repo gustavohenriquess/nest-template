@@ -89,7 +89,7 @@ Lista de melhorias planejadas para elevar o template para um padrão "Enterprise
 - [ ] **Utilitários de Paginação e Filtros**
   - Criar DTOs padronizados (`page`, `limit`, `sort`).
   - Implementar resposta envelopada com metadados de paginação (`total`, `totalPages`, `hasNextPage`).
-- [ ] **Versionamento de API (URI)**
+- [x] **Versionamento de API (URI)**
   - Ativar o versionamento nativo do NestJS (ex: `/v1/health` vs `/v2/health`) para garantir retrocompatibilidade futura.
 - [ ] **Database Seeding (Prisma)**
   - Criar o script `prisma/seed.ts` para popular dados essenciais no banco ao iniciar um ambiente novo.

@@ -1,5 +1,6 @@
 import { otelSDK } from './tracing';
 import { NestFactory } from '@nestjs/core';
+import { VersioningType } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import helmet from 'helmet';
 import { ConfigService } from '@nestjs/config';
@@ -34,6 +35,11 @@ async function bootstrap() {
     origin: allowedOrigins,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
+  });
+
+  app.enableVersioning({
+    type: VersioningType.URI,
+    defaultVersion: '1',
   });
 
   app.use(helmet());

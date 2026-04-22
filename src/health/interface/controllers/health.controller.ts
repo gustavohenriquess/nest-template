@@ -16,7 +16,10 @@ import { ErrorResponseDto, BaseResponseDto } from '@/core/dto/api-response.dto';
 
 @ApiTags('Health')
 @ApiExtraModels(BaseResponseDto, ErrorResponseDto)
-@Controller('health')
+@Controller({
+  path: 'health',
+  version: '1',
+})
 export class HealthController {
   private readonly health: HealthCheckService;
   private readonly memory: MemoryHealthIndicator;

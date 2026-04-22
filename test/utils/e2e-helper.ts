@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, VersioningType } from '@nestjs/common';
 import { Logger } from 'nestjs-pino';
 import { MemoryHealthIndicator } from '@nestjs/terminus';
 import { AppModule } from '@/app.module';
@@ -48,6 +48,11 @@ export class E2EHelper {
 
     // Silence logger or use a simple one for E2E
     this.app.useLogger(this.app.get(Logger));
+
+    this.app.enableVersioning({
+      type: VersioningType.URI,
+      defaultVersion: '1',
+    });
 
     await this.app.init();
     return this.app;
