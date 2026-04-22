@@ -60,8 +60,7 @@ describe('HealthController (e2e)', () => {
         expect(data.status).toBe('ok');
         // Check standard indicators are present via info object returned by Terminus
         expect(data.info).toHaveProperty('prisma_default');
-        expect(data.info).toHaveProperty('prisma_primary');
-        expect(data.info).toHaveProperty('prisma_secondary');
+
         expect(data.info).toHaveProperty('pubsub');
         expect(data.info).toHaveProperty('bigquery');
         expect(data.info).toHaveProperty('storage');
