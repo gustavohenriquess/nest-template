@@ -80,3 +80,18 @@ Lista de melhorias planejadas para elevar o template para um padrão "Enterprise
   - [x] Criar workflows para build, lint e testes automáticos em cada commit.
 - [x] **Catálogo de Códigos de Erro de Negócio**
   - Implementar um padrão de codificação (ex: `APP-001`) para facilitar o tratamento de erros pelo Frontend.
+
+## 🏢 Módulos Avançados (API & Negócio)
+- [ ] **Autenticação e Autorização (IAM)**
+  - Configurar `@nestjs/passport` com JWT.
+  - Implementar RBAC (Role-Based Access Control) com Guardas customizados (ex: `@Roles('ADMIN')`).
+  - Criar decorator genérico `@CurrentUser()` para extrair a sessão no Controller.
+- [ ] **Utilitários de Paginação e Filtros**
+  - Criar DTOs padronizados (`page`, `limit`, `sort`).
+  - Implementar resposta envelopada com metadados de paginação (`total`, `totalPages`, `hasNextPage`).
+- [ ] **Versionamento de API (URI)**
+  - Ativar o versionamento nativo do NestJS (ex: `/v1/health` vs `/v2/health`) para garantir retrocompatibilidade futura.
+- [ ] **Database Seeding (Prisma)**
+  - Criar o script `prisma/seed.ts` para popular dados essenciais no banco ao iniciar um ambiente novo.
+- [ ] **Compressão de Resposta (Performance)**
+  - Adicionar e configurar o middleware `compression` (Gzip/Brotli) para otimizar payloads volumosos.
