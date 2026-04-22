@@ -86,7 +86,7 @@ Lista de melhorias planejadas para elevar o template para um padrão "Enterprise
   - Configurar `@nestjs/passport` com JWT.
   - Implementar RBAC (Role-Based Access Control) com Guardas customizados (ex: `@Roles('ADMIN')`).
   - Criar decorator genérico `@CurrentUser()` para extrair a sessão no Controller.
-- [ ] **Utilitários de Paginação e Filtros**
+- [x] **Utilitários de Paginação e Filtros**
   - Criar DTOs padronizados (`page`, `limit`, `sort`).
   - Implementar resposta envelopada com metadados de paginação (`total`, `totalPages`, `hasNextPage`).
 - [x] **Versionamento de API (URI)**
