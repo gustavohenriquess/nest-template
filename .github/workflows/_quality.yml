@@ -13,7 +13,7 @@ jobs:
       POSTGRES_DB: nest_db
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/nest_db
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
