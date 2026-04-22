@@ -2,30 +2,30 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class PaginationMeta {
   @ApiProperty({ description: 'Total number of items across all pages' })
-  total: number;
+  total!: number;
 
   @ApiProperty({ description: 'Current page number' })
-  page: number;
+  page!: number;
 
   @ApiProperty({ description: 'Number of items per page' })
-  limit: number;
+  limit!: number;
 
   @ApiProperty({ description: 'Total number of pages' })
-  totalPages: number;
+  totalPages!: number;
 
   @ApiProperty({ description: 'Indicates if there is a next page' })
-  hasNextPage: boolean;
+  hasNextPage!: boolean;
 
   @ApiProperty({ description: 'Indicates if there is a previous page' })
-  hasPreviousPage: boolean;
+  hasPreviousPage!: boolean;
 }
 
 export class PaginatedResponseDto<T> {
   @ApiProperty({ description: 'The array of data items', isArray: true })
-  data: T[];
+  data!: T[];
 
   @ApiProperty({ description: 'Pagination metadata', type: PaginationMeta })
-  meta: PaginationMeta;
+  meta!: PaginationMeta;
 
   /**
    * Helper factory to create a paginated response and automatically calculate
