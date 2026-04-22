@@ -1,5 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  // "rangeStrategy": "bump", (Use esta linha se desejar que o Renovate sempre atualize a versão no package.json, mesmo que a nova versão já seja aceita pelo range atual)
   "extends": [
     "config:recommended",
     ":semanticCommits",
