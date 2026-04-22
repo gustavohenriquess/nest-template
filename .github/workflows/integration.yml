@@ -1,0 +1,23 @@
+name: CI Fast Integration
+
+on:
+  push:
+    branches: [ develop ]
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+      - '.github/workflows/release.yml'
+
+jobs:
+  # The "Do Once" root
+  setup:
+    uses: ./.github/workflows/_setup.yml
+
+  # The parallel "Break into More" branches
+  quality:
+    needs: setup
+    uses: ./.github/workflows/_quality.yml
+
+  tests:
+    needs: setup
+    uses: ./.github/workflows/_tests.yml

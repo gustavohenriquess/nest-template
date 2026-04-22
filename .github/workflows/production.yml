@@ -1,8 +1,8 @@
-name: CI Orchestration
+name: CI Stable Release
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main ]
     paths-ignore:
       - 'docs/**'
       - '**.md'
