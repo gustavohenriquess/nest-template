@@ -1,4 +1,4 @@
-import { otelSDK } from './tracing';
+import { otelSDK, startHostMetrics } from './tracing';
 import { NestFactory } from '@nestjs/core';
 import { VersioningType } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
@@ -10,6 +10,7 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   // Start the OpenTelemetry SDK
   otelSDK.start();
+  startHostMetrics();
 
   process.on('unhandledRejection', (reason, promise) => {
     console.error('Unhandled Rejection at:', promise, 'reason:', reason);

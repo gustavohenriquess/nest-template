@@ -80,6 +80,18 @@ services:
       - loki_data:/loki
     restart: unless-stopped
 
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    restart: unless-stopped
+
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
@@ -94,9 +106,11 @@ services:
       - GF_AUTH_DISABLE_LOGIN_FORM=${GF_AUTH_DISABLE_LOGIN_FORM}
       - LOKI_URL=${LOKI_URL}
       - JAEGER_UI_URL=${JAEGER_UI_URL}
+      - PROMETHEUS_URL=${PROMETHEUS_URL}
     depends_on:
       - loki
       - jaeger
+      - prometheus
     restart: unless-stopped
 
 volumes:
@@ -105,4 +119,6 @@ volumes:
   loki_data:
     driver: local
   grafana_data:
+    driver: local
+  prometheus_data:
     driver: local

@@ -20,6 +20,8 @@ Lista de melhorias planejadas para elevar o template para um padrão "Enterprise
   - Facilitar a busca de logs no Grafana/Datadog via ID de rastreio.
 - [x] **Monitoramento de Resource Usage**
   - Adicionar métricas de memória/CPU ao Health Check.
+- [x] **OpenTelemetry Metrics (Host Metrics)**
+  - Coletar e exportar uso real de CPU, Memória, Disco e Rede via OTLP.
 
 ## 📖 Documentação & DX
 - [x] **Swagger (OpenAPI) Integration**

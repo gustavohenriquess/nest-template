@@ -30,6 +30,11 @@ exporters:
       site: ${DD_URL}
       key: ${DD_KEY}
 
+  prometheus:
+    endpoint: ${PROMETHEUS_ENDPOINT}
+    resource_to_telemetry_conversion:
+      enabled: true
+
 processors:
   batch:
     send_batch_max_size: 100
@@ -56,10 +61,10 @@ service:
     metrics:
       receivers: [otlp]
       processors: [batch]
-      exporters: [debug]
+      exporters: [prometheus]
     logs:
       receivers: [otlp]
       processors: [batch]
       # debug: exibe os logs no console do Collector para validação local
       # loki: envia para o Loki para visualização no Grafana
-      exporters: [debug, otlphttp/loki]
+      exporters: [otlphttp/loki]

@@ -12,6 +12,9 @@ import { HttpInstrumentation } from '@opentelemetry/instrumentation-http';
 import { ExpressInstrumentation } from '@opentelemetry/instrumentation-express';
 import { NestInstrumentation } from '@opentelemetry/instrumentation-nestjs-core';
 import { PrismaInstrumentation } from '@prisma/instrumentation';
+import { PeriodicExportingMetricReader } from '@opentelemetry/sdk-metrics';
+import { OTLPMetricExporter } from '@opentelemetry/exporter-metrics-otlp-http';
+import { HostMetrics } from '@opentelemetry/host-metrics';
 import { TraceContext } from './core/utils/trace-context';
 
 /**
@@ -56,12 +59,22 @@ const traceExporter = new OTLPTraceExporter({
   url: `${otlpEndpoint}/v1/traces`,
 });
 
+const metricExporter = new OTLPMetricExporter({
+  url: `${otlpEndpoint}/v1/metrics`,
+});
+
+const metricReader = new PeriodicExportingMetricReader({
+  exporter: metricExporter,
+  exportIntervalMillis: 10000, // Export metrics every 10 seconds
+});
+
 export const otelSDK = new NodeSDK({
   // Using singular spanProcessor with MultiSpanProcessor for maximum compatibility
   spanProcessor: new MultiSpanProcessor([
     new SimpleSpanProcessor(traceExporter),
     new BaggageSpanProcessor(),
   ]),
+  metricReader,
   instrumentations: [
     new HttpInstrumentation(),
     new ExpressInstrumentation(),
@@ -69,3 +82,11 @@ export const otelSDK = new NodeSDK({
     new PrismaInstrumentation(),
   ],
 });
+
+// Start collecting CPU, Memory, Network, and Disk usage
+export const startHostMetrics = () => {
+  const hostMetrics = new HostMetrics({
+    name: 'nest-template-host-metrics',
+  });
+  hostMetrics.start();
+};
