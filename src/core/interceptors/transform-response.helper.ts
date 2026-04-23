@@ -1,7 +1,10 @@
+import { TraceContext } from '../utils/trace-context';
+
 export interface TransformResponse<T> {
   meta: {
     timestamp: string;
     path: string;
+    correlationId?: string;
     filters: unknown;
     count?: number;
     [key: string]: unknown;
@@ -18,6 +21,7 @@ export function formatSuccessResponse<T>(
   const meta: TransformResponse<T>['meta'] = {
     timestamp: new Date().toISOString(),
     path,
+    correlationId: TraceContext.getCorrelationId(),
     filters,
   };
 

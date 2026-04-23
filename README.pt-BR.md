@@ -44,6 +44,8 @@ Para entender as decisões de design e aprender como usar as funcionalidades ava
 * [Arquitetura e Estrutura](docs/guides/pt-br/architecture.md)
 * [Design System e Convenções](docs/guides/pt-br/design-system.md)
 * [Estratégia de Testes](docs/guides/pt-br/testing.md)
+* [Observabilidade e Telemetria](docs/guides/pt-br/observability.md)
+* [Performance e Otimização](docs/guides/pt-br/performance.md)
 
 ### Implementação de Módulos
 * [Validação e Zod (`@UseZodSchema`)](docs/guides/pt-br/validation-zod.md)

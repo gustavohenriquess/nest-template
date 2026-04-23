@@ -16,6 +16,7 @@ import {
 } from '../errors/domain.error';
 
 import { ErrorCode } from '../errors/error-codes';
+import { TraceContext } from '../utils/trace-context';
 
 interface RequestWithMeta extends Request {
   customMeta?: Record<string, unknown>;
@@ -78,6 +79,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       meta: {
         timestamp: new Date().toISOString(),
         path: request.url,
+        correlationId: TraceContext.getCorrelationId(),
         filters,
         ...customMeta,
       },

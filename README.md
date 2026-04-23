@@ -44,6 +44,8 @@ To understand the core design decisions and learn how to use the advanced featur
 * [Architecture & Structure](docs/guides/en/architecture.md)
 * [Design System & Conventions](docs/guides/en/design-system.md)
 * [Testing Strategy](docs/guides/en/testing.md)
+* [Observability & Telemetry](docs/guides/en/observability.md)
+* [Performance & Optimization](docs/guides/en/performance.md)
 
 ### Feature Implementations
 * [Validation & Zod (`@UseZodSchema`)](docs/guides/en/validation-zod.md)

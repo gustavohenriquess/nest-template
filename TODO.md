@@ -95,5 +95,5 @@ Lista de melhorias planejadas para elevar o template para um padrão "Enterprise
   - Ativar o versionamento nativo do NestJS (ex: `/v1/health` vs `/v2/health`) para garantir retrocompatibilidade futura.
 - [ ] **Database Seeding (Prisma)**
   - Criar o script `prisma/seed.ts` para popular dados essenciais no banco ao iniciar um ambiente novo.
-- [ ] **Compressão de Resposta (Performance)**
+- [x] **Compressão de Resposta (Performance)**
   - Adicionar e configurar o middleware `compression` (Gzip/Brotli) para otimizar payloads volumosos.
