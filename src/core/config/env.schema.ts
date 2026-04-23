@@ -6,7 +6,12 @@ export const envSchema = z.object({
   // CORS Configuration
   ALLOWED_ORIGINS: z.string().default('*'),
 
-  // Rate Limiting (Throttler)
+  // Auth / Security
+  JWT_SECRET: z
+    .string()
+    .min(10, 'JWT secret must be at least 10 characters long'),
+
+  // OTEL & Monitoring (Throttler)
   THROTTLE_TTL: z.coerce.number().default(60000), // ms
   THROTTLE_LIMIT: z.coerce.number().default(100),
 

@@ -1,0 +1,33 @@
+/* istanbul ignore file */
+import { ExtractJwt, Strategy } from 'passport-jwt';
+import { PassportStrategy } from '@nestjs/passport';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { UserSession } from '../interfaces/user-session.interface';
+
+@Injectable()
+export class JwtStrategy extends PassportStrategy(Strategy) {
+  private configService: ConfigService;
+
+  constructor(configService: ConfigService) {
+    super({
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ignoreExpiration: false,
+      secretOrKey: configService.getOrThrow<string>('JWT_SECRET'),
+    });
+    this.configService = configService;
+  }
+
+  // This method is called after the JWT signature is successfully verified.
+  validate(payload: Record<string, any>): UserSession {
+    if (!payload.sub) {
+      throw new UnauthorizedException('Invalid token payload');
+    }
+
+    return {
+      sub: payload.sub as string,
+      email: payload.email as string,
+      roles: (payload.roles as string[]) || [],
+    };
+  }
+}

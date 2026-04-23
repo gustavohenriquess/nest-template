@@ -5,6 +5,7 @@ import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { LoggerModule } from 'nestjs-pino';
 import { validate } from './core/config/env.schema';
 import { HealthModule } from './health/health.module';
+import { AuthModule } from './core/auth/auth.module';
 import { TransformInterceptor } from './core/interceptors/transform.interceptor';
 import { GlobalExceptionFilter } from './core/filters/global-exception.filter';
 import { CorrelationIdMiddleware } from './core/infrastructure/middleware/correlation-id.middleware';
@@ -29,6 +30,7 @@ import { ZodValidationPipe } from './core/pipes/zod-validation.pipe';
       ],
     }),
     LoggerModule.forRoot(loggerConfig),
+    AuthModule,
     HealthModule,
   ],
   providers: [

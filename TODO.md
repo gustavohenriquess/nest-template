@@ -84,10 +84,10 @@ Lista de melhorias planejadas para elevar o template para um padrão "Enterprise
   - Implementar um padrão de codificação (ex: `APP-001`) para facilitar o tratamento de erros pelo Frontend.
 
 ## 🏢 Módulos Avançados (API & Negócio)
-- [ ] **Autenticação e Autorização (IAM)**
-  - Configurar `@nestjs/passport` com JWT.
-  - Implementar RBAC (Role-Based Access Control) com Guardas customizados (ex: `@Roles('ADMIN')`).
-  - Criar decorator genérico `@CurrentUser()` para extrair a sessão no Controller.
+- [x] **Autenticação e Autorização (IAM)**
+  - [x] Configurar `@nestjs/passport` com JWT.
+  - [x] Implementar RBAC (Role-Based Access Control) com Guardas customizados (ex: `@Roles('ADMIN')`).
+  - [x] Criar decorator genérico `@CurrentUser()` para extrair a sessão no Controller.
 - [x] **Utilitários de Paginação e Filtros**
   - Criar DTOs padronizados (`page`, `limit`, `sort`).
   - Implementar resposta envelopada com metadados de paginação (`total`, `totalPages`, `hasNextPage`).

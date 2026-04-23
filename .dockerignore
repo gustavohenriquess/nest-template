@@ -10,4 +10,6 @@ Dockerfile
 coverage
 test
 docs
+scripts
 README.md
+README.pt-BR.md

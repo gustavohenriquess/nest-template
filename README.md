@@ -45,6 +45,7 @@ To understand the core design decisions and learn how to use the advanced featur
 * [Design System & Conventions](docs/guides/en/design-system.md)
 * [Testing Strategy](docs/guides/en/testing.md)
 * [Observability & Telemetry](docs/guides/en/observability.md)
+* [Authentication & Authorization (IAM)](docs/guides/en/authentication.md)
 * [Performance & Optimization](docs/guides/en/performance.md)
 
 ### Feature Implementations

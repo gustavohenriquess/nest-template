@@ -1,11 +1,14 @@
 import request from 'supertest';
 import { E2EHelper } from './utils/e2e-helper';
+import { JwtService } from '@nestjs/jwt';
 
 describe('HealthController (e2e)', () => {
   const helper = new E2EHelper();
+  let jwtService: JwtService;
 
   beforeAll(async () => {
     await helper.bootstrap();
+    jwtService = helper.getApp().get<JwtService>(JwtService);
   });
 
   afterAll(async () => {
@@ -39,8 +42,11 @@ describe('HealthController (e2e)', () => {
   });
 
   it('/v1/health/integrations (GET)', () => {
+    const token = jwtService.sign({ sub: 'e2e-user', roles: [] });
+
     return request(helper.getApp().getHttpServer() as never)
       .get('/v1/health/integrations')
+      .set('Authorization', `Bearer ${token}`)
       .expect(200)
       .expect((res) => {
         const { meta, data } = res.body as {

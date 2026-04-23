@@ -5,7 +5,8 @@
     "test",
     "dist",
     "**/*spec.ts",
-    "prisma.config.ts"
+    "prisma.config.ts",
+    "scripts"
   ],
   "compilerOptions": {
     "rootDir": "src",

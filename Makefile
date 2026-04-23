@@ -1,4 +1,4 @@
-.PHONY: setup install sys-up sys-down prisma-gen test build start clean help rebuild
+.PHONY: setup install sys-up sys-down prisma-gen test build start clean help rebuild auth-token
 
 # Default target
 help:
@@ -16,6 +16,7 @@ help:
 	@echo "  start       Start application in development mode"
 	@echo "  clean       Remove dist and coverage folders"
 	@echo "  release     Create a new version tag and update CHANGELOG.md"
+	@echo "  auth-token  Generate a JWT token for local development"
 
 setup: install sys-up prisma-gen
 
@@ -49,3 +50,6 @@ clean:
 release:
 	npm run release
 	git push --follow-tags origin $$(git rev-parse --abbrev-ref HEAD)
+
+auth-token:
+	npx ts-node scripts/generate-token.ts

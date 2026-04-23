@@ -8,6 +8,7 @@ describe('envSchema', () => {
     POSTGRES_PASSWORD: 'test-password',
     POSTGRES_DB: 'test-db',
     DATABASE_URL: 'postgresql://localhost:5432/test-db',
+    JWT_SECRET: 'test-secret-key-that-is-long-enough',
   };
 
   it('should validate a correct config', () => {

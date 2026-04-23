@@ -1,9 +1,11 @@
 import { Controller, Get } from '@nestjs/common';
+import { Public } from '../../../core/auth/decorators/public.decorator';
 import {
   ApiTags,
   ApiOperation,
   ApiResponse,
   ApiExtraModels,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import {
   HealthCheckService,
@@ -35,6 +37,7 @@ export class HealthController {
     this.integrations = integrations;
   }
 
+  @Public()
   @Get()
   @HealthCheck()
   @ApiOperation({ summary: 'Check basic system health' })
@@ -58,6 +61,7 @@ export class HealthController {
 
   @Get('integrations')
   @HealthCheck()
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Check health of all integrations (DB, GCP, etc.)',
   })
