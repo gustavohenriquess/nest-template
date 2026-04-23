@@ -93,7 +93,7 @@ Lista de melhorias planejadas para elevar o template para um padrão "Enterprise
   - Implementar resposta envelopada com metadados de paginação (`total`, `totalPages`, `hasNextPage`).
 - [x] **Versionamento de API (URI)**
   - Ativar o versionamento nativo do NestJS (ex: `/v1/health` vs `/v2/health`) para garantir retrocompatibilidade futura.
-- [ ] **Database Seeding (Prisma)**
-  - Criar o script `prisma/seed.ts` para popular dados essenciais no banco ao iniciar um ambiente novo.
+- [x] **Database Seeding (Prisma)**
+  - [x] Criar o script `prisma/seed.ts` para popular dados essenciais no banco ao iniciar um ambiente novo.
 - [x] **Compressão de Resposta (Performance)**
   - Adicionar e configurar o middleware `compression` (Gzip/Brotli) para otimizar payloads volumosos.

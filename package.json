@@ -142,5 +142,8 @@
       "npm run format",
       "jest --findRelatedTests --bail --passWithNoTests"
     ]
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   }
 }

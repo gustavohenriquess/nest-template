@@ -1,4 +1,4 @@
-.PHONY: setup install sys-up sys-down prisma-gen test build start clean help rebuild auth-token
+.PHONY: setup install sys-up sys-down prisma-gen prisma-seed test build start clean help rebuild auth-token
 
 # Default target
 help:
@@ -11,6 +11,7 @@ help:
 	@echo "  sys-down    Stop docker-compose services"
 	@echo "  rebuild     Force rebuild and restart services"
 	@echo "  prisma-gen  Generate Prisma client"
+	@echo "  prisma-seed Populate database with initial data"
 	@echo "  test        Run tests with coverage"
 	@echo "  build       Build the application"
 	@echo "  start       Start application in development mode"
@@ -34,6 +35,9 @@ rebuild: sys-down
 
 prisma-gen:
 	npx prisma generate
+
+prisma-seed:
+	npx prisma db seed
 
 test:
 	npm run test:cov -- --no-cache
