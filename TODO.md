@@ -88,6 +88,9 @@ Lista de melhorias planejadas para elevar o template para um padrão "Enterprise
   - [x] Configurar `@nestjs/passport` com JWT.
   - [x] Implementar RBAC (Role-Based Access Control) com Guardas customizados (ex: `@Roles('ADMIN')`).
   - [x] Criar decorator genérico `@CurrentUser()` para extrair a sessão no Controller.
+  - [ ] Evoluir para Controle de Acesso Híbrido (Roles + Permissions/Permissions/Claims).
+    - Criar decorator `@Permissions()` e integrar com Claims do JWT.
+    - Implementar um `PolicyGuard` que suporte lógica flexível (ex: Role ADMIN *ou* Permissão específica).
 - [x] **Utilitários de Paginação e Filtros**
   - Criar DTOs padronizados (`page`, `limit`, `sort`).
   - Implementar resposta envelopada com metadados de paginação (`total`, `totalPages`, `hasNextPage`).
