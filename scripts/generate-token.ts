@@ -15,7 +15,8 @@ if (!secret) {
 const payload = {
   sub: 'user-123',
   email: 'test@example.com',
-  roles: ['ADMIN'], // Try changing this to an empty array [] to test Forbidden scenarios
+  roles: ['ADMIN'],
+  permissions: ['health:read', 'integrations:write'], // Add permissions for testing
 };
 
 const token = jwt.sign(payload, secret, { expiresIn: '1h' });

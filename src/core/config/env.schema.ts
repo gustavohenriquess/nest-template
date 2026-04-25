@@ -10,6 +10,8 @@ export const envSchema = z.object({
   JWT_SECRET: z
     .string()
     .min(10, 'JWT secret must be at least 10 characters long'),
+  AUTH_ROLES_CLAIM_PATH: z.string().default('roles'),
+  AUTH_PERMISSIONS_CLAIM_PATH: z.string().default('permissions'),
 
   // OTEL & Monitoring (Throttler)
   THROTTLE_TTL: z.coerce.number().default(60000), // ms

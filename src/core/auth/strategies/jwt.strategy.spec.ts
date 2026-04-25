@@ -14,6 +14,11 @@ describe('JwtStrategy', () => {
           provide: ConfigService,
           useValue: {
             getOrThrow: jest.fn().mockReturnValue('test-secret'),
+            get: jest.fn((key: string) => {
+              if (key === 'AUTH_ROLES_CLAIM_PATH') return 'roles';
+              if (key === 'AUTH_PERMISSIONS_CLAIM_PATH') return 'permissions';
+              return null;
+            }),
           },
         },
       ],
@@ -29,23 +34,32 @@ describe('JwtStrategy', () => {
   describe('validate', () => {
     it('should throw UnauthorizedException if sub is missing', () => {
       const payload = { email: 'test@test.com' };
-      expect(() => strategy.validate(payload)).toThrow(UnauthorizedException);
+      expect(() => {
+        strategy.validate(payload);
+      }).toThrow(UnauthorizedException);
     });
 
     it('should return UserSession if payload is valid', () => {
-      const payload = { sub: '123', email: 'test@test.com', roles: ['ADMIN'] };
+      const payload = {
+        sub: '123',
+        email: 'test@test.com',
+        roles: ['ADMIN'],
+        permissions: ['read'],
+      };
       const result = strategy.validate(payload);
       expect(result).toEqual({
         sub: '123',
         email: 'test@test.com',
         roles: ['ADMIN'],
+        permissions: ['read'],
       });
     });
 
-    it('should return empty roles array if roles are missing', () => {
+    it('should return empty arrays if roles and permissions are missing', () => {
       const payload = { sub: '123', email: 'test@test.com' };
       const result = strategy.validate(payload);
       expect(result.roles).toEqual([]);
+      expect(result.permissions).toEqual([]);
     });
   });
 });
