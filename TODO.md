@@ -100,3 +100,22 @@ Lista de melhorias planejadas para elevar o template para um padrão "Enterprise
   - [x] Criar o script `prisma/seed.ts` para popular dados essenciais no banco ao iniciar um ambiente novo.
 - [x] **Compressão de Resposta (Performance)**
   - Adicionar e configurar o middleware `compression` (Gzip/Brotli) para otimizar payloads volumosos.
+
+---
+
+## ⚡ Módulos Futuros (Roadmap)
+
+- [ ] **Módulo de Segurança Avançada (RLS)**
+  - [ ] Criar `AsyncLocalStorage` context store para propagação de sessão.
+  - [ ] Implementar Prisma Extension para filtros automáticos de Multi-tenancy.
+  - [ ] Criar middleware global para alimentação do contexto de segurança.
+
+- [ ] **Módulo de Performance & Cache (Redis)**
+  - [ ] Configurar infraestrutura do Redis e suporte a clusters.
+  - [ ] Implementar Global Cache Manager com suporte a invalidação por tags.
+  - [ ] Adicionar indicadores de saúde para monitoramento do Redis via Terminus.
+
+- [ ] **Módulo de Mensageria & Background Jobs (BullMQ)**
+  - [ ] Configurar infraestrutura do BullMQ integrada ao Redis.
+  - [ ] Implementar arquitetura robusta de Jobs, Workers e Processadores assíncronos.
+  - [ ] Criar dashboard de monitoramento para filas e retentativas automáticas.
