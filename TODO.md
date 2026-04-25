@@ -105,10 +105,10 @@ Lista de melhorias planejadas para elevar o template para um padrão "Enterprise
 
 ## ⚡ Módulos Futuros (Roadmap)
 
-- [ ] **Módulo de Segurança Avançada (RLS)**
-  - [ ] Criar `AsyncLocalStorage` context store para propagação de sessão.
-  - [ ] Implementar Prisma Extension para filtros automáticos de Multi-tenancy.
-  - [ ] Criar middleware global para alimentação do contexto de segurança.
+- [x] **Módulo de Segurança Avançada (RLS)**
+  - [x] Criar `AsyncLocalStorage` context store para propagação de sessão.
+  - [x] Criar middleware global para alimentação do contexto de segurança.
+  - [x] Documentar implementação do Prisma Extension para filtros automáticos de Multi-tenancy.
 
 - [ ] **Módulo de Performance & Cache (Redis)**
   - [ ] Configurar infraestrutura do Redis e suporte a clusters.
