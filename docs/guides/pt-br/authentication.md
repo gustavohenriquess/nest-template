@@ -8,17 +8,21 @@ Este guia explica a implementação de **Identity & Access Management (IAM)** ba
 
 | Componente | Finalidade |
 |------------|------------|
-| `JwtStrategy` | Configura a estratégia `passport-jwt`, extrai o token do cabeçalho `Authorization: Bearer <token>` e valida a assinatura usando a chave definida em `JWT_SECRET`. |
+| `JwtStrategy` | Configura a estratégia `passport-jwt`, extrai o token do cabeçalho e valida a assinatura. Extrai dinamicamente **Roles** e **Permissões** usando caminhos definidos em variáveis de ambiente. |
 | `JwtAuthGuard` | Guarda global (`APP_GUARD`) que delega a autenticação para a `JwtStrategy`. Rejeita requisições sem um token válido (401). |
-| `RolesGuard` | Guarda opcional que verifica se o usuário autenticado possui as **roles** necessárias definidas via o decorator `@Roles()`. Retorna **403** quando a verificação falha. |
-| Decorators | `@Public()` – marca uma rota como pública. `@Roles(...roles)` – declara as roles exigidas. `@CurrentUser()` – injeta o payload do usuário autenticado nos métodos do controller. |
-| `AuthModule` | Registra a estratégia e ambas as guardas, expondo-as globalmente. |
+| `RolesGuard` | Guarda opcional que verifica se o usuário autenticado possui as **roles** necessárias definidas via o decorator `@Roles()`. |
+| `PermissionsGuard`| Guarda opcional que valida **permissões/scopes** granulares definidos via o decorator `@Permissions()`. |
+| Decorators | `@Public()` – marca uma rota como pública. `@Roles(...roles)` – declara roles exigidas. `@Permissions(...perms)` – declara permissões exigidas. `@CurrentUser()` – injeta o payload do usuário. |
+| `AuthModule` | Registra a estratégia e as guardas, expondo-as globalmente. |
 
 ## Configuração
 
-1. **Variável de Ambiente** – adicione a secret ao seu arquivo `.env`:
+1. **Variáveis de Ambiente** – adicione as chaves ao seu arquivo `.env`:
    ```bash
    JWT_SECRET=my-super-secret-jwt-key-for-local-dev-123
+   # Opcional: ajuste os caminhos baseados no seu Provedor de Identidade (ex: Microsoft, Google)
+   AUTH_ROLES_CLAIM_PATH=roles
+   AUTH_PERMISSIONS_CLAIM_PATH=permissions
    ```
 2. **Módulo de Autenticação** (`src/core/auth/auth.module.ts`):
    ```typescript
@@ -40,20 +44,30 @@ Este guia explica a implementação de **Identity & Access Management (IAM)** ba
    @Roles('ADMIN')
    @Get('admin')
    getAdminData() { … }             // Exige JWT + role ADMIN
+
+   @Permissions('reports:view')
+   @Get('reports')
+   getReports() { … }               // Exige JWT + permissão 'reports:view'
+
+   @Roles('MANAGER')
+   @Permissions('billing:write')
+   @Patch('billing')
+   updateBilling() { … }            // Exige JWT + role MANAGER E permissão 'billing:write'
    ```
 
 ## Gerando um JWT para Desenvolvimento
 
-Um pequeno script utilitário foi disponibilizado em `scripts/generate-token.ts`. Ele lê o `JWT_SECRET` do `.env` e assina um payload.
+Um pequeno script utilitário foi disponibilizado em `scripts/generate-token.ts`. Ele também pode ser executado via Makefile:
 ```bash
-npx ts-node scripts/generate-token.ts
+make auth-token
 ```
-O script imprime um token pronto para uso e o payload utilizado. Edite a constante `payload` no script para simular diferentes usuários e roles:
+O script imprime um token pronto para uso e o payload utilizado. Edite a constante `payload` no script para simular diferentes usuários, roles e permissões:
 ```typescript
 const payload = {
   sub: 'user-123',
   email: 'test@example.com',
-  roles: ['ADMIN'], // Use [] para testar cenários de Forbidden (403)
+  roles: ['ADMIN'],
+  permissions: ['health:read', 'integrations:write'],
 };
 ```
 
