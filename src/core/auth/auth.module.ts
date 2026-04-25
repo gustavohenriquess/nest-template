@@ -7,6 +7,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { RolesGuard } from './guards/roles.guard';
 import { PermissionsGuard } from './guards/permissions.guard';
+import { PolicyGuard } from './guards/policy.guard';
 
 @Module({
   imports: [
@@ -21,6 +22,9 @@ import { PermissionsGuard } from './guards/permissions.guard';
   ],
   providers: [
     JwtStrategy,
+    RolesGuard,
+    PermissionsGuard,
+    PolicyGuard,
     // By providing guards globally here, all routes are protected by default
     {
       provide: APP_GUARD,
@@ -28,13 +32,15 @@ import { PermissionsGuard } from './guards/permissions.guard';
     },
     {
       provide: APP_GUARD,
-      useClass: RolesGuard,
-    },
-    {
-      provide: APP_GUARD,
-      useClass: PermissionsGuard,
+      useClass: PolicyGuard,
     },
   ],
-  exports: [JwtModule, PassportModule],
+  exports: [
+    JwtModule,
+    PassportModule,
+    RolesGuard,
+    PermissionsGuard,
+    PolicyGuard,
+  ],
 })
 export class AuthModule {}

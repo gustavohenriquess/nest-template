@@ -31,11 +31,9 @@ describe('HealthController', () => {
       ],
     }).compile();
 
-    controller = module.get<HealthController>(HealthController);
-    health = module.get<HealthCheckService>(HealthCheckService);
-    integrations = module.get<HealthIntegrationsService>(
-      HealthIntegrationsService,
-    );
+    controller = module.get(HealthController);
+    health = module.get(HealthCheckService);
+    integrations = module.get(HealthIntegrationsService);
   });
 
   it('should be defined', () => {

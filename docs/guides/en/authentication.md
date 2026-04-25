@@ -10,9 +10,10 @@ This guide explains the **Identity & Access Management (IAM)** implementation ba
 |-----------|---------|
 | `JwtStrategy` | Configures the `passport-jwt` strategy, extracts the token from the header and validates the signature. It dynamically extracts **Roles** and **Permissions** using paths defined in environment variables. |
 | `JwtAuthGuard` | Global guard (`APP_GUARD`) that delegates authentication to `JwtStrategy`. Rejects requests without a valid token (401). |
-| `RolesGuard` | Optional guard that checks if the authenticated user has the required **roles** defined via the `@Roles()` decorator. |
-| `PermissionsGuard`| Optional guard that validates granular **permissions/scopes** defined via the `@Permissions()` decorator. |
-| Decorators | `@Public()` – marks a route as public. `@Roles(...roles)` – declares required roles. `@Permissions(...perms)` – declares required permissions. `@CurrentUser()` – injects the decoded user payload. |
+| `PolicyGuard` | Global guard (`APP_GUARD`) that implements **Hybrid Authorization (OR logic)**. Grants access if the user has the required Role **OR** the required Permissions. |
+| `RolesGuard` | Local guard for manual use. Checks required **roles**. Useful for enforcing strict **AND** logic when used with others. |
+| `PermissionsGuard`| Local guard for manual use. Checks granular **permissions/scopes**. Useful for enforcing strict **AND** logic. |
+| Decorators | `@Public()` – marks a route as public. `@Roles(...roles)` – declares required roles. `@Permissions(...perms)` – declares required permissions. `@CurrentUser()` – injects the user session. |
 | `AuthModule` | Registers the strategy and guards, exposing them globally. |
 
 ## Configuration
@@ -52,8 +53,29 @@ This guide explains the **Identity & Access Management (IAM)** implementation ba
    @Roles('MANAGER')
    @Permissions('billing:write')
    @Patch('billing')
-   updateBilling() { … }            // Requires JWT + MANAGER role AND 'billing:write' permission
+   updateBilling() { … }            // Requires JWT + (MANAGER role OR 'billing:write' permission) - PolicyGuard Default
+
+   // For strict AND logic (Role AND Permission), bypass the global PolicyGuard:
+   @Roles('MANAGER')
+   @Permissions('billing:write')
+   @UseGuards(RolesGuard, PermissionsGuard)
+   @Patch('critical-billing')
+   criticalUpdate() { … }           // Requires JWT + MANAGER role AND 'billing:write' permission
    ```
+
+### 4. Accessing the Current User
+Use the `@CurrentUser()` decorator to inject the authenticated user session directly into your controller methods.
+
+```typescript
+@Get('me')
+getProfile(@CurrentUser() user: UserSession) {
+  return {
+    id: user.sub,
+    email: user.email,
+    roles: user.roles,
+  };
+}
+```
 
 ## Generating a JWT for Development
 
