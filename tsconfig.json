@@ -29,6 +29,7 @@
     "types": [
       "node",
       "jest"
-    ]
+    ],
+    "ignoreDeprecations": "6.0"
   }
 }

@@ -5,6 +5,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { UserSession } from '../interfaces/user-session.interface';
 import { getByPath } from '../../utils/get-by-path.helper';
+import { RequestContext } from '../../infrastructure/context/request-context';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -33,7 +34,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     const roles = getByPath(payload, rolesPath, []) as string[];
     const permissions = getByPath(payload, permissionsPath, []) as string[];
 
-    return {
+    const user: UserSession = {
       sub: payload.sub as string,
       email: payload.email as string,
       roles: Array.isArray(roles) ? roles : [roles].filter(Boolean),
@@ -41,5 +42,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         ? permissions
         : [permissions].filter(Boolean),
     };
+
+    // Populamos o contexto global da requisição
+    RequestContext.user = user;
+
+    return user;
   }
 }

@@ -2,6 +2,7 @@ import { UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { JwtStrategy } from './jwt.strategy';
+import { RequestContext } from '../../infrastructure/context/request-context';
 
 describe('JwtStrategy', () => {
   let strategy: JwtStrategy;
@@ -39,27 +40,36 @@ describe('JwtStrategy', () => {
       }).toThrow(UnauthorizedException);
     });
 
-    it('should return UserSession if payload is valid', () => {
+    it('should return UserSession and populate RequestContext if payload is valid', () => {
       const payload = {
         sub: '123',
         email: 'test@test.com',
         roles: ['ADMIN'],
         permissions: ['read'],
       };
-      const result = strategy.validate(payload);
-      expect(result).toEqual({
-        sub: '123',
-        email: 'test@test.com',
-        roles: ['ADMIN'],
-        permissions: ['read'],
+
+      RequestContext.run({}, () => {
+        const result = strategy.validate(payload);
+
+        expect(result).toEqual({
+          sub: '123',
+          email: 'test@test.com',
+          roles: ['ADMIN'],
+          permissions: ['read'],
+        });
+
+        // Verificamos se o RequestContext foi alimentado
+        expect(RequestContext.user).toEqual(result);
       });
     });
 
     it('should return empty arrays if roles and permissions are missing', () => {
       const payload = { sub: '123', email: 'test@test.com' };
-      const result = strategy.validate(payload);
-      expect(result.roles).toEqual([]);
-      expect(result.permissions).toEqual([]);
+      RequestContext.run({}, () => {
+        const result = strategy.validate(payload);
+        expect(result.roles).toEqual([]);
+        expect(result.permissions).toEqual([]);
+      });
     });
   });
 });

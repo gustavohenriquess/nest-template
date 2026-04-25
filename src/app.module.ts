@@ -9,6 +9,7 @@ import { AuthModule } from './core/auth/auth.module';
 import { TransformInterceptor } from './core/interceptors/transform.interceptor';
 import { GlobalExceptionFilter } from './core/filters/global-exception.filter';
 import { CorrelationIdMiddleware } from './core/infrastructure/middleware/correlation-id.middleware';
+import { ContextMiddleware } from './core/infrastructure/context/context.middleware';
 import { loggerConfig } from './core/config/logger.config';
 import { LifecycleService } from './core/infrastructure/lifecycle.service';
 import { ZodValidationPipe } from './core/pipes/zod-validation.pipe';
@@ -55,6 +56,6 @@ import { ZodValidationPipe } from './core/pipes/zod-validation.pipe';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(CorrelationIdMiddleware).forRoutes('*');
+    consumer.apply(ContextMiddleware, CorrelationIdMiddleware).forRoutes('*');
   }
 }
