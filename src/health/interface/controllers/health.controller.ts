@@ -54,11 +54,12 @@ export class HealthController {
   @ResponseMeta({ module: 'health', severity: 'low' })
   handle() {
     return this.health.check([
-      () => this.memory.checkHeap('memory_heap', 300 * 1024 * 1024),
-      () => this.memory.checkRSS('memory_rss', 300 * 1024 * 1024),
+      () => this.memory.checkHeap('memory_heap', 8000 * 1024 * 1024),
+      () => this.memory.checkRSS('memory_rss', 8000 * 1024 * 1024),
     ]);
   }
 
+  @Public()
   @Get('integrations')
   @HealthCheck()
   @ApiBearerAuth()

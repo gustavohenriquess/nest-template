@@ -10,7 +10,7 @@ import { BigQueryService } from '@/core/infrastructure/gcp/bigquery.service';
 import { PubSubService } from '@/core/infrastructure/gcp/pubsub.service';
 import { StorageService } from '@/core/infrastructure/gcp/storage.service';
 import { PrismaService } from '@/core/infrastructure/persistence/prisma/prisma.service';
-import { PubSubListenerExample } from './application/listeners/pubsub-listener.example';
+// import { PubSubListenerExample } from './application/listeners/pubsub-listener.example';
 import { HealthIntegrationsService } from './application/services/health-integrations.service';
 
 @Module({
@@ -21,7 +21,7 @@ import { HealthIntegrationsService } from './application/services/health-integra
     PubSubHealthIndicator,
     BigQueryHealthIndicator,
     StorageHealthIndicator,
-    PubSubListenerExample,
+    // PubSubListenerExample,
     HealthIntegrationsService,
 
     {
