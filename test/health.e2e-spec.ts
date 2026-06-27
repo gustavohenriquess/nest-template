@@ -1,14 +1,17 @@
 import request from 'supertest';
 import { E2EHelper } from './utils/e2e-helper';
 import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 describe('HealthController (e2e)', () => {
   const helper = new E2EHelper();
   let jwtService: JwtService;
+  let configService: ConfigService;
 
   beforeAll(async () => {
     await helper.bootstrap();
     jwtService = helper.getApp().get<JwtService>(JwtService);
+    configService = helper.getApp().get<ConfigService>(ConfigService);
   });
 
   afterAll(async () => {
@@ -67,9 +70,29 @@ describe('HealthController (e2e)', () => {
         // Check standard indicators are present via info object returned by Terminus
         expect(data.info).toHaveProperty('prisma_default');
 
-        expect(data.info).toHaveProperty('pubsub');
-        expect(data.info).toHaveProperty('bigquery');
-        expect(data.info).toHaveProperty('storage');
+        if (configService.get<boolean>('PUBSUB_ENABLED')) {
+          expect(data.info).toHaveProperty('pubsub');
+        } else {
+          expect(data.info).not.toHaveProperty('pubsub');
+        }
+
+        if (configService.get<boolean>('BIGQUERY_ENABLED')) {
+          expect(data.info).toHaveProperty('bigquery');
+        } else {
+          expect(data.info).not.toHaveProperty('bigquery');
+        }
+
+        if (configService.get<boolean>('STORAGE_ENABLED')) {
+          expect(data.info).toHaveProperty('storage');
+        } else {
+          expect(data.info).not.toHaveProperty('storage');
+        }
+
+        if (configService.get<boolean>('CACHE_ENABLED')) {
+          expect(data.info).toHaveProperty('redis');
+        } else {
+          expect(data.info).not.toHaveProperty('redis');
+        }
       });
   });
 });
