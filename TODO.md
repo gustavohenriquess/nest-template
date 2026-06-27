@@ -110,10 +110,10 @@ Lista de melhorias planejadas para elevar o template para um padrão "Enterprise
   - [x] Criar middleware global para alimentação do contexto de segurança.
   - [x] Documentar implementação do Prisma Extension para filtros automáticos de Multi-tenancy.
 
-- [ ] **Módulo de Performance & Cache (Redis)**
-  - [ ] Configurar infraestrutura do Redis e suporte a clusters.
-  - [ ] Implementar Global Cache Manager com suporte a invalidação por tags.
-  - [ ] Adicionar indicadores de saúde para monitoramento do Redis via Terminus.
+- [x] **Módulo de Performance & Cache (Redis)**
+  - [x] Configurar infraestrutura do Redis e suporte a clusters.
+  - [x] Implementar Global Cache Manager com suporte a invalidação por tags.
+  - [x] Adicionar indicadores de saúde para monitoramento do Redis via Terminus.
 
 - [ ] **Módulo de Mensageria & Background Jobs (BullMQ)**
   - [ ] Configurar infraestrutura do BullMQ integrada ao Redis.
