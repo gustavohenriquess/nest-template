@@ -1,4 +1,4 @@
-import { Logger, OnModuleDestroy } from '@nestjs/common';
+import { Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { Pool } from 'pg';
 import { PrismaPg } from '@prisma/adapter-pg';
@@ -6,7 +6,7 @@ import { IPrismaService } from './prisma-service.interface';
 
 export class PrismaService
   extends PrismaClient
-  implements IPrismaService, OnModuleDestroy
+  implements IPrismaService, OnModuleInit, OnModuleDestroy
 {
   private readonly logger = new Logger(PrismaService.name);
   private readonly pool: Pool;
@@ -41,6 +41,10 @@ export class PrismaService
     } catch (error) {
       this.logger.error('Error disconnecting from database:', error);
     }
+  }
+
+  async onModuleInit() {
+    await this.connect();
   }
 
   async onModuleDestroy() {
