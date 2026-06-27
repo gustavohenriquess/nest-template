@@ -19,6 +19,13 @@ services:
         condition: service_started
     restart: unless-stopped
 
+  redis:
+    image: redis:7-alpine
+    container_name: nest-template-redis
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    restart: unless-stopped
+
   postgres:
     image: bitnami/postgresql:latest
     container_name: nest-template-db

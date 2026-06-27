@@ -12,7 +12,7 @@ A highly opinionated, production-ready NestJS template designed for enterprise-s
 - **Resilience & Security**: Rate limiting, Helmet, CORS, and Graceful Shutdown.
 - **DX & Automation**: Standardized Changelog, Git hooks (Husky), and a comprehensive `Makefile`.
 - **API Standardization**: URI Versioning (`/v1`), Zod validation, and generic pagination utilities.
-- **Database & Cloud**: Prisma ORM, GCP integrations (BigQuery, Pub/Sub, Storage) with active terminus health checks.
+- **Database, Cloud & Cache**: Prisma ORM, Redis integration (caching + health checks), GCP integrations (BigQuery, Pub/Sub, Storage) with active terminus health checks.
 
 ## 🚀 Quick Start
 
@@ -51,6 +51,7 @@ To understand the core design decisions and learn how to use the advanced featur
 ### Feature Implementations
 * [Validation & Zod (`@UseZodSchema`)](docs/guides/en/validation-zod.md)
 * [Pagination Utilities](docs/guides/en/pagination.md)
+* [Redis Cache Module](docs/guides/en/cache.md)
 * [The Health Module](docs/guides/en/health-module.md)
 * [Prisma & Database](docs/guides/en/prisma-database.md)
 * [GCP Integrations](docs/guides/en/gcp-integrations.md)

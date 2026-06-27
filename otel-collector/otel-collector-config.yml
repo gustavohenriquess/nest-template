@@ -24,11 +24,11 @@ exporters:
     tls:
       insecure: true
 
-  datadog:
-    hostname: "nest-template-otelcol"
-    api:
-      site: ${DD_URL}
-      key: ${DD_KEY}
+  # datadog:
+  #   hostname: "nest-template-otelcol"
+  #   api:
+  #     site: ${DD_URL}
+  #     key: ${DD_KEY}
 
   prometheus:
     endpoint: ${PROMETHEUS_ENDPOINT}

@@ -13,6 +13,8 @@ import { ContextMiddleware } from './core/infrastructure/context/context.middlew
 import { loggerConfig } from './core/config/logger.config';
 import { LifecycleService } from './core/infrastructure/lifecycle.service';
 import { ZodValidationPipe } from './core/pipes/zod-validation.pipe';
+import { CacheModule } from './core/cache/cache.module';
+import { CacheInterceptor } from './core/cache/interceptors/cache.interceptor';
 
 @Module({
   imports: [
@@ -32,6 +34,7 @@ import { ZodValidationPipe } from './core/pipes/zod-validation.pipe';
     }),
     LoggerModule.forRoot(loggerConfig),
     AuthModule,
+    CacheModule,
     HealthModule,
   ],
   providers: [
@@ -42,6 +45,10 @@ import { ZodValidationPipe } from './core/pipes/zod-validation.pipe';
     {
       provide: APP_INTERCEPTOR,
       useClass: TransformInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: CacheInterceptor,
     },
     {
       provide: APP_FILTER,

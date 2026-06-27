@@ -15,6 +15,8 @@ import {
 import { HealthIntegrationsService } from '../../application/services/health-integrations.service';
 import { ResponseMeta } from '@/core/decorators/response-meta.decorator';
 import { ErrorResponseDto, BaseResponseDto } from '@/core/dto/api-response.dto';
+import { Cache } from '@/core/cache/decorators/cache.decorator';
+import { InvalidateCache } from '@/core/cache/decorators/invalidate-cache.decorator';
 
 @ApiTags('Health')
 @ApiExtraModels(BaseResponseDto, ErrorResponseDto)
@@ -39,6 +41,7 @@ export class HealthController {
 
   @Public()
   @Get()
+  @Cache()
   @HealthCheck()
   @ApiOperation({ summary: 'Check basic system health' })
   @ApiResponse({
@@ -60,6 +63,7 @@ export class HealthController {
   }
 
   @Public()
+  @Cache()
   @Get('integrations')
   @HealthCheck()
   @ApiBearerAuth()
@@ -79,5 +83,12 @@ export class HealthController {
   @ResponseMeta({ module: 'health', severity: 'high' })
   async handleIntegrations() {
     return this.health.check(this.integrations.getIndicators());
+  }
+
+  @Public()
+  @Get('cleancache')
+  @InvalidateCache()
+  handleCache() {
+    return { ok: true };
   }
 }

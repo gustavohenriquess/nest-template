@@ -21,6 +21,24 @@ export const envSchema = z.object({
   GCP_PRIMARY_PROJECT_ID: z.string(),
   GCP_PROJECT_A_ID: z.string().optional(),
   GCP_PROJECT_B_ID: z.string().optional(),
+  PUBSUB_ENABLED: z
+    .preprocess((val) => {
+      if (typeof val === 'string') return val.toLowerCase() === 'true';
+      return Boolean(val);
+    }, z.boolean())
+    .default(false),
+  BIGQUERY_ENABLED: z
+    .preprocess((val) => {
+      if (typeof val === 'string') return val.toLowerCase() === 'true';
+      return Boolean(val);
+    }, z.boolean())
+    .default(false),
+  STORAGE_ENABLED: z
+    .preprocess((val) => {
+      if (typeof val === 'string') return val.toLowerCase() === 'true';
+      return Boolean(val);
+    }, z.boolean())
+    .default(false),
 
   // Database Configuration
   POSTGRES_USER: z.string(),
@@ -41,6 +59,18 @@ export const envSchema = z.object({
   JAEGER_URL: z.string().optional(),
   DD_URL: z.string().optional(),
   DD_KEY: z.string().optional(),
+
+  // Redis Cache
+  REDIS_HOST: z.string().default('localhost'),
+  REDIS_PORT: z.coerce.number().default(6379),
+  REDIS_PASSWORD: z.string().optional(),
+  CACHE_ENABLED: z
+    .preprocess((val) => {
+      if (typeof val === 'string') return val.toLowerCase() === 'true';
+      return Boolean(val);
+    }, z.boolean())
+    .default(false),
+  CACHE_DEFAULT_TTL: z.coerce.number().default(60),
 });
 
 export type Env = z.infer<typeof envSchema>;

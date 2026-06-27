@@ -6,6 +6,7 @@ import { PrismaHealthIndicator } from './application/indicators/prisma.health';
 import { PubSubHealthIndicator } from './application/indicators/pubsub.health';
 import { BigQueryHealthIndicator } from './application/indicators/bigquery.health';
 import { StorageHealthIndicator } from './application/indicators/storage.health';
+import { RedisHealthIndicator } from './application/indicators/redis.health';
 import { BigQueryService } from '@/core/infrastructure/gcp/bigquery.service';
 import { PubSubService } from '@/core/infrastructure/gcp/pubsub.service';
 import { StorageService } from '@/core/infrastructure/gcp/storage.service';
@@ -21,6 +22,7 @@ import { HealthIntegrationsService } from './application/services/health-integra
     PubSubHealthIndicator,
     BigQueryHealthIndicator,
     StorageHealthIndicator,
+    RedisHealthIndicator,
     // PubSubListenerExample,
     HealthIntegrationsService,
 

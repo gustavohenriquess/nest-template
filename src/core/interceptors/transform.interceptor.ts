@@ -37,19 +37,27 @@ export class TransformInterceptor<T> implements NestInterceptor<
     }
 
     const http = context.switchToHttp();
-    const request = http.getRequest<RequestWithMeta>();
+    const request = http.getRequest<RequestWithMeta & { isCached?: boolean }>();
     const customMeta = this.reflector.getAllAndOverride<
       Record<string, unknown>
     >(RESPONSE_META_KEY, [context.getHandler(), context.getClass()]);
 
     request.customMeta = customMeta;
 
-    return next
-      .handle()
-      .pipe(
-        map((data: T) =>
-          formatSuccessResponse(data, request.url, request.query, customMeta),
-        ),
-      );
+    return next.handle().pipe(
+      map((data: T) => {
+        const metaWithCache = {
+          ...customMeta,
+          cached: !!request.isCached,
+        };
+        request.customMeta = metaWithCache;
+        return formatSuccessResponse(
+          data,
+          request.url,
+          request.query,
+          metaWithCache,
+        );
+      }),
+    );
   }
 }

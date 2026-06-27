@@ -4,10 +4,12 @@ import { PrismaHealthIndicator } from '../indicators/prisma.health';
 import { PubSubHealthIndicator } from '../indicators/pubsub.health';
 import { BigQueryHealthIndicator } from '../indicators/bigquery.health';
 import { StorageHealthIndicator } from '../indicators/storage.health';
+import { RedisHealthIndicator } from '../indicators/redis.health';
 import { BigQueryService } from '@/core/infrastructure/gcp/bigquery.service';
 import { PubSubService } from '@/core/infrastructure/gcp/pubsub.service';
 import { StorageService } from '@/core/infrastructure/gcp/storage.service';
 import { PrismaService } from '@/core/infrastructure/persistence/prisma/prisma.service';
+import { ConfigService } from '@nestjs/config';
 
 describe('HealthIntegrationsService', () => {
   let service: HealthIntegrationsService;
@@ -33,10 +35,18 @@ describe('HealthIntegrationsService', () => {
           provide: StorageHealthIndicator,
           useValue: { isHealthy: jest.fn().mockResolvedValue({}) },
         },
+        {
+          provide: RedisHealthIndicator,
+          useValue: { isHealthy: jest.fn().mockResolvedValue({}) },
+        },
         { provide: BigQueryService, useValue: {} },
         { provide: PubSubService, useValue: {} },
         { provide: StorageService, useValue: {} },
         { provide: PrismaService, useValue: {} },
+        {
+          provide: ConfigService,
+          useValue: { get: jest.fn().mockReturnValue(true) },
+        },
       ],
     }).compile();
 
@@ -48,9 +58,9 @@ describe('HealthIntegrationsService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should return 6 indicator functions', () => {
+  it('should return 5 indicator functions when cache is enabled', () => {
     const indicators = service.getIndicators();
-    expect(indicators).toHaveLength(4);
+    expect(indicators).toHaveLength(5);
     indicators.forEach((fn) => expect(typeof fn).toBe('function'));
   });
 

@@ -12,7 +12,7 @@ Um template NestJS altamente opinativo e pronto para produção, projetado para 
 - **Resiliência e Segurança**: Rate limiting, Helmet, CORS e Graceful Shutdown.
 - **DX e Automação**: Changelog padronizado, Git hooks (Husky) e um `Makefile` completo.
 - **Padronização de API**: Versionamento nativo (`/v1`), validação com Zod e utilitários genéricos de paginação.
-- **Banco de Dados e Nuvem**: Prisma ORM, integrações nativas GCP (BigQuery, Pub/Sub, Storage) com testes de vida ativos via terminus.
+- **Banco de Dados, Nuvem e Cache**: Prisma ORM, integração com Redis (caching + health checks), integrações nativas GCP (BigQuery, Pub/Sub, Storage) com testes de vida ativos via terminus.
 
 ## 🚀 Como Iniciar (Quick Start)
 
@@ -51,6 +51,7 @@ Para entender as decisões de design e aprender como usar as funcionalidades ava
 ### Implementação de Módulos
 * [Validação e Zod (`@UseZodSchema`)](docs/guides/pt-br/validation-zod.md)
 * [Utilitários de Paginação](docs/guides/pt-br/pagination.md)
+* [Módulo de Cache com Redis](docs/guides/pt-br/cache.md)
 * [O Módulo de Health](docs/guides/pt-br/health-module.md)
 * [Prisma e Banco de Dados](docs/guides/pt-br/prisma-database.md)
 * [Integrações GCP](docs/guides/pt-br/gcp-integrations.md)
