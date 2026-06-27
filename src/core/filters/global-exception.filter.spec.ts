@@ -85,6 +85,7 @@ describe('GlobalExceptionFilter', () => {
     expect(mockResponse.json).toHaveBeenCalledWith(
       expect.objectContaining({
         error: {
+          statusCode: 400,
           code: 'CUSTOM_CODE',
           message: 'Custom error',
           details: { foo: 'bar' },

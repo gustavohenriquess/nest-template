@@ -7,6 +7,7 @@ export interface TransformResponse<T> {
     correlationId?: string;
     filters: unknown;
     count?: number;
+    statusCode: number;
     [key: string]: unknown;
   };
   data: T;
@@ -17,10 +18,12 @@ export function formatSuccessResponse<T>(
   path: string,
   filters: unknown,
   customMeta: Record<string, unknown> | undefined,
+  statusCode: number = 200,
 ): TransformResponse<T> {
   const meta: TransformResponse<T>['meta'] = {
     timestamp: new Date().toISOString(),
     path,
+    statusCode,
     correlationId: TraceContext.getCorrelationId(),
     filters,
   };

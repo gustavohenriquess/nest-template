@@ -79,11 +79,13 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       meta: {
         timestamp: new Date().toISOString(),
         path: request.url,
+        statusCode: status,
         correlationId: TraceContext.getCorrelationId(),
         filters,
         ...customMeta,
       },
       error: {
+        statusCode: status,
         code,
         message,
         details,

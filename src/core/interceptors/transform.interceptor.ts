@@ -7,7 +7,7 @@ import {
   Inject,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { RESPONSE_META_KEY } from '../decorators/response-meta.decorator';
@@ -38,11 +38,17 @@ export class TransformInterceptor<T> implements NestInterceptor<
 
     const http = context.switchToHttp();
     const request = http.getRequest<RequestWithMeta & { isCached?: boolean }>();
+    const response =
+      typeof http.getResponse === 'function'
+        ? http.getResponse<Response>()
+        : undefined;
     const customMeta = this.reflector.getAllAndOverride<
       Record<string, unknown>
     >(RESPONSE_META_KEY, [context.getHandler(), context.getClass()]);
 
     request.customMeta = customMeta;
+
+    const statusCode = response?.statusCode ?? 200;
 
     return next.handle().pipe(
       map((data: T) => {
@@ -56,6 +62,7 @@ export class TransformInterceptor<T> implements NestInterceptor<
           request.url,
           request.query,
           metaWithCache,
+          statusCode,
         );
       }),
     );
