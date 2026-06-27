@@ -54,6 +54,7 @@ To understand the core design decisions and learn how to use the advanced featur
 * [Redis Cache Module](docs/guides/en/cache.md)
 * [The Health Module](docs/guides/en/health-module.md)
 * [Prisma & Database](docs/guides/en/prisma-database.md)
+* [Multi-tenancy & RLS (Prisma)](docs/guides/en/multi-tenancy-prisma.md)
 * [GCP Integrations](docs/guides/en/gcp-integrations.md)
 
 ### DevOps & Automation

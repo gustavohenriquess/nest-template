@@ -54,6 +54,7 @@ Para entender as decisões de design e aprender como usar as funcionalidades ava
 * [Módulo de Cache com Redis](docs/guides/pt-br/cache.md)
 * [O Módulo de Health](docs/guides/pt-br/health-module.md)
 * [Prisma e Banco de Dados](docs/guides/pt-br/prisma-database.md)
+* [Multi-tenancy e RLS (Prisma)](docs/guides/pt-br/multi-tenancy-prisma.md)
 * [Integrações GCP](docs/guides/pt-br/gcp-integrations.md)
 
 ### DevOps e Automação
