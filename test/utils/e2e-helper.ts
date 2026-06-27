@@ -49,6 +49,8 @@ export class E2EHelper {
     // Silence logger or use a simple one for E2E
     this.app.useLogger(this.app.get(Logger));
 
+    this.app.setGlobalPrefix('api');
+
     this.app.enableVersioning({
       type: VersioningType.URI,
       defaultVersion: '1',

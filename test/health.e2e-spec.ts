@@ -18,9 +18,9 @@ describe('HealthController (e2e)', () => {
     await helper.teardown();
   });
 
-  it('/v1/health (GET)', () => {
+  it('/api/v1/health (GET)', () => {
     return request(helper.getApp().getHttpServer() as never)
-      .get('/v1/health')
+      .get('/api/v1/health')
       .expect(200)
       .expect((res) => {
         const { meta, data } = res.body as {
@@ -44,11 +44,11 @@ describe('HealthController (e2e)', () => {
       });
   });
 
-  it('/v1/health/integrations (GET)', () => {
+  it('/api/v1/health/integrations (GET)', () => {
     const token = jwtService.sign({ sub: 'e2e-user', roles: [] });
 
     return request(helper.getApp().getHttpServer() as never)
-      .get('/v1/health/integrations')
+      .get('/api/v1/health/integrations')
       .set('Authorization', `Bearer ${token}`)
       .expect(200)
       .expect((res) => {
