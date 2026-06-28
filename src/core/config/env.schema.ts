@@ -15,7 +15,8 @@ export const envSchema = z.object({
 
   // OTEL & Monitoring (Throttler)
   THROTTLE_TTL: z.coerce.number().default(60000), // ms
-  THROTTLE_LIMIT: z.coerce.number().default(100),
+  THROTTLE_LIMIT: z.coerce.number().default(10),
+  THROTTLE_LIMIT_AUTHENTICATED: z.coerce.number().default(500),
 
   // GCP Configuration
   GCP_PRIMARY_PROJECT_ID: z.string(),

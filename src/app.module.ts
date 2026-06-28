@@ -1,7 +1,7 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_INTERCEPTOR, APP_FILTER, APP_GUARD, APP_PIPE } from '@nestjs/core';
-import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { LoggerModule } from 'nestjs-pino';
 import { validate } from './core/config/env.schema';
 import { HealthModule } from './health/health.module';
@@ -15,6 +15,7 @@ import { LifecycleService } from './core/infrastructure/lifecycle.service';
 import { ZodValidationPipe } from './core/pipes/zod-validation.pipe';
 import { CacheModule } from './core/cache/cache.module';
 import { CacheInterceptor } from './core/cache/interceptors/cache.interceptor';
+import { CustomThrottlerGuard } from './core/auth/guards/custom-throttler.guard';
 
 @Module({
   imports: [
@@ -27,8 +28,14 @@ import { CacheInterceptor } from './core/cache/interceptors/cache.interceptor';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => [
         {
+          name: 'global',
           ttl: config.get<number>('THROTTLE_TTL') ?? 60000,
-          limit: config.get<number>('THROTTLE_LIMIT') ?? 100,
+          limit: config.get<number>('THROTTLE_LIMIT') ?? 10,
+        },
+        {
+          name: 'authenticated',
+          ttl: config.get<number>('THROTTLE_TTL') ?? 60000,
+          limit: config.get<number>('THROTTLE_LIMIT_AUTHENTICATED') ?? 500,
         },
       ],
     }),
@@ -40,7 +47,7 @@ import { CacheInterceptor } from './core/cache/interceptors/cache.interceptor';
   providers: [
     {
       provide: APP_GUARD,
-      useClass: ThrottlerGuard,
+      useClass: CustomThrottlerGuard,
     },
     {
       provide: APP_INTERCEPTOR,
