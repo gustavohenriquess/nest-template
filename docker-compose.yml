@@ -9,6 +9,11 @@ services:
       - "${PORT:-3000}:3000"
     env_file:
       - .env
+    environment:
+      - REDIS_HOST=redis
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public
+      - DATABASE_URL_PRIMARY=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public
+      - DATABASE_URL_SECONDARY=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public
     volumes:
       - .:/app
       - /app/node_modules
