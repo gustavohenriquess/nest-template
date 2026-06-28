@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import { Context } from '@opentelemetry/api';
 import { NodeSDK } from '@opentelemetry/sdk-node';
 import {

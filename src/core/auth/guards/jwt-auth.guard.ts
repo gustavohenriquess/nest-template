@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import {
   ExecutionContext,
   Injectable,

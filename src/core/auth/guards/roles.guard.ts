@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import {
   Injectable,
   CanActivate,
@@ -9,7 +8,6 @@ import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from '../decorators/roles.decorator';
 import { UserSession } from '../interfaces/user-session.interface';
 
-/* istanbul ignore next */
 @Injectable()
 export class RolesGuard implements CanActivate {
   private reflector: Reflector;
