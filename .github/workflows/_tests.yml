@@ -7,6 +7,7 @@ jobs:
   coverage:
     runs-on: ubuntu-latest
     env:
+      JWT_SECRET: ci-secret-key-at-least-thirty-two-bytes
       GCP_PRIMARY_PROJECT_ID: ci-project
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
