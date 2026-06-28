@@ -121,15 +121,7 @@
       ".module.ts",
       "<rootDir>/app.controller.ts",
       "<rootDir>/app.service.ts",
-      "health.controller.ts",
-      "health-integrations.service.ts",
-      "pubsub-listener.example.ts",
-      "transform.interceptor.ts",
-      "policy.guard.ts",
-      "permissions.guard.ts",
-      "jwt.strategy.ts",
-      "jwt-auth.guard.ts",
-      "roles.guard.ts"
+      "pubsub-listener.example.ts"
     ],
     "moduleNameMapper": {
       "^@/(.*)$": "<rootDir>/$1"

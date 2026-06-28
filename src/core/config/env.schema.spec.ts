@@ -51,4 +51,34 @@ describe('envSchema', () => {
     });
     expect(result.PORT).toBe(5000);
   });
+
+  it('should parse boolean preprocess fields from strings and booleans', () => {
+    // Test case 1: all as strings
+    const configWithStrings = {
+      ...validConfig,
+      PUBSUB_ENABLED: 'true',
+      BIGQUERY_ENABLED: 'false',
+      STORAGE_ENABLED: 'true',
+      CACHE_ENABLED: 'false',
+    };
+    const result1 = validate(configWithStrings);
+    expect(result1.PUBSUB_ENABLED).toBe(true);
+    expect(result1.BIGQUERY_ENABLED).toBe(false);
+    expect(result1.STORAGE_ENABLED).toBe(true);
+    expect(result1.CACHE_ENABLED).toBe(false);
+
+    // Test case 2: all as real booleans
+    const configWithBooleans = {
+      ...validConfig,
+      PUBSUB_ENABLED: true,
+      BIGQUERY_ENABLED: false,
+      STORAGE_ENABLED: true,
+      CACHE_ENABLED: false,
+    };
+    const result2 = validate(configWithBooleans);
+    expect(result2.PUBSUB_ENABLED).toBe(true);
+    expect(result2.BIGQUERY_ENABLED).toBe(false);
+    expect(result2.STORAGE_ENABLED).toBe(true);
+    expect(result2.CACHE_ENABLED).toBe(false);
+  });
 });

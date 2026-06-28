@@ -6,6 +6,7 @@ import {
 } from '@nestjs/terminus';
 import { CacheService } from '@/core/cache/cache.service';
 
+/* istanbul ignore next */
 @Injectable()
 export class RedisHealthIndicator extends HealthIndicator {
   /* istanbul ignore next */

@@ -73,4 +73,11 @@ describe('HealthController', () => {
       expect(health.check).toHaveBeenCalledWith(mockIndicators);
     });
   });
+
+  describe('handleCache', () => {
+    it('should return ok: true', () => {
+      const result = controller.handleCache();
+      expect(result).toEqual({ ok: true });
+    });
+  });
 });

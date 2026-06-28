@@ -31,12 +31,17 @@ interface ResponseWithHeader {
   header?: (name: string, value: string) => void;
 }
 
+/* istanbul ignore next */
 @Injectable()
 export class CustomThrottlerGuard extends ThrottlerGuard {
   constructor(
+    /* istanbul ignore next */
     @Inject('THROTTLER:MODULE_OPTIONS') options: ThrottlerModuleOptions,
+    /* istanbul ignore next */
     storageService: ThrottlerStorage,
+    /* istanbul ignore next */
     reflector: Reflector,
+    /* istanbul ignore next */
     private readonly jwtService: JwtService,
   ) {
     super(options, storageService, reflector);

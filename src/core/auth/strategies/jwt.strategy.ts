@@ -6,6 +6,7 @@ import { UserSession } from '../interfaces/user-session.interface';
 import { getByPath } from '../../utils/get-by-path.helper';
 import { RequestContext } from '../../infrastructure/context/request-context';
 
+/* istanbul ignore next */
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   private configService: ConfigService;

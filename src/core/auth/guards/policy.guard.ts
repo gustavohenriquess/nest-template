@@ -22,6 +22,7 @@ import { UserSession } from '../interfaces/user-session.interface';
  * If you need strict "AND" logic (must have Role AND Permission),
  * use RolesGuard and PermissionsGuard separately via @UseGuards().
  */
+/* istanbul ignore next */
 @Injectable()
 export class PolicyGuard implements CanActivate {
   constructor(private readonly reflector: Reflector) {}

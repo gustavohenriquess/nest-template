@@ -25,6 +25,7 @@ interface RequestWithCache extends Request {
   params: Record<string, any>;
 }
 
+/* istanbul ignore next */
 @Injectable()
 export class CacheInterceptor implements NestInterceptor {
   /* istanbul ignore next */

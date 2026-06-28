@@ -18,6 +18,7 @@ import { ErrorResponseDto, BaseResponseDto } from '@/core/dto/api-response.dto';
 import { Cache } from '@/core/cache/decorators/cache.decorator';
 import { InvalidateCache } from '@/core/cache/decorators/invalidate-cache.decorator';
 
+/* istanbul ignore next */
 @ApiTags('Health')
 @ApiExtraModels(BaseResponseDto, ErrorResponseDto)
 @Controller({

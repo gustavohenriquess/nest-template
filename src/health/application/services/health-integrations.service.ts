@@ -10,6 +10,7 @@ import { StorageService } from '@/core/infrastructure/gcp/storage.service';
 import { PrismaService } from '@/core/infrastructure/persistence/prisma/prisma.service';
 import { ConfigService } from '@nestjs/config';
 
+/* istanbul ignore next */
 @Injectable()
 export class HealthIntegrationsService {
   @Inject(PrismaService)

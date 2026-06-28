@@ -101,6 +101,32 @@ describe('CustomThrottlerGuard', () => {
       );
       expect(mockResponse.header).toHaveBeenCalledWith('Retry-After', '5');
     });
+
+    it('should not set headers if response is not an HTTP response', async () => {
+      const mockContext = {
+        switchToHttp: jest.fn().mockReturnValue({
+          getRequest: jest.fn().mockReturnValue({}),
+          getResponse: jest.fn().mockReturnValue(undefined),
+        }),
+      } as unknown as ExecutionContext;
+
+      const detail: ThrottlerLimitDetail = {
+        timeToExpire: 5,
+        limit: 10,
+        ttl: 60,
+        key: 'test-key',
+        totalHits: 1,
+        name: 'global',
+        throttler: { name: 'global', limit: 10, ttl: 60 },
+        blockDuration: 0,
+        getTracker: jest.fn(),
+        generateKey: jest.fn(),
+      };
+
+      await expect(
+        guard['throwThrottlingException'](mockContext, detail),
+      ).rejects.toThrow();
+    });
   });
 
   describe('handleRequest', () => {
@@ -290,6 +316,50 @@ describe('CustomThrottlerGuard', () => {
       const tracker = await requestProps.getTracker(mockRequest);
       expect(tracker).toBe('127.0.0.1');
       expect(superHandleRequestSpy).toHaveBeenCalledWith(requestProps);
+    });
+
+    it('should not authenticate if token payload does not have a string sub', async () => {
+      mockRequest.headers = { authorization: 'Bearer invalid-payload' };
+      const jwtService = moduleRef.get<JwtService>(JwtService);
+      jest
+        .spyOn(jwtService, 'verify')
+        .mockReturnValue({ email: 'test@example.com' });
+
+      const requestProps: ThrottlerRequest = {
+        context: mockContext,
+        limit: 10,
+        ttl: 60,
+        throttler: { name: 'authenticated', limit: 10, ttl: 60 },
+        blockDuration: 0,
+        getTracker: jest.fn(),
+        generateKey: jest.fn(),
+      };
+
+      const result = await guard['handleRequest'](requestProps);
+      expect(result).toBe(true);
+      expect(mockRequest.user).toBeUndefined();
+    });
+
+    it('should ignore and catch token verification errors', async () => {
+      mockRequest.headers = { authorization: 'Bearer invalid-token' };
+      const jwtService = moduleRef.get<JwtService>(JwtService);
+      jest.spyOn(jwtService, 'verify').mockImplementation(() => {
+        throw new Error('JWT expired');
+      });
+
+      const requestProps: ThrottlerRequest = {
+        context: mockContext,
+        limit: 10,
+        ttl: 60,
+        throttler: { name: 'authenticated', limit: 10, ttl: 60 },
+        blockDuration: 0,
+        getTracker: jest.fn(),
+        generateKey: jest.fn(),
+      };
+
+      const result = await guard['handleRequest'](requestProps);
+      expect(result).toBe(true);
+      expect(mockRequest.user).toBeUndefined();
     });
   });
 });

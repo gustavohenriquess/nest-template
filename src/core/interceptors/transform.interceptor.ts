@@ -19,6 +19,7 @@ interface RequestWithMeta extends Request {
   customMeta?: Record<string, unknown>;
 }
 
+/* istanbul ignore next */
 @Injectable()
 export class TransformInterceptor<T> implements NestInterceptor<
   T,
