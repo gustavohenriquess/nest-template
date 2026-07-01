@@ -46,8 +46,7 @@ export class ZodValidationPipe implements PipeTransform {
 
     if (metadata.metatype) {
       return Reflect.getMetadata(ZOD_SCHEMA_KEY, metadata.metatype) as
-        | zod.ZodSchema
-        | undefined;
+        zod.ZodSchema | undefined;
     }
 
     return undefined;
