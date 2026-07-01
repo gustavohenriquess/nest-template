@@ -1,1 +1,22 @@
+#!/bin/sh
+
+# If npx is not in PATH, try to load common Node version managers or Homebrew paths
+if ! command -v npx >/dev/null 2>&1; then
+  # Load NVM (Node Version Manager) if it exists
+  if [ -s "$HOME/.nvm/nvm.sh" ]; then
+    export NVM_DIR="$HOME/.nvm"
+    . "$NVM_DIR/nvm.sh"
+  # Load fnm (Fast Node Manager) if it exists
+  elif [ -s "$HOME/.local/share/fnm/fnm" ]; then
+    export PATH="$HOME/.local/share/fnm:$PATH"
+    eval "`fnm env`"
+  # Check standard Homebrew path
+  elif [ -x "/opt/homebrew/bin/npx" ]; then
+    export PATH="/opt/homebrew/bin:$PATH"
+  # Check standard Intel Mac path
+  elif [ -x "/usr/local/bin/npx" ]; then
+    export PATH="/usr/local/bin:$PATH"
+  fi
+fi
+
 npx lint-staged
