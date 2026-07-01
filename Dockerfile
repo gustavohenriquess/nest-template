@@ -3,7 +3,7 @@ FROM node:24-alpine AS development
 
 WORKDIR /app
 
-RUN apk add --no-cache python3 make g++
+RUN apk add --no-cache python3 make g++ tzdata
 
 COPY package*.json ./
 COPY prisma ./prisma/
@@ -33,6 +33,8 @@ FROM node:24-alpine AS production
 ENV NODE_ENV=production
 
 WORKDIR /app
+
+RUN apk add --no-cache tzdata
 
 # Copiar arquivos necessários com as permissões corretas
 COPY --chown=node:node --from=builder /app/package*.json ./
