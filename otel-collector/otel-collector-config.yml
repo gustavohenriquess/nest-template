@@ -6,6 +6,21 @@ receivers:
       http:
         endpoint: 0.0.0.0:4318
 
+  postgresql:
+    endpoint: postgres:5432
+    transport: tcp
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    databases:
+      - ${POSTGRES_DB}
+    tls:
+      insecure: true
+    collection_interval: 10s
+
+  redis:
+    endpoint: redis:6379
+    collection_interval: 10s
+
 exporters:
   debug:
     verbosity: detailed
@@ -59,7 +74,7 @@ service:
       processors: [batch]
       exporters: [otlp]
     metrics:
-      receivers: [otlp]
+      receivers: [otlp, postgresql, redis]
       processors: [batch]
       exporters: [prometheus]
     logs:
