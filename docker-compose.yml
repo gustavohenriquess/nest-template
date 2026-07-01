@@ -23,6 +23,14 @@ services:
       otel-collector:
         condition: service_started
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 512M
 
   redis:
     image: redis:8-alpine
@@ -30,6 +38,14 @@ services:
     ports:
       - "${REDIS_PORT:-6379}:6379"
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 256M
+        reservations:
+          cpus: '0.10'
+          memory: 64M
 
   postgres:
     image: bitnami/postgresql:latest
@@ -51,6 +67,14 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   jaeger:
     image: jaegertracing/all-in-one:latest
@@ -63,6 +87,14 @@ services:
     environment:
       - COLLECTOR_OTLP_ENABLED=true
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.10'
+          memory: 128M
 
   otel-collector:
     image: otel/opentelemetry-collector-contrib:latest
@@ -80,6 +112,14 @@ services:
     depends_on:
       jaeger:
         condition: service_started
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 256M
+        reservations:
+          cpus: '0.10'
+          memory: 64M
 
   loki:
     image: grafana/loki:3.7
@@ -91,6 +131,14 @@ services:
       - ./loki/loki-config.yml:/etc/loki/loki-config.yml
       - loki_data:/loki
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.10'
+          memory: 128M
 
   prometheus:
     image: prom/prometheus:latest
@@ -103,6 +151,14 @@ services:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.10'
+          memory: 128M
 
   grafana:
     image: grafana/grafana:latest
@@ -124,6 +180,14 @@ services:
       - jaeger
       - prometheus
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.10'
+          memory: 128M
 
 volumes:
   postgres_data:
