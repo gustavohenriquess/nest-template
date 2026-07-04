@@ -28,7 +28,7 @@ sys-up:
 	docker compose up -d
 
 sys-down:
-	docker compose down
+	docker compose down -v
 
 rebuild: sys-down
 	docker compose up -d --build

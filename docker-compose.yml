@@ -13,8 +13,7 @@ services:
       - TZ=${TZ:-America/Sao_Paulo}
       - REDIS_HOST=redis
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public
-      - DATABASE_URL_PRIMARY=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public
-      - DATABASE_URL_SECONDARY=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public
+      - SHADOW_DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB_SHADOW}?schema=public
     volumes:
       - .:/app
       - /app/node_modules
@@ -63,7 +62,7 @@ services:
       - POSTGRESQL_USERNAME=${POSTGRES_USER}
       - POSTGRESQL_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRESQL_DATABASE=${POSTGRES_DB}
-      - POSTGRESQL_MULTIPLE_DATABASES=shadow_nest_db,primary_db,secondary_db
+      - POSTGRESQL_MULTIPLE_DATABASES=${POSTGRES_DB_SHADOW}
     volumes:
       - postgres_data:/bitnami/postgresql
       - ./scripts/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
