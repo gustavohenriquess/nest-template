@@ -13,19 +13,19 @@ Este documento descreve todas as etapas necessárias para construir o módulo de
 - [x] **Criar os Relacionamentos (N:M)**
   - Um `User` pode ter muitas `Role`s e muitas `Permission`s exclusivas.
   - Uma `Role` pode ter muitas `Permission`s.
-- [ ] **Gerar e aplicar Migration**
+- [x] **Gerar e aplicar Migration**
   - Rodar `npx prisma migrate dev --name init_auth_schema`.
 
 ---
 
 ## 2. Instalação de Dependências Faltantes
-- [ ] Instalar o pacote para hash de senhas: `npm i argon2` ou `npm i bcrypt` (e suas tipagens `@types/bcrypt`).
+- [x] Instalar o pacote para hash de senhas: `npm i argon2` (Decidido pelo uso do Argon2).
 
 ---
 
 ## 3. Módulo de Autenticação (AuthModule)
 - [ ] **Configurar JWT Module**
-  - Configurar `@nestjs/jwt` com secret vinda do `.env` e TTL estático (ou configurável) de `7d` (7 dias).
+  - Configurar `@nestjs/jwt` com secret vinda do `.env` e TTL estático (ou configurável) de `1d` (1 dias).
 - [ ] **Criar `POST /api/v1/auth/login`**
   - Receber `email` e `password`.
   - Buscar usuário pelo email no PostgreSQL.
