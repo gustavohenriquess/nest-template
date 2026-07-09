@@ -1,7 +1,8 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, UserStatus } from '@prisma/client';
 import { Pool } from 'pg';
 import { PrismaPg } from '@prisma/adapter-pg';
 import * as dotenv from 'dotenv';
+import * as argon2 from 'argon2';
 
 dotenv.config();
 
@@ -10,12 +11,6 @@ dotenv.config();
  * -------------------
  * This script is used to populate your database with initial data.
  * It is executed when running `npx prisma db seed`.
- *
- * For a clean template, this script is provided as a boilerplate.
- * To use it:
- * 1. Define your models in `schema.prisma`.
- * 2. Run `npx prisma migrate dev` to update your database.
- * 3. Uncomment and modify the logic below to seed your data.
  */
 
 const databaseUrl = process.env.DATABASE_URL;
@@ -30,23 +25,57 @@ const prisma = new PrismaClient({ adapter });
 async function main() {
   console.log('🌱 Starting database seeding...');
 
-  // Satisfy require-await lint rule since the example below is commented out
-  await Promise.resolve();
+  // 1. Create Permission
+  const basicViewPermission = await prisma.permission.upsert({
+    where: { name: 'basic:view' },
+    update: {},
+    create: {
+      name: 'basic:view',
+      description: 'Basic view permission',
+    },
+  });
+  console.log(`✅ Permission seeded: ${basicViewPermission.name}`);
 
-  /**
-   * Example: Seeding an Admin User
-   *
-   * const adminUser = await prisma.user.upsert({
-   *   where: { email: 'admin@example.com' },
-   *   update: {},
-   *   create: {
-   *     email: 'admin@example.com',
-   *     name: 'Administrator',
-   *     roles: ['ADMIN'],
-   *   },
-   * });
-   * console.log({ adminUser });
-   */
+  // 2. Create Roles
+  const basicRole = await prisma.role.upsert({
+    where: { name: 'BASIC' },
+    update: {},
+    create: {
+      name: 'BASIC',
+      description: 'Basic User Role',
+      permissions: {
+        connect: [{ id: basicViewPermission.id }],
+      },
+    },
+  });
+  console.log(`✅ Role seeded: ${basicRole.name}`);
+
+  const adminRole = await prisma.role.upsert({
+    where: { name: 'ADMIN' },
+    update: {},
+    create: {
+      name: 'ADMIN',
+      description: 'Administrator Role',
+    },
+  });
+  console.log(`✅ Role seeded: ${adminRole.name}`);
+
+  // 3. Create Admin User
+  const adminPassword = await argon2.hash('admin123'); // Default password
+  const adminUser = await prisma.user.upsert({
+    where: { email: 'admin@admin.com' },
+    update: {},
+    create: {
+      email: 'admin@admin.com',
+      name: 'Administrator',
+      password: adminPassword,
+      status: UserStatus.ACTIVE,
+      roles: {
+        connect: [{ id: adminRole.id }],
+      },
+    },
+  });
+  console.log(`✅ User seeded: ${adminUser.email}`);
 
   console.log('✅ Seeding completed successfully.');
 }

@@ -43,7 +43,7 @@ describe('PrismaUserRepository', () => {
       email: email,
       password: 'hashed-password',
       avatarUrl: null,
-      status: 'ATIVO',
+      status: 'ACTIVE',
       createdAt: new Date(),
       updatedAt: new Date(),
       roles: [{ id: 'role-1', name: 'ADMIN' }],
@@ -67,7 +67,7 @@ describe('PrismaUserRepository', () => {
     expect(result).toBeInstanceOf(User);
     expect(result?.id).toBe(mockPrismaUser.id);
     expect(result?.name).toBe(mockPrismaUser.name);
-    expect(result?.status).toBe(UserStatus.ATIVO);
+    expect(result?.status).toBe(UserStatus.ACTIVE);
     expect(result?.roles).toHaveLength(1);
     expect(result?.permissions).toHaveLength(1);
   });

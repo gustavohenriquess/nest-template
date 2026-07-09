@@ -39,7 +39,7 @@ export class LoginUseCase {
     }
 
     // 3. Verificar status do usuário
-    if (user.status !== UserStatus.ATIVO) {
+    if (user.status !== UserStatus.ACTIVE) {
       throw new ForbiddenError('Usuário inativo ou pendente');
     }
 

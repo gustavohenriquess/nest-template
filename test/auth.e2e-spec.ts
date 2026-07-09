@@ -35,7 +35,7 @@ describe('AuthController (e2e)', () => {
           email: 'active@example.com',
           name: 'Active User',
           password: hashedPassword,
-          status: 'ATIVO',
+          status: 'ACTIVE',
         },
       });
 
@@ -63,7 +63,7 @@ describe('AuthController (e2e)', () => {
           email: 'wrongpass@example.com',
           name: 'Wrong Pass User',
           password: hashedPassword,
-          status: 'ATIVO',
+          status: 'ACTIVE',
         },
       });
 
@@ -95,7 +95,7 @@ describe('AuthController (e2e)', () => {
           email: 'inactive@example.com',
           name: 'Inactive User',
           password: hashedPassword,
-          status: 'INATIVO', // Or PENDENTE
+          status: 'INACTIVE', // Or PENDING
         },
       });
 

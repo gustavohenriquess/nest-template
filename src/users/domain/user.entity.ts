@@ -1,7 +1,7 @@
 export enum UserStatus {
-  ATIVO = 'ATIVO',
-  INATIVO = 'INATIVO',
-  PENDENTE = 'PENDENTE',
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  PENDING = 'PENDING',
 }
 
 export interface UserRole {
@@ -34,6 +34,6 @@ export class User {
   }
 
   get isActive(): boolean {
-    return this.status === UserStatus.ATIVO;
+    return this.status === UserStatus.ACTIVE;
   }
 }

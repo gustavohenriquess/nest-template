@@ -1,7 +1,7 @@
 enum UserStatus {
-  ATIVO
-  INATIVO
-  PENDENTE
+  ACTIVE
+  INACTIVE
+  PENDING
 
   @@schema("auth")
 }
@@ -12,7 +12,7 @@ model User {
   email       String       @unique
   password    String
   avatarUrl   String?
-  status      UserStatus   @default(PENDENTE)
+  status      UserStatus   @default(PENDING)
   roles       Role[]
   permissions Permission[]
   createdAt   DateTime     @default(now())

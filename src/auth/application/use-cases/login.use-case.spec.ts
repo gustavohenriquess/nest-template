@@ -74,7 +74,7 @@ describe('LoginUseCase', () => {
     id: 'user-id-1',
     email: 'test@example.com',
     password: 'hashed-password',
-    status: UserStatus.ATIVO,
+    status: UserStatus.ACTIVE,
     roles: [
       {
         name: 'ADMIN',
@@ -144,8 +144,8 @@ describe('LoginUseCase', () => {
     await expect(useCase.execute(loginDto)).rejects.toThrow(UnauthorizedError);
   });
 
-  it('should throw ForbiddenError if user status is not ATIVO', async () => {
-    const inactiveUser = { ...mockUser, status: UserStatus.INATIVO };
+  it('should throw ForbiddenError if user status is not ACTIVE', async () => {
+    const inactiveUser = { ...mockUser, status: UserStatus.INACTIVE };
     (
       userRepository.findByEmailWithRolesAndPermissions as jest.Mock
     ).mockResolvedValue(inactiveUser);
@@ -160,7 +160,7 @@ describe('LoginUseCase', () => {
       id: 'user-id-2',
       email: 'test2@example.com',
       password: 'hashed-password',
-      status: UserStatus.ATIVO,
+      status: UserStatus.ACTIVE,
       // explicitly omitting roles and permissions to test fallbacks
     };
 
@@ -192,7 +192,7 @@ describe('LoginUseCase', () => {
       id: 'user-id-3',
       email: 'test3@example.com',
       password: 'hashed-password',
-      status: UserStatus.ATIVO,
+      status: UserStatus.ACTIVE,
       roles: [{ id: 'role-1', name: 'USER' }], // permissions undefined
     };
 

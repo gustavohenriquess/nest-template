@@ -2,7 +2,7 @@
 CREATE SCHEMA IF NOT EXISTS "auth";
 
 -- CreateEnum
-CREATE TYPE "auth"."UserStatus" AS ENUM ('ATIVO', 'INATIVO', 'PENDENTE');
+CREATE TYPE "auth"."UserStatus" AS ENUM ('ACTIVE', 'INACTIVE', 'PENDING');
 
 -- CreateTable
 CREATE TABLE "auth"."User" (
@@ -11,7 +11,7 @@ CREATE TABLE "auth"."User" (
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "avatarUrl" TEXT,
-    "status" "auth"."UserStatus" NOT NULL DEFAULT 'PENDENTE',
+    "status" "auth"."UserStatus" NOT NULL DEFAULT 'PENDING',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
