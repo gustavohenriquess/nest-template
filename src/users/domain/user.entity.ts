@@ -1,0 +1,39 @@
+export enum UserStatus {
+  ATIVO = 'ATIVO',
+  INATIVO = 'INATIVO',
+  PENDENTE = 'PENDENTE',
+}
+
+export interface UserRole {
+  id: string;
+  name: string;
+  description?: string | null;
+  permissions?: UserPermission[];
+}
+
+export interface UserPermission {
+  id: string;
+  name: string;
+  description?: string | null;
+}
+
+export class User {
+  id!: string;
+  name!: string;
+  email!: string;
+  password?: string;
+  avatarUrl?: string | null;
+  status!: UserStatus;
+  roles?: UserRole[];
+  permissions?: UserPermission[];
+  createdAt?: Date;
+  updatedAt?: Date;
+
+  constructor(partial: Partial<User>) {
+    Object.assign(this, partial);
+  }
+
+  get isActive(): boolean {
+    return this.status === UserStatus.ATIVO;
+  }
+}
