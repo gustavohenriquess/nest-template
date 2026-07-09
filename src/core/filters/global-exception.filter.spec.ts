@@ -6,6 +6,7 @@ import {
   BusinessRuleError,
   ConflictError,
   UnauthorizedError,
+  ForbiddenError,
   DomainError,
 } from '../errors/domain.error';
 import { ErrorCode } from '../errors/error-codes';
@@ -161,6 +162,20 @@ describe('GlobalExceptionFilter', () => {
       expect.objectContaining({
         error: expect.objectContaining({
           code: ErrorCode.UNAUTHORIZED,
+        }) as unknown,
+      }) as unknown,
+    );
+  });
+
+  it('should map ForbiddenError to 403', () => {
+    const error = new ForbiddenError();
+    filter.catch(error, mockArgumentsHost);
+
+    expect(mockResponse.status).toHaveBeenCalledWith(HttpStatus.FORBIDDEN);
+    expect(mockResponse.json).toHaveBeenCalledWith(
+      expect.objectContaining({
+        error: expect.objectContaining({
+          code: ErrorCode.FORBIDDEN,
         }) as unknown,
       }) as unknown,
     );

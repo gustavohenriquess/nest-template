@@ -13,6 +13,7 @@ import {
   BusinessRuleError,
   ConflictError,
   UnauthorizedError,
+  ForbiddenError,
 } from '../errors/domain.error';
 
 import { ErrorCode } from '../errors/error-codes';
@@ -98,6 +99,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     if (error instanceof BusinessRuleError) return HttpStatus.BAD_REQUEST;
     if (error instanceof ConflictError) return HttpStatus.CONFLICT;
     if (error instanceof UnauthorizedError) return HttpStatus.UNAUTHORIZED;
+    if (error instanceof ForbiddenError) return HttpStatus.FORBIDDEN;
     return HttpStatus.BAD_REQUEST;
   }
 }

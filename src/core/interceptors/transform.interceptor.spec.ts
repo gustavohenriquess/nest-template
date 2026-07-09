@@ -50,6 +50,9 @@ describe('TransformInterceptor', () => {
         url: '/test-path',
         query: { search: 'term' },
       }),
+      getResponse: jest.fn().mockReturnValue({
+        statusCode: 201,
+      }),
     } as unknown as ExecutionContext;
     callHandler = {
       handle: jest.fn().mockReturnValue(of('test-data')),
