@@ -16,6 +16,9 @@ import { ZodValidationPipe } from './core/pipes/zod-validation.pipe';
 import { CacheModule } from './core/cache/cache.module';
 import { CacheInterceptor } from './core/cache/interceptors/cache.interceptor';
 import { CustomThrottlerGuard } from './core/auth/guards/custom-throttler.guard';
+import { PrismaModule } from './core/infrastructure/persistence/prisma/prisma.module';
+import { UsersModule } from './users/users.module';
+import { AuthFeatureModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -40,6 +43,9 @@ import { CustomThrottlerGuard } from './core/auth/guards/custom-throttler.guard'
       ],
     }),
     LoggerModule.forRoot(loggerConfig),
+    PrismaModule,
+    UsersModule,
+    AuthFeatureModule,
     AuthModule,
     CacheModule,
     HealthModule,

@@ -10,7 +10,6 @@ import { RedisHealthIndicator } from './application/indicators/redis.health';
 import { BigQueryService } from '@/core/infrastructure/gcp/bigquery.service';
 import { PubSubService } from '@/core/infrastructure/gcp/pubsub.service';
 import { StorageService } from '@/core/infrastructure/gcp/storage.service';
-import { PrismaService } from '@/core/infrastructure/persistence/prisma/prisma.service';
 // import { PubSubListenerExample } from './application/listeners/pubsub-listener.example';
 import { HealthIntegrationsService } from './application/services/health-integrations.service';
 
@@ -53,16 +52,6 @@ import { HealthIntegrationsService } from './application/services/health-integra
           configService.get<string>('GCP_PRIMARY_PROJECT_ID') ||
           'primary-project-id';
         return new StorageService(projectId);
-      },
-      inject: [ConfigService],
-    },
-    {
-      provide: PrismaService,
-      useFactory: (configService: ConfigService) => {
-        const url =
-          configService.get<string>('DATABASE_URL') ||
-          'postgresql://user:pass@localhost:5432/default';
-        return new PrismaService(url);
       },
       inject: [ConfigService],
     },

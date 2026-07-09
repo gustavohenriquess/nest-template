@@ -14,6 +14,7 @@ import { ConfigService } from '@nestjs/config';
 describe('HealthIntegrationsService', () => {
   let service: HealthIntegrationsService;
   let prismaIndicator: PrismaHealthIndicator;
+  let configService: ConfigService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -52,6 +53,7 @@ describe('HealthIntegrationsService', () => {
 
     service = module.get<HealthIntegrationsService>(HealthIntegrationsService);
     prismaIndicator = module.get<PrismaHealthIndicator>(PrismaHealthIndicator);
+    configService = module.get<ConfigService>(ConfigService);
   });
 
   it('should be defined', () => {
@@ -71,5 +73,13 @@ describe('HealthIntegrationsService', () => {
     }
     // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(prismaIndicator.isHealthy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should return only prisma indicator when other integrations are disabled', () => {
+    // We already have configService from beforeEach
+    jest.spyOn(configService, 'get').mockReturnValue(false);
+
+    const indicators = service.getIndicators();
+    expect(indicators).toHaveLength(1);
   });
 });
