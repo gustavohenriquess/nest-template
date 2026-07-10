@@ -1,85 +1,134 @@
-/* eslint-disable @typescript-eslint/unbound-method */
-import { Test, TestingModule } from '@nestjs/testing';
+/* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment */
 import { PrismaUserRepository } from './prisma-user.repository';
-import { PrismaService } from '@/core/infrastructure/persistence/prisma/prisma.service';
-import { User, UserStatus } from '../../../domain/user.entity';
+import { User, UserStatus } from '@/users/domain/user.entity';
 
 describe('PrismaUserRepository', () => {
   let repository: PrismaUserRepository;
-  let prismaService: jest.Mocked<PrismaService>;
+  let prismaService: any;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        PrismaUserRepository,
-        {
-          provide: PrismaService,
-          useValue: {
-            user: {
-              findUnique: jest.fn(),
-            },
-          },
-        },
-      ],
-    }).compile();
-
-    repository = module.get<PrismaUserRepository>(PrismaUserRepository);
-    prismaService = module.get(PrismaService);
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it('should be defined', () => {
-    expect(repository).toBeDefined();
-  });
-
-  it('should return a user domain entity when user is found', async () => {
-    const email = 'test@example.com';
-    const mockPrismaUser = {
-      id: 'uuid-1',
-      name: 'Test Name',
-      email: email,
-      password: 'hashed-password',
-      avatarUrl: null,
-      status: 'ACTIVE',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      roles: [{ id: 'role-1', name: 'ADMIN' }],
-      permissions: [{ id: 'perm-1', name: 'users:read' }],
-    };
-
-    (prismaService.user.findUnique as jest.Mock).mockResolvedValue(
-      mockPrismaUser,
-    );
-
-    const result = await repository.findByEmailWithRolesAndPermissions(email);
-
-    expect(prismaService.user.findUnique).toHaveBeenCalledWith({
-      where: { email },
-      include: {
-        roles: { include: { permissions: true } },
-        permissions: true,
+  beforeEach(() => {
+    prismaService = {
+      user: {
+        findFirst: jest.fn(),
+        create: jest.fn(),
+        findMany: jest.fn(),
+        count: jest.fn(),
+        update: jest.fn(),
       },
-    });
-
-    expect(result).toBeInstanceOf(User);
-    expect(result?.id).toBe(mockPrismaUser.id);
-    expect(result?.name).toBe(mockPrismaUser.name);
-    expect(result?.status).toBe(UserStatus.ACTIVE);
-    expect(result?.roles).toHaveLength(1);
-    expect(result?.permissions).toHaveLength(1);
+    };
+    repository = new PrismaUserRepository(prismaService);
   });
 
-  it('should return null when user is not found', async () => {
-    (prismaService.user.findUnique as jest.Mock).mockResolvedValue(null);
+  const mockPrismaUser = {
+    id: '1',
+    name: 'Test',
+    email: 'test@test.com',
+    password: 'hash',
+    avatarUrl: null,
+    status: 'ACTIVE',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    deletedAt: null,
+    roles: [],
+  };
 
-    const result = await repository.findByEmailWithRolesAndPermissions(
-      'notfound@example.com',
+  it('should find by id', async () => {
+    prismaService.user.findFirst.mockResolvedValue(mockPrismaUser);
+    const user = await repository.findById('1');
+    expect(user?.name).toBe('Test');
+    expect(prismaService.user.findFirst).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { id: '1', deletedAt: null } }),
     );
+  });
 
-    expect(result).toBeNull();
-    expect(prismaService.user.findUnique).toHaveBeenCalled();
+  it('should return null if find by id not found', async () => {
+    prismaService.user.findFirst.mockResolvedValue(null);
+    const user = await repository.findById('1');
+    expect(user).toBeNull();
+  });
+
+  it('should find by email with roles and permissions', async () => {
+    prismaService.user.findFirst.mockResolvedValue(mockPrismaUser);
+    const user =
+      await repository.findByEmailWithRolesAndPermissions('test@test.com');
+    expect(user?.email).toBe('test@test.com');
+    expect(prismaService.user.findFirst).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { email: 'test@test.com', deletedAt: null },
+        include: {
+          permissions: true,
+          roles: { include: { permissions: true } },
+        },
+      }),
+    );
+  });
+
+  it('should find by email and handle missing roles', async () => {
+    prismaService.user.findFirst.mockResolvedValue({
+      ...mockPrismaUser,
+      roles: undefined,
+    });
+    const user =
+      await repository.findByEmailWithRolesAndPermissions('test@test.com');
+    expect(user?.roles).toBeUndefined();
+  });
+
+  it('should return null if find by email is not found', async () => {
+    prismaService.user.findFirst.mockResolvedValue(null);
+    const user =
+      await repository.findByEmailWithRolesAndPermissions('notfound@test.com');
+    expect(user).toBeNull();
+  });
+
+  it('should create user', async () => {
+    prismaService.user.create.mockResolvedValue(mockPrismaUser);
+    const data = {
+      name: 'Test',
+      email: 'test@test.com',
+      password: 'hash',
+      status: 'ACTIVE' as UserStatus,
+    };
+    const user = await repository.create(new User(data));
+    expect(user.id).toBe('1');
+    expect(prismaService.user.create).toHaveBeenCalled();
+  });
+
+  it('should find all paginated', async () => {
+    prismaService.user.findMany.mockResolvedValue([mockPrismaUser]);
+    prismaService.user.count.mockResolvedValue(1);
+
+    const result = await repository.findAll(1, 10);
+    expect(result.users).toHaveLength(1);
+    expect(result.total).toBe(1);
+    expect(prismaService.user.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        skip: 0,
+        take: 10,
+        where: { deletedAt: null },
+      }),
+    );
+  });
+
+  it('should update user', async () => {
+    prismaService.user.update.mockResolvedValue({
+      ...mockPrismaUser,
+      name: 'New',
+    });
+    const user = await repository.update('1', { name: 'New' });
+    expect(user.name).toBe('New');
+    expect(prismaService.user.update).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { id: '1' }, data: { name: 'New' } }),
+    );
+  });
+
+  it('should soft delete user', async () => {
+    prismaService.user.update.mockResolvedValue(mockPrismaUser);
+    await repository.delete('1');
+    expect(prismaService.user.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { id: '1' },
+        data: { status: 'INACTIVE', deletedAt: expect.any(Date) },
+      }),
+    );
   });
 });
