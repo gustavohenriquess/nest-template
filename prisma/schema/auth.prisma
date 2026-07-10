@@ -17,6 +17,7 @@ model User {
   permissions Permission[]
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
+  deletedAt   DateTime?
 
   @@schema("auth")
 }

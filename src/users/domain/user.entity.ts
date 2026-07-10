@@ -28,12 +28,13 @@ export class User {
   permissions?: UserPermission[];
   createdAt?: Date;
   updatedAt?: Date;
+  deletedAt?: Date | null;
 
   constructor(partial: Partial<User>) {
     Object.assign(this, partial);
   }
 
   get isActive(): boolean {
-    return this.status === UserStatus.ACTIVE;
+    return this.status === UserStatus.ACTIVE && !this.deletedAt;
   }
 }
