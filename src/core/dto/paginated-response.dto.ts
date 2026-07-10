@@ -20,12 +20,17 @@ export class PaginationMeta {
   hasPreviousPage!: boolean;
 }
 
+export class PaginatedMetaDto {
+  @ApiProperty({ type: PaginationMeta })
+  pagination!: PaginationMeta;
+}
+
 export class PaginatedResponseDto<T> {
   @ApiProperty({ description: 'The array of data items', isArray: true })
   data!: T[];
 
-  @ApiProperty({ description: 'Pagination metadata', type: PaginationMeta })
-  meta!: PaginationMeta;
+  @ApiProperty({ description: 'Pagination metadata', type: PaginatedMetaDto })
+  meta!: PaginatedMetaDto;
 
   /**
    * Helper factory to create a paginated response and automatically calculate
@@ -42,12 +47,14 @@ export class PaginatedResponseDto<T> {
     return {
       data,
       meta: {
-        total,
-        page,
-        limit,
-        totalPages,
-        hasNextPage: page < totalPages,
-        hasPreviousPage: page > 1,
+        pagination: {
+          total,
+          page,
+          limit,
+          totalPages,
+          hasNextPage: page < totalPages,
+          hasPreviousPage: page > 1,
+        },
       },
     };
   }

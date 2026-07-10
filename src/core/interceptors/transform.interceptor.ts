@@ -51,9 +51,24 @@ export class TransformInterceptor<T> implements NestInterceptor<
     const statusCode = response?.statusCode ?? 200;
 
     return next.handle().pipe(
-      map((data: T) => {
+      map((result: T | { data: T; meta: Record<string, unknown> }) => {
+        let data = result as T;
+        let dynamicMeta = {};
+
+        // Se o controller retornar um objeto com data e meta (ex: paginação)
+        if (
+          result &&
+          typeof result === 'object' &&
+          'data' in result &&
+          'meta' in result
+        ) {
+          data = (result as { data: T }).data;
+          dynamicMeta = (result as { meta: Record<string, unknown> }).meta;
+        }
+
         const metaWithCache = {
           ...customMeta,
+          ...dynamicMeta,
           cached: !!request.isCached,
         };
         request.customMeta = metaWithCache;
