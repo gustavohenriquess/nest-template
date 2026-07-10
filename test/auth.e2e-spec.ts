@@ -21,14 +21,25 @@ describe('AuthController (e2e)', () => {
 
   beforeEach(async () => {
     // Clean up users before each test
-    await prisma.user.deleteMany();
+    await prisma.user.deleteMany({
+      where: {
+        email: {
+          in: [
+            'active@example.com',
+            'wrongpass@example.com',
+            'notfound@example.com',
+            'inactive@example.com',
+          ],
+        },
+      },
+    });
   });
 
   describe('/api/v1/auth/login (POST)', () => {
     it('should return 200 and access token for valid credentials', async () => {
       const password = 'StrongPassword123!';
       const hashedPassword = await argon2.hash(password);
-      console.log(hashedPassword);
+
       // Create an active user
       await prisma.user.create({
         data: {

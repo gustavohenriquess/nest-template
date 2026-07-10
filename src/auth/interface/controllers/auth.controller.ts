@@ -10,7 +10,6 @@ import type { Response } from 'express';
 import { LoginUseCase } from '../../application/use-cases/login.use-case';
 import { LoginDto } from '../dto/login.dto';
 import { Public } from '@/core/auth/decorators/public.decorator';
-import { Cache } from '@/core/cache/decorators/cache.decorator';
 
 @Controller('auth')
 export class AuthController {

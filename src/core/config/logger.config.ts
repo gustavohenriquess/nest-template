@@ -5,6 +5,26 @@ import { TraceContext } from '../utils/trace-context';
 const maskValue = (val: unknown) =>
   typeof val === 'string' ? `****${val.slice(-2)}****` : val;
 
+const redactFields = [
+  'password',
+  'password_confirmation',
+  'token',
+  'accessToken',
+  'refreshToken',
+  'secret',
+  'client_secret',
+  'email',
+];
+
+const redactPaths = redactFields.flatMap((field) => [
+  field,
+  `*.${field}`,
+  `*.*.${field}`,
+  `*.*.*.${field}`,
+  `*.*.*.*.${field}`,
+  `*.*.*.*.*.${field}`,
+]);
+
 export const loggerConfig: Params = {
   pinoHttp: {
     genReqId: (req) => req.headers['x-correlation-id'] || randomUUID(),
@@ -18,13 +38,7 @@ export const loggerConfig: Params = {
       paths: [
         'req.headers.authorization',
         'req.headers.cookie',
-        'password',
-        'password_confirmation',
-        'token',
-        'accessToken',
-        'refreshToken',
-        'secret',
-        'client_secret',
+        ...redactPaths,
       ],
       censor: '[REDACTED]',
     },
