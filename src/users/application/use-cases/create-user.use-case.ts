@@ -19,7 +19,7 @@ export class CreateUserUseCase {
     const existingUser =
       await this.userRepository.findByEmailWithRolesAndPermissions(dto.email);
     if (existingUser) {
-      throw new ConflictError('Email já está em uso');
+      throw new ConflictError('Email is already in use');
     }
 
     const hashedPassword = await argon2.hash(dto.password);

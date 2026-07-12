@@ -23,14 +23,14 @@ export class UpdateUserUseCase {
 
     const user = await this.userRepository.findById(id);
     if (!user) {
-      throw new EntityNotFoundError('Usuário não encontrado');
+      throw new EntityNotFoundError('User not found');
     }
 
     if (dto.email && dto.email !== user.email) {
       const existingUser =
         await this.userRepository.findByEmailWithRolesAndPermissions(dto.email);
       if (existingUser) {
-        throw new ConflictError('Email já está em uso');
+        throw new ConflictError('Email is already in use');
       }
     }
 

@@ -15,7 +15,7 @@ export class DeleteUserUseCase {
   async execute(id: string): Promise<void> {
     const user = await this.userRepository.findById(id);
     if (!user) {
-      throw new EntityNotFoundError('Usuário não encontrado');
+      throw new EntityNotFoundError('User not found');
     }
 
     await this.userRepository.delete(id);

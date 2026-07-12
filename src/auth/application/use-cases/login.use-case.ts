@@ -28,19 +28,19 @@ export class LoginUseCase {
     );
 
     if (!user) {
-      throw new UnauthorizedError('E-mail ou senha incorretos');
+      throw new UnauthorizedError('Incorrect email or password');
     }
 
     // 2. Verificar o hash da senha
     const isPasswordValid = await argon2.verify(user.password!, dto.password);
 
     if (!isPasswordValid) {
-      throw new UnauthorizedError('E-mail ou senha incorretos');
+      throw new UnauthorizedError('Incorrect email or password');
     }
 
     // 3. Verificar status do usuário
     if (user.status !== UserStatus.ACTIVE) {
-      throw new ForbiddenError('Usuário inativo ou pendente');
+      throw new ForbiddenError('Inactive or pending user');
     }
 
     // 4. Mapear roles e permissions

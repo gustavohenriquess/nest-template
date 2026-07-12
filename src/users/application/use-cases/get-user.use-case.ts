@@ -17,7 +17,7 @@ export class GetUserUseCase {
     const user = await this.userRepository.findById(id);
 
     if (!user) {
-      throw new EntityNotFoundError('Usuário não encontrado');
+      throw new EntityNotFoundError('User not found');
     }
 
     return new UserResponseDto(user);
