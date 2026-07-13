@@ -29,13 +29,13 @@ export class DbHelper {
    */
   async truncateAll() {
     const tablenames = await this.prisma.$queryRaw<
-      Array<{ tablename: string }>
+      Array<{ schemaname: string; tablename: string }>
     >`
-      SELECT tablename FROM pg_tables WHERE schemaname='public' AND tablename != '_prisma_migrations'
+      SELECT schemaname, tablename FROM pg_tables WHERE schemaname IN ('public', 'auth') AND tablename != '_prisma_migrations'
     `;
 
     const tables = tablenames
-      .map(({ tablename }) => `"public"."${tablename}"`)
+      .map(({ schemaname, tablename }) => `"${schemaname}"."${tablename}"`)
       .join(', ');
 
     if (tables) {

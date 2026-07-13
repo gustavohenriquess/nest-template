@@ -24,9 +24,9 @@ Este documento descreve todas as etapas necessárias para construir o módulo de
 ---
 
 ## 3. Módulo de Autenticação (AuthModule)
-- [ ] **Configurar JWT Module**
+- [x] **Configurar JWT Module**
   - Configurar `@nestjs/jwt` com secret vinda do `.env` e TTL estático (ou configurável) de `1d` (1 dias).
-- [ ] **Criar `POST /api/v1/auth/login`**
+- [x] **Criar `POST /api/v1/auth/login`**
   - Receber `email` e `password`.
   - Buscar usuário pelo email no PostgreSQL.
   - Verificar se a senha está correta (comparar hash).
@@ -41,10 +41,10 @@ Este documento descreve todas as etapas necessárias para construir o módulo de
 ---
 
 ## 4. Módulo de Usuários (UsersModule)
-- [ ] **Criar DTOs com Zod** (para validação)
+- [x] **Criar DTOs com Zod** (para validação)
   - `CreateUserDto` (nome, email, senha obrigatórios).
   - `UpdateUserDto` (campos opcionais).
-- [ ] **Criar Controladores (CRUD)**
+- [x] **Criar Controladores (CRUD)**
   - `POST /api/v1/users`: Criação do usuário. (Sempre encodar a senha antes de salvar).
   - `GET /api/v1/users`: Listagem (paginada).
   - `GET /api/v1/users/:id`: Detalhes.
@@ -54,10 +54,10 @@ Este documento descreve todas as etapas necessárias para construir o módulo de
 ---
 
 ## 5. Módulo de Perfis e Permissões (Roles e Permissions)
-- [ ] **RolesModule (CRUD)**
+- [x] **RolesModule (CRUD)**
   - `POST`, `GET`, `PATCH`, `DELETE` em `/api/v1/roles`.
   - Relacionar as roles à tabela de permissões.
-- [ ] **PermissionsModule (CRUD)**
+- [x] **PermissionsModule (CRUD)**
   - `POST`, `GET`, `PATCH`, `DELETE` em `/api/v1/permissions`.
 
 ---
