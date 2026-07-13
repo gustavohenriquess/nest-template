@@ -25,7 +25,10 @@ import { InvalidateCache } from '@/core/cache/decorators/invalidate-cache.decora
 
 @ApiTags('Users')
 @Roles('ADMIN')
-@Controller('users')
+@Controller({
+  path: 'users',
+  version: '1',
+})
 export class UsersController {
   constructor(
     private readonly createUserUseCase: CreateUserUseCase,

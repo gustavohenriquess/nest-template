@@ -11,7 +11,10 @@ import { LoginUseCase } from '../../application/use-cases/login.use-case';
 import { LoginDto } from '../dto/login.dto';
 import { Public } from '@/core/auth/decorators/public.decorator';
 
-@Controller('auth')
+@Controller({
+  path: 'auth',
+  version: '1',
+})
 export class AuthController {
   constructor(private readonly loginUseCase: LoginUseCase) {}
 
