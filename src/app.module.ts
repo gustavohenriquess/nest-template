@@ -19,6 +19,8 @@ import { CustomThrottlerGuard } from './core/auth/guards/custom-throttler.guard'
 import { PrismaModule } from './core/infrastructure/persistence/prisma/prisma.module';
 import { UsersModule } from './users/users.module';
 import { AuthFeatureModule } from './auth/auth.module';
+import { PermissionsModule } from './permissions/permissions.module';
+import { RolesModule } from './roles/roles.module';
 
 @Module({
   imports: [
@@ -46,6 +48,8 @@ import { AuthFeatureModule } from './auth/auth.module';
     PrismaModule,
     UsersModule,
     AuthFeatureModule,
+    PermissionsModule,
+    RolesModule,
     AuthModule,
     CacheModule,
     HealthModule,
