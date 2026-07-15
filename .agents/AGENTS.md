@@ -10,9 +10,13 @@ As regras de comportamento, estilo de código e restrições estão modularizada
 - **[Arquivos Proibidos](file:///Users/gustavo/projects/nest-template/.agents/rules/forbidden-files.md)**: Lista de arquivos contendo segredos (como `.env`) que não devem ser lidos em hipótese alguma.
 - **[Padrões de Commit](file:///Users/gustavo/projects/nest-template/.agents/rules/commits.md)**: Diretrizes para padronização de commits (Conventional Commits).
 - **[Nomenclatura de Branches](file:///Users/gustavo/projects/nest-template/.agents/rules/branches.md)**: Padrão de nomenclatura para criação de novas branches (Conventional Branch).
+- **[Nomenclatura e Estilo](file:///Users/gustavo/projects/nest-template/.agents/rules/naming-conventions.md)**: Convenções de imports, pastas e caixas léxicas (camelCase, PascalCase).
+- **[Tratamento de Erros](file:///Users/gustavo/projects/nest-template/.agents/rules/error-handling.md)**: Isolamento de erros do domínio de HTTP status codes genéricos.
 - **[Padrões de Validação](file:///Users/gustavo/projects/nest-template/.agents/rules/validation.md)**: Regras que garantem uso do Zod e proíbem class-validator.
 - **[Logs e Observabilidade](file:///Users/gustavo/projects/nest-template/.agents/rules/logging.md)**: Obriga uso do Pino, proíbe console.log e restringe PII.
-- [Arquitetura (DDD)](file:///Users/gustavo/projects/nest-template/.agents/rules/architecture.md): Garante separação e coesão do domínio.
+- **[Arquitetura (DDD) e SOLID](file:///Users/gustavo/projects/nest-template/.agents/rules/architecture.md)**: Garante a base conceitual do sistema e princípios de separação.
+- **[Padrões de Testes](file:///Users/gustavo/projects/nest-template/.agents/rules/testing-standards.md)**: Diferencia rigorosamente mocks unitários vs conexões E2E com infraestrutura real.
+- **[Checklist de Validação Final](file:///Users/gustavo/projects/nest-template/.agents/rules/pre-commit-checks.md)**: Exige que a inteligência artificial audite compilação e linters de forma remota antes da entrega.
 - **[Estrutura de Pastas](file:///Users/gustavo/projects/nest-template/.agents/rules/folder-structure.md)**: Padrão obrigatório de scaffolding de pastas (Camadas do DDD) para novos módulos.
 - **[Padrões de API e Versionamento](file:///Users/gustavo/projects/nest-template/.agents/rules/api-standards.md)**: Validação explícita da rota (V1, V2) e retornos padronizados.
 
