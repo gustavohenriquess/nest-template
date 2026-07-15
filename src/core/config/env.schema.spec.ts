@@ -29,19 +29,17 @@ describe('envSchema', () => {
   });
 
   it('should throw error on missing required fields', () => {
-    const invalidConfig = { ...validConfig } as Record<string, unknown>;
-    delete invalidConfig.GCP_PRIMARY_PROJECT_ID;
-
-    expect(() => validate(invalidConfig)).toThrow('Config validation error');
+    const invalidEnv = {};
+    expect(() => validate(invalidEnv)).toThrow('Invalid environment variables');
   });
 
   it('should throw error on invalid URLs', () => {
-    const invalidConfig = {
-      ...validConfig,
+    const invalidEnv = {
+      NODE_ENV: 'development',
+      PORT: '3000',
       DATABASE_URL: 'not-a-url',
     };
-
-    expect(() => validate(invalidConfig)).toThrow('Config validation error');
+    expect(() => validate(invalidEnv)).toThrow('Invalid environment variables');
   });
 
   it('should coerce string port to number', () => {

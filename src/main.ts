@@ -14,18 +14,21 @@ async function bootstrap() {
   otelSDK.start();
   startHostMetrics();
 
-  process.on('unhandledRejection', (reason, promise) => {
-    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
-  });
-
-  process.on('uncaughtException', (err, origin) => {
-    console.error(`Caught exception: ${err}\n` + `Exception origin: ${origin}`);
-  });
-
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
   });
-  app.useLogger(app.get(Logger));
+  const logger = app.get(Logger);
+  // Register global error handlers using the injected logger
+  process.on('unhandledRejection', (reason, promise) => {
+    logger.error('Unhandled Rejection', { promise, reason });
+  });
+
+  process.on('uncaughtException', (err, origin) => {
+    logger.error('Caught exception', { err, origin });
+  });
+
+  // Use the injected logger for NestJS logging
+  app.useLogger(logger);
 
   const configService = app.get(ConfigService);
   const allowedOriginsStr = configService.get<string>('ALLOWED_ORIGINS') || '*';

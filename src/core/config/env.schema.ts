@@ -80,8 +80,10 @@ export function validate(config: Record<string, unknown>) {
   const result = envSchema.safeParse(config);
 
   if (!result.success) {
-    console.error('❌ Invalid environment variables:', result.error.format());
-    throw new Error('Config validation error');
+    throw new Error(
+      'Invalid environment variables: ' + JSON.stringify(result.error.format()),
+    );
+    // Keep only detailed validation error above
   }
 
   return result.data;
