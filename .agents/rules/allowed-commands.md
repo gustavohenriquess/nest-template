@@ -26,4 +26,5 @@ Para este projeto, é permitido e encorajado a execução apenas dos seguintes c
 - `npm run format`
 - `npm run build`
 - `git status`
+- `git add`
 Por padrão, prefira utilizar estes comandos ao invés de alternativas genéricas. Respeite os scripts do `make` e do `npm` definidos no projeto para interagir com a aplicação e com os testes.

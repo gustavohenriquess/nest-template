@@ -12,7 +12,8 @@ As regras de comportamento, estilo de código e restrições estão modularizada
 - **[Nomenclatura de Branches](file:///Users/gustavo/projects/nest-template/.agents/rules/branches.md)**: Padrão de nomenclatura para criação de novas branches (Conventional Branch).
 - **[Padrões de Validação](file:///Users/gustavo/projects/nest-template/.agents/rules/validation.md)**: Regras que garantem uso do Zod e proíbem class-validator.
 - **[Logs e Observabilidade](file:///Users/gustavo/projects/nest-template/.agents/rules/logging.md)**: Obriga uso do Pino, proíbe console.log e restringe PII.
-- **[Arquitetura (DDD)](file:///Users/gustavo/projects/nest-template/.agents/rules/architecture.md)**: Garante separação e coesão do domínio.
+- [Arquitetura (DDD)](file:///Users/gustavo/projects/nest-template/.agents/rules/architecture.md): Garante separação e coesão do domínio.
+- **[Estrutura de Pastas](file:///Users/gustavo/projects/nest-template/.agents/rules/folder-structure.md)**: Padrão obrigatório de scaffolding de pastas (Camadas do DDD) para novos módulos.
 - **[Padrões de API e Versionamento](file:///Users/gustavo/projects/nest-template/.agents/rules/api-standards.md)**: Validação explícita da rota (V1, V2) e retornos padronizados.
 
 ## Habilidades (Skills)
