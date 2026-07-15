@@ -5,13 +5,20 @@ import { EntityNotFoundError } from '@/core/errors/domain.error';
 describe('DeleteUserUseCase', () => {
   let useCase: DeleteUserUseCase;
   let userRepository: any;
+  let logger: any;
 
   beforeEach(() => {
     userRepository = {
       findById: jest.fn(),
       delete: jest.fn(),
     };
-    useCase = new DeleteUserUseCase(userRepository);
+    logger = {
+      info: jest.fn(),
+      error: jest.fn(),
+      warn: jest.fn(),
+      debug: jest.fn(),
+    };
+    useCase = new DeleteUserUseCase(userRepository, logger);
   });
 
   it('should throw EntityNotFoundError if user not found', async () => {

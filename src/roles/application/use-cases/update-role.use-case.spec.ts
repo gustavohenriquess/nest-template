@@ -5,6 +5,7 @@ import { EntityNotFoundError, ConflictError } from '@/core/errors/domain.error';
 describe('UpdateRoleUseCase', () => {
   let useCase: UpdateRoleUseCase;
   let roleRepository: any;
+  let logger: any;
 
   beforeEach(() => {
     roleRepository = {
@@ -12,7 +13,13 @@ describe('UpdateRoleUseCase', () => {
       findByName: jest.fn(),
       update: jest.fn(),
     };
-    useCase = new UpdateRoleUseCase(roleRepository);
+    logger = {
+      info: jest.fn(),
+      error: jest.fn(),
+      warn: jest.fn(),
+      debug: jest.fn(),
+    };
+    useCase = new UpdateRoleUseCase(roleRepository, logger);
   });
 
   it('should throw EntityNotFoundError if role not found', async () => {

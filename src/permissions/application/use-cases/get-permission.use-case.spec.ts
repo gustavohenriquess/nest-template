@@ -5,12 +5,19 @@ import { EntityNotFoundError } from '@/core/errors/domain.error';
 describe('GetPermissionUseCase', () => {
   let useCase: GetPermissionUseCase;
   let permissionRepository: any;
+  let logger: any;
 
   beforeEach(() => {
     permissionRepository = {
       findById: jest.fn(),
     };
-    useCase = new GetPermissionUseCase(permissionRepository);
+    logger = {
+      info: jest.fn(),
+      error: jest.fn(),
+      warn: jest.fn(),
+      debug: jest.fn(),
+    };
+    useCase = new GetPermissionUseCase(permissionRepository, logger);
   });
 
   it('should throw EntityNotFoundError if permission not found', async () => {

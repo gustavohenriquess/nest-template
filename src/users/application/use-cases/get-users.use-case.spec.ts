@@ -4,12 +4,19 @@ import { GetUsersUseCase } from './get-users.use-case';
 describe('GetUsersUseCase', () => {
   let useCase: GetUsersUseCase;
   let userRepository: any;
+  let logger: any;
 
   beforeEach(() => {
     userRepository = {
       findAll: jest.fn(),
     };
-    useCase = new GetUsersUseCase(userRepository);
+    logger = {
+      info: jest.fn(),
+      error: jest.fn(),
+      warn: jest.fn(),
+      debug: jest.fn(),
+    };
+    useCase = new GetUsersUseCase(userRepository, logger);
   });
 
   it('should return a paginated list of users', async () => {

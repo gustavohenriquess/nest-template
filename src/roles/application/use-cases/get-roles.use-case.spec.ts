@@ -4,12 +4,19 @@ import { GetRolesUseCase } from './get-roles.use-case';
 describe('GetRolesUseCase', () => {
   let useCase: GetRolesUseCase;
   let roleRepository: any;
+  let logger: any;
 
   beforeEach(() => {
     roleRepository = {
       findAll: jest.fn(),
     };
-    useCase = new GetRolesUseCase(roleRepository);
+    logger = {
+      info: jest.fn(),
+      error: jest.fn(),
+      warn: jest.fn(),
+      debug: jest.fn(),
+    };
+    useCase = new GetRolesUseCase(roleRepository, logger);
   });
 
   it('should return paginated roles', async () => {

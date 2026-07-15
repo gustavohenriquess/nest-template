@@ -5,12 +5,19 @@ import { EntityNotFoundError } from '@/core/errors/domain.error';
 describe('GetRoleUseCase', () => {
   let useCase: GetRoleUseCase;
   let roleRepository: any;
+  let logger: any;
 
   beforeEach(() => {
     roleRepository = {
       findById: jest.fn(),
     };
-    useCase = new GetRoleUseCase(roleRepository);
+    logger = {
+      info: jest.fn(),
+      error: jest.fn(),
+      warn: jest.fn(),
+      debug: jest.fn(),
+    };
+    useCase = new GetRoleUseCase(roleRepository, logger);
   });
 
   it('should throw EntityNotFoundError if role not found', async () => {

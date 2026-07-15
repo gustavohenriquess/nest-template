@@ -8,13 +8,20 @@ jest.mock('argon2');
 describe('CreateUserUseCase', () => {
   let useCase: CreateUserUseCase;
   let userRepository: any;
+  let logger: any;
 
   beforeEach(() => {
     userRepository = {
       findByEmailWithRolesAndPermissions: jest.fn(),
       create: jest.fn(),
     };
-    useCase = new CreateUserUseCase(userRepository);
+    logger = {
+      info: jest.fn(),
+      error: jest.fn(),
+      warn: jest.fn(),
+      debug: jest.fn(),
+    };
+    useCase = new CreateUserUseCase(userRepository, logger);
     (argon2.hash as jest.Mock).mockResolvedValue('hashed_password');
   });
 

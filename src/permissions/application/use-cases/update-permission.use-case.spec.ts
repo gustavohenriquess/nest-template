@@ -5,6 +5,7 @@ import { EntityNotFoundError, ConflictError } from '@/core/errors/domain.error';
 describe('UpdatePermissionUseCase', () => {
   let useCase: UpdatePermissionUseCase;
   let permissionRepository: any;
+  let logger: any;
 
   beforeEach(() => {
     permissionRepository = {
@@ -12,7 +13,13 @@ describe('UpdatePermissionUseCase', () => {
       findByName: jest.fn(),
       update: jest.fn(),
     };
-    useCase = new UpdatePermissionUseCase(permissionRepository);
+    logger = {
+      info: jest.fn(),
+      error: jest.fn(),
+      warn: jest.fn(),
+      debug: jest.fn(),
+    };
+    useCase = new UpdatePermissionUseCase(permissionRepository, logger);
   });
 
   it('should throw EntityNotFoundError if permission not found', async () => {

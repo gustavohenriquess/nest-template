@@ -5,13 +5,20 @@ import { ConflictError } from '@/core/errors/domain.error';
 describe('CreatePermissionUseCase', () => {
   let useCase: CreatePermissionUseCase;
   let permissionRepository: any;
+  let logger: any;
 
   beforeEach(() => {
     permissionRepository = {
       findByName: jest.fn(),
       create: jest.fn(),
     };
-    useCase = new CreatePermissionUseCase(permissionRepository);
+    logger = {
+      info: jest.fn(),
+      error: jest.fn(),
+      warn: jest.fn(),
+      debug: jest.fn(),
+    };
+    useCase = new CreatePermissionUseCase(permissionRepository, logger);
   });
 
   it('should throw ConflictError if permission name already exists', async () => {

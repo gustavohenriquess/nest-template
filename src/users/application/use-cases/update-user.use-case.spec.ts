@@ -18,8 +18,9 @@ describe('UpdateUserUseCase', () => {
     };
     logger = {
       info: jest.fn(),
+      error: jest.fn(),
     };
-    useCase = new UpdateUserUseCase(logger, userRepository);
+    useCase = new UpdateUserUseCase(userRepository, logger);
     (argon2.hash as jest.Mock).mockResolvedValue('hashed_password');
   });
 

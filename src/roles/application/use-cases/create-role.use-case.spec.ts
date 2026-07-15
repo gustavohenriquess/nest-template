@@ -5,13 +5,20 @@ import { ConflictError } from '@/core/errors/domain.error';
 describe('CreateRoleUseCase', () => {
   let useCase: CreateRoleUseCase;
   let roleRepository: any;
+  let logger: any;
 
   beforeEach(() => {
     roleRepository = {
       findByName: jest.fn(),
       create: jest.fn(),
     };
-    useCase = new CreateRoleUseCase(roleRepository);
+    logger = {
+      info: jest.fn(),
+      error: jest.fn(),
+      warn: jest.fn(),
+      debug: jest.fn(),
+    };
+    useCase = new CreateRoleUseCase(roleRepository, logger);
   });
 
   it('should throw ConflictError if role name already exists', async () => {

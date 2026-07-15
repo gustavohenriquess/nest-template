@@ -4,12 +4,19 @@ import { GetPermissionsUseCase } from './get-permissions.use-case';
 describe('GetPermissionsUseCase', () => {
   let useCase: GetPermissionsUseCase;
   let permissionRepository: any;
+  let logger: any;
 
   beforeEach(() => {
     permissionRepository = {
       findAll: jest.fn(),
     };
-    useCase = new GetPermissionsUseCase(permissionRepository);
+    logger = {
+      info: jest.fn(),
+      error: jest.fn(),
+      warn: jest.fn(),
+      debug: jest.fn(),
+    };
+    useCase = new GetPermissionsUseCase(permissionRepository, logger);
   });
 
   it('should return paginated permissions', async () => {

@@ -12,10 +12,10 @@ import { EntityNotFoundError, ConflictError } from '@/core/errors/domain.error';
 @Injectable()
 export class UpdateUserUseCase {
   constructor(
-    @InjectPinoLogger(UpdateUserUseCase.name)
-    private readonly logger: PinoLogger,
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepository,
+    @InjectPinoLogger(UpdateUserUseCase.name)
+    private readonly logger: PinoLogger,
   ) {}
 
   async execute(id: string, dto: UpdateUserDto): Promise<UserResponseDto> {
@@ -23,14 +23,14 @@ export class UpdateUserUseCase {
 
     const user = await this.userRepository.findById(id);
     if (!user) {
-      throw new EntityNotFoundError('User not found');
+      throw new EntityNotFoundError('User not found', this.logger);
     }
 
     if (dto.email && dto.email !== user.email) {
       const existingUser =
         await this.userRepository.findByEmailWithRolesAndPermissions(dto.email);
       if (existingUser) {
-        throw new ConflictError('Email is already in use');
+        throw new ConflictError('Email is already in use', this.logger);
       }
     }
 

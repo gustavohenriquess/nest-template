@@ -5,13 +5,20 @@ import { EntityNotFoundError } from '@/core/errors/domain.error';
 describe('DeletePermissionUseCase', () => {
   let useCase: DeletePermissionUseCase;
   let permissionRepository: any;
+  let logger: any;
 
   beforeEach(() => {
     permissionRepository = {
       findById: jest.fn(),
       delete: jest.fn(),
     };
-    useCase = new DeletePermissionUseCase(permissionRepository);
+    logger = {
+      info: jest.fn(),
+      error: jest.fn(),
+      warn: jest.fn(),
+      debug: jest.fn(),
+    };
+    useCase = new DeletePermissionUseCase(permissionRepository, logger);
   });
 
   it('should throw EntityNotFoundError if permission not found', async () => {
