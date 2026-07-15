@@ -1,3 +1,7 @@
+---
+trigger: always_on
+---
+
 # Padrão de Commits
 
 Sempre que realizar commits neste repositório, você **deve** seguir estritamente o padrão [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
@@ -28,4 +32,4 @@ O formato da mensagem do commit deve ser:
 1. **Idioma**: Procure manter a mensagem principal (`description`) clara e concisa (preferencialmente em inglês se for o padrão do time, ou respeitando o idioma vigente do projeto).
 2. **Imperativo**: A descrição deve ser no modo imperativo (ex: `add user login` ao invés de `added user login` ou `adds user login`).
 3. **Breaking Changes**: Se a mudança introduzir uma quebra de compatibilidade, adicione `!` logo antes do `:` no cabeçalho (ex: `feat(api)!: change response format`).
-4. **Commits Atômicos**: Mantenha os commits o mais granulares e focados possível. Nunca faça commits genéricos como "várias alterações".
+4. **Commits Atômicos (Separação Granular)**: ANTES de efetuar o commit, você **deve** realizar a separação do que foi efetuado o mais granular possível. Nunca agrupe alterações de contextos diferentes no mesmo commit (ex: "várias alterações" ou "refatoração + nova feature"). Separe os arquivos (`git add`) logicamente de acordo com o contexto exato do que foi feito.
