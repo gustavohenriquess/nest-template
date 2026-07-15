@@ -10,6 +10,10 @@ As regras de comportamento, estilo de código e restrições estão modularizada
 - **[Arquivos Proibidos](file:///Users/gustavo/projects/nest-template/.agents/rules/forbidden-files.md)**: Lista de arquivos contendo segredos (como `.env`) que não devem ser lidos em hipótese alguma.
 - **[Padrões de Commit](file:///Users/gustavo/projects/nest-template/.agents/rules/commits.md)**: Diretrizes para padronização de commits (Conventional Commits).
 - **[Nomenclatura de Branches](file:///Users/gustavo/projects/nest-template/.agents/rules/branches.md)**: Padrão de nomenclatura para criação de novas branches (Conventional Branch).
+- **[Padrões de Validação](file:///Users/gustavo/projects/nest-template/.agents/rules/validation.md)**: Regras que garantem uso do Zod e proíbem class-validator.
+- **[Logs e Observabilidade](file:///Users/gustavo/projects/nest-template/.agents/rules/logging.md)**: Obriga uso do Pino, proíbe console.log e restringe PII.
+- **[Arquitetura (DDD)](file:///Users/gustavo/projects/nest-template/.agents/rules/architecture.md)**: Garante separação e coesão do domínio.
+- **[Padrões de API e Versionamento](file:///Users/gustavo/projects/nest-template/.agents/rules/api-standards.md)**: Validação explícita da rota (V1, V2) e retornos padronizados.
 
 ## Habilidades (Skills)
 As habilidades específicas e fluxos de trabalho ensinados ao agente estão na pasta `.agents/skills/`:
