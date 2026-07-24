@@ -27,3 +27,4 @@ As habilidades específicas e fluxos de trabalho ensinados ao agente estão na p
 - **[domain-modeling](file:///Users/gustavo/projects/nest-template/.agents/skills/domain-modeling/SKILL.md)**: Disciplina para construção e manutenção do modelo de domínio do projeto.
 - **[documentation-standard](file:///Users/gustavo/projects/nest-template/.agents/skills/documentation-standard/SKILL.md)**: Padrão obrigatório e tags de metadados a serem seguidos ao criar documentos Markdown de contexto.
 - **[history-harness](file:///Users/gustavo/projects/nest-template/.agents/skills/history-harness/SKILL.md)**: Skill para registrar automaticamente o histórico de buscas, entendimentos e alterações na pasta `ai/harness/`.
+- **[mermaid-flow](file:///Users/gustavo/projects/nest-template/.agents/skills/mermaid-flow/SKILL.md)**: Skill para gerar ou atualizar automaticamente diagramas detalhados de fluxo (Mermaid) documentando todos os Use Cases criados ou modificados.
