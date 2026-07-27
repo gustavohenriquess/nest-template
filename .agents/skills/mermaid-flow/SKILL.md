@@ -6,7 +6,7 @@ description: Gera ou atualiza um diagrama detalhado em Mermaid documentando o fl
 # Mermaid Flow
 
 ## Objetivo
-Sempre que você criar ou realizar modificações na lógica de um Use Case, você **deve** gerar (ou atualizar) um arquivo Markdown contendo o diagrama de fluxo exato daquele caso de uso. O arquivo deve se chamar `[nome_do_use_case].mermaid.md` e **deve ser salvo obrigatoriamente dentro da pasta `docs/flow/`** na raiz do projeto.
+Sempre que você criar ou realizar modificações na lógica de um Use Case, você **deve** gerar (ou atualizar) um arquivo Markdown contendo o diagrama de fluxo exato daquele caso de uso. O arquivo deve se chamar `[nome_do_use_case].mermaid.md` e **deve ser salvo obrigatoriamente dentro da pasta `docs/flow/[nome_do_modulo]/`** na raiz do projeto, separando os diagramas por módulo.
 
 ## Diretrizes de Geração
 1. **Padrão de Documentação**: O arquivo final deve obedecer às formatações e tags de metadados estipuladas pela skill `documentation-standard`.
