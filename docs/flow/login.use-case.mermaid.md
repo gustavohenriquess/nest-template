@@ -39,5 +39,5 @@ flowchart TD
     
     MapPermissions --> GeneratePayload[Montar JWT Payload c/ sub, email, roles e permissions]
     GeneratePayload --> SignToken[Assinar token com JwtService]
-    SignToken --> End([Fim: Retorna { accessToken }])
+    SignToken --> End(["Fim: Retorna { accessToken }"])
 ```

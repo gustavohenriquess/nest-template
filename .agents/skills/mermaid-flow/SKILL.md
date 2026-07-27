@@ -18,6 +18,7 @@ Sempre que você criar ou realizar modificações na lógica de um Use Case, voc
    - O ponto de saída e o formato de retorno final.
 3. **Atualização Contínua**: Assim como o código vivo, toda alteração de lógica do Use Case que for solicitada no chat deve vir acompanhada da atualização correspondente no arquivo `.mermaid.md`.
 4. **Formato**: Utilize o formato `flowchart TD` para desenhar fluxos de decisão. Utilize formatos em losango `{ }` para os `if`s e setas duplas ou caminhos explícitos (`-- Yes -->`, `-- No -->`) para ramificações.
+5. **Caracteres Especiais**: Lembre-se de sempre colocar o texto entre aspas `["texto"]` quando o label do nó (node) contiver caracteres especiais como chaves `{ }`, colchetes `[ ]` ou parênteses `( )`, para não quebrar a sintaxe do Mermaid.
 
 ## Exemplo de Diagrama de Uso
 ```markdown
