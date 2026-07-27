@@ -21,6 +21,9 @@ As regras de comportamento, estilo de código e restrições estão modularizada
 - **[Padrões de API e Versionamento](file:///Users/gustavo/projects/nest-template/.agents/rules/api-standards.md)**: Validação explícita da rota (V1, V2) e retornos padronizados.
 
 ## Habilidades (Skills)
+
+**REGRA GLOBAL DE SKILLS**: Sempre que **QUALQUER** skill for utilizada ou uma atividade for executada (seja para criar, modificar, investigar, explicar ou orquestrar tarefas, independentemente da necessidade expressa do usuário), você **DEVE OBRIGATORIAMENTE** criar um registro de histórico utilizando a skill **[history-harness](file:///Users/gustavo/projects/nest-template/.agents/skills/history-harness/SKILL.md)**.
+
 As habilidades específicas e fluxos de trabalho ensinados ao agente estão na pasta `.agents/skills/`:
 
 - **[tlc-spec-driven](file:///Users/gustavo/projects/nest-template/.agents/skills/tlc-spec-driven/SKILL.md)**: Fluxo adaptativo de planejamento e implementação de features com verificação e commits atômicos.
