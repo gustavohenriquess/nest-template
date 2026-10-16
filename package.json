@@ -44,7 +44,7 @@
     "@opentelemetry/host-metrics": "^0.39.0",
     "@opentelemetry/instrumentation-express": "^0.71.0",
     "@opentelemetry/instrumentation-http": "^0.223.0",
-    "@opentelemetry/instrumentation-nestjs-core": "^0.69.0",
+    "@opentelemetry/instrumentation-nestjs-core": "^0.70.0",
     "@opentelemetry/resources": "^2.7.0",
     "@opentelemetry/sdk-metrics": "^2.7.0",
     "@opentelemetry/sdk-node": "^0.223.0",
