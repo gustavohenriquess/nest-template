@@ -1,5 +1,5 @@
 # Stage 1: Development
-FROM node:24-alpine AS development
+FROM node:26-alpine AS development
 
 WORKDIR /app
 
@@ -14,7 +14,7 @@ RUN npm ci
 COPY . .
 
 # Stage 2: Builder
-FROM node:24-alpine AS builder
+FROM node:26-alpine AS builder
 
 WORKDIR /app
 COPY --from=development /app ./
@@ -27,7 +27,7 @@ RUN npm run build
 RUN npm prune --omit=dev
 
 # Stage 3: Production
-FROM node:24-alpine AS production
+FROM node:26-alpine AS production
 
 # Setar modo de produção 
 ENV NODE_ENV=production
